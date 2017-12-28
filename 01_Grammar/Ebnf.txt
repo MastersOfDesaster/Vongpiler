@@ -6,9 +6,9 @@ type= dType vName;
 
 vName= name vAssi;
 
-vAssi= "goenn.dir" val;
+vAssi= "goenn.dir" varValue;
 
-val= value vEnd //Value has to be an own datatype;
+varValue= value vEnd //Value has to be an own datatype;
 
 vEnd= "!!!" (type|main)//|FUNC;
 
@@ -49,3 +49,5 @@ specialCharacter= ("_" | "-" | "," | ";" | "+" | "*" | "#" | "'" | "=" | ")" | "
 digit = ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9");
 
 value = {(lowerCharacter | upperCharacter | specialCharacter | digit)};
+
+(*Comments and Whitespaces will be ignored*)
