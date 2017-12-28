@@ -1,0 +1,47 @@
+start= "was.isd.das.fuer.1.kot?" (var|main) (*FUNC*);
+	
+var= "i.bims.1" type;
+	
+type= dType vName;
+
+vName= name=ID vAssi;
+
+vAssi= "goenn.dir" value;
+
+value= value=ID vEnd //Value has to be an own datatype;
+
+vEnd= "!!!" (type|main)//|FUNC;
+
+(*FUNC= main;*)
+
+main= "i.bims.1.uhrjump.vong,function.her!" (cmd|fAssi|mEnd);
+
+fAssi= vname=ID fOper;
+
+fOper= "goenn.dir" cmd;
+
+cmd= "was.isd.das.fuer.1" fName;
+
+fName= fname=ID pStart;
+
+pStart= "vong" para;
+
+para= value=ID (pEnd|pNext) //Value could be a constanant or a VarName;
+
+pNext= "," para;
+
+pEnd= "her!" (cmd|fAssi|mEnd);
+
+mEnd= "uhrjump.nd!!!" end;
+
+end= "1.nicer!!!";
+
+dType= ("zal" | "word" | "isso");
+
+name= (lowerCharacter | upperCharacter | "_") (lowerCharacter | upperCharacter | "_" | digit);
+
+lowerCharacter= ("a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z");
+
+upperCharacter= ("A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z");
+
+digit = ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9");
