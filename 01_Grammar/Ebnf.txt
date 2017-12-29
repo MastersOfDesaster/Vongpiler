@@ -28,7 +28,7 @@ pStart = "vong" para;
 
 fdef = "sume" | "abziehung" | "mahl" | "teilung" | "räst" | "ismär" | "isweniga" | "same");
 
-para = value=ID (pEnd|pNext)
+para = value (pEnd|pNext)
 
 pNext = "," para;
 
