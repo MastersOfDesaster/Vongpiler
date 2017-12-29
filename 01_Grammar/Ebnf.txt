@@ -22,9 +22,11 @@ fOper = "goenn.dir" cmd;
 
 cmd = "was.isd.das.fuer.1" fName;
 
-fName = name pStart;
+fName = (name | Fdef | pStart);
 
 pStart = "vong" para;
+
+fdef = "sume" | "abziehung" | "mahl" | "teilung" | "räst" | "ismär" | "isweniga" | "same");
 
 para = value=ID (pEnd|pNext)
 
