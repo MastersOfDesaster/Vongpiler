@@ -34,7 +34,7 @@ public class ByteCodeWriter {
 		linesToWrite.add(registerHandler.addOperation(command));
 	}
 
-	void addCommand(OperationEnum command, int para) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, String para) throws WrongNumberOfArgumentsException {
 		linesToWrite.add(registerHandler.addOperation(command, para));
 	}
 
@@ -78,9 +78,14 @@ public class ByteCodeWriter {
 		}
 	}
 	
-	boolean writeToFile() {
+	private boolean writeToFile() {
 		try {
-			FileWriter fw = new FileWriter(new File("./" + filename + ".vch"));
+			File file = new File(filename + ".vch");
+			if (!file.exists()) {
+				System.out.println(file.getAbsolutePath());
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			linesToWrite.forEach(line -> {
 				try {

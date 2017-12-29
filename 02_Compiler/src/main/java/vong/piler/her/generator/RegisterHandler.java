@@ -34,11 +34,11 @@ class RegisterHandler {
 		return dataPointer;
 	}
 	
-	int getVariableAddress(String name) {
+	String getVariableAddress(String name) {
 		if (!dataRegister.containsKey(name)) {
 			addVariable(name);
 		}
-		return dataRegister.get(name);
+		return dataRegister.get(name)+"";
 	}
 	
 	void addJumpMarker(String name) {
@@ -53,18 +53,17 @@ class RegisterHandler {
 		return operationBuilder.toString();
 	}
 	
-	String addOperation(OperationEnum operation, double parameter) throws WrongNumberOfArgumentsException {
+	String addOperation(OperationEnum operation, String parameter) throws WrongNumberOfArgumentsException {
 		if (operation.getArgCount() != 1)
 			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 1");
+		if (operation.equals(OperationEnum.PSA)) {
+			parameter = getVariableAddress(parameter);
+		}
 		operationAdded(operation);
 		StringBuilder operationBuilder = new StringBuilder(operation.ordinal());
 		operationBuilder.append(" ");
 		operationBuilder.append(parameter);
 		return operationBuilder.toString();
-	}
-	
-	String addOperation(OperationEnum operation, String parameter) throws WrongNumberOfArgumentsException {
-		return addOperation(operation, getVariableAddress(parameter));
 	}
 	
 	String addOperation(OperationEnum operation, int address, int count) throws WrongNumberOfArgumentsException {
@@ -83,7 +82,7 @@ class RegisterHandler {
 		return addOperation(operation, getVariableAddress(address), count);
 	}
 	
-	public String addJumpOperation(String address) {
+	String addJumpOperation(String address) {
 		operationAdded(OperationEnum.PSA);
 		StringBuilder operationBuilder = new StringBuilder(OperationEnum.PSA.ordinal());
 		operationBuilder.append(" ");
