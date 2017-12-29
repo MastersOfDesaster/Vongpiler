@@ -265,7 +265,7 @@ public class Steakmachine {
 	private void sva() {
 		int address = popAddress();
 		int storeAddress = popAddress();
-		StackElement element = new StackElement(Type.ADDRESS, storeAddress);
+		StackElement element = new StackElement(Type.ADDRESS, address);
 		programmMemory[storeAddress] = element;		
 	}
 	
