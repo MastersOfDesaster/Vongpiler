@@ -9,6 +9,7 @@ public enum OperationEnum {
     PSA(1), // push address to stack
     PSZ(1), // push number(zal) to stack
     PSI(1), // push boolean(isso) to stack
+    PSW(1),
     ADD(0), // arg1 + arg2
     SUB(0), // arg1 - arg2
     MUL(0), // arg1 * arg2
@@ -30,6 +31,9 @@ public enum OperationEnum {
     SVA(0),
     SVZ(0),
     SVI(0),
+    SVW(0),
+    EQW(0),
+    NQW(0),
     END(0);  // end of code
 	
 	private int argCount;
