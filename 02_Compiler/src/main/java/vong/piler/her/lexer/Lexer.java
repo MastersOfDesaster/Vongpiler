@@ -42,7 +42,8 @@ public class Lexer {
             
             if (matcher.matches()) {
                 token = new Token(tokenType);
-                index += matcher.group(1).length();
+                index += matcher.group(1).length() + 1;
+                break;
             }
         }
 
