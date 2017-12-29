@@ -15,8 +15,10 @@ public enum OperationEnum {
     DIV(0), // arg1 / arg2
     MOD(0), // arg1 % arg2
     LES(0), // arg1 < arg2
-    EQL(0), // arg1 == arg2
-    NQL(0), // arg1 != arg2
+    EQZ(0), // arg1 == arg2
+    EQI(0),
+    NQZ(0), // arg1 != arg2
+    NQI(0),
     GTR(0), // arg1 > arg2
     AND(0), // arg1 && arg2
     OHR(0), // arg1 || arg2
@@ -25,6 +27,9 @@ public enum OperationEnum {
     SAV(0), // save arg in data-memory
     PRT(0), // prints arg
     AAL(0), // prints "hello world!"
+    SVA(0),
+    SVZ(0),
+    SVI(0),
     END(0);  // end of code
 	
 	private int argCount;

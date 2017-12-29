@@ -3,7 +3,7 @@ package vong.piler.her.steakmachine;
 
 public class Command {
 	private OperationEnum opCode;
-	private Object firstParam, secondParam;
+	private String firstParam, secondParam;
 
 	public OperationEnum getOpCode() {
 		return opCode;
@@ -13,19 +13,19 @@ public class Command {
 		this.opCode = opCode;
 	}
 
-	public Object getFirstParam() {
+	public String getFirstParam() {
 		return firstParam;
 	}
 
-	public void setFirstParam(Object firstParam) {
+	public void setFirstParam(String firstParam) {
 		this.firstParam = firstParam;
 	}
 
-	public Object getSecondParam() {
+	public String getSecondParam() {
 		return secondParam;
 	}
 
-	public void setSecondParam(Object secondParam) {
+	public void setSecondParam(String secondParam) {
 		this.secondParam = secondParam;
 	}
 

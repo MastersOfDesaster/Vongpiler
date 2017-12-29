@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Stack;
 
+import vong.piler.her.steakmachine.StackElement.Type;
+
 public class Steakmachine {
 	
 	private static final int PROGRAM_MEMORY_SIZE = 100;
 	private static final int CODE_MEMORY_SIZE = 100;
-	private Stack<Object> stack;
+	private Stack<StackElement> stack;
 	private Object[] programmMemory;
 	private String[] codeMemory;
 	
@@ -63,9 +65,10 @@ public class Steakmachine {
 		running = true;
 		while(running) {
     		String rawCommand = readCommand();
+    		instructionPointer++;
     		Command command = decodeCommand(rawCommand);
     		executeCommand(command);
-    		instructionPointer++;
+   		
     	}
         
     }
@@ -95,60 +98,302 @@ public class Steakmachine {
     private void executeCommand(Command command) {
     	switch(command.getOpCode()) {
     	case PSZ:
-    		stack.push(Double.parseDouble(command.getFirstParam().toString()));
-    		 		   		break;
+    		psz(command.getFirstParam());
+    		break;
     	case ADD:
-    		double a = (double) stack.pop();
-    		double b = (double) stack.pop();
-    		double result = a + b;
-    		stack.push(result);
+    		add();
     		break;
     	case PRT:
-    		String out = stack.pop().toString();
-    		System.out.println(out);
+    		print();
+    		break;
 		case AAL:
+			aal();
 			break;
 		case AND:
+			and();
 			break;
 		case DIV:
+			div();
 			break;
 		case END:
-			running = false;
+			end();
 			break;
-		case EQL:
+		case EQZ:
+			eqz();
+			break;
+		case EQI:
+			eqi();
 			break;
 		case GTR:
+			gtr();
 			break;
 		case JMP:
+			jmp();
 			break;
 		case JMT:
+			jmt();
 			break;
 		case LES:
+			les();
 			break;
 		case MOD:
+			mod();
 			break;
 		case MUL:
+    		mul();
 			break;
-		case NQL:
+		case NQI:
+			nqi();
+			break;
+		case NQZ:
+			nqz();
 			break;
 		case OHR:
+			ohr();
 			break;
 		case PSA:
+			psa(command.getFirstParam());
 			break;
 		case PSI:
-			break;
-		case SAV:
+			psi(command.getFirstParam());
 			break;
 		case SUB:
+    		sub();
+			break;
+		case SVA:
+    		sva();
+			break;
+		case SVZ:
+    		svz();
+			break;
+		case SVI:
+    		svi();
 			break;
 		default:
 			break;
     	}
     }
 
-	private void stop() {
-		// TODO Auto-generated method stub
+	private void eqz() {
+		double a = popZal();
+		double b = popZal();
+		boolean isso = b == a;
+		pushIsso(isso);	
+	}
+	
+	private void eqi() {
+		boolean a = popIsso();
+		boolean b = popIsso();
+		boolean isso = b == a;
+		pushIsso(isso);	
+	}
+	
+	private void nqz() {
+		double a = popZal();
+		double b = popZal();
+		boolean isso = b != a;
+		pushIsso(isso);
+	}
+	
+	private void nqi() {
+		boolean a = popIsso();
+		boolean b = popIsso();
+		boolean isso = b != a;
+		pushIsso(isso);	
+	}
+
+	private void sub() {
+		double a = popZal();
+		double b = popZal();
+		double result = b - a;
+		pushZal(result);
+	}
+
+	private void mod() {
+		double a = popZal();
+		double b = popZal();
+		double result = b % a;
+		pushZal(result);
 		
 	}
+
+	private void les() {
+		double a = popZal();
+		double b = popZal();
+		boolean result = b < a;
+		pushIsso(result);
+		
+	}
+
+	private void jmt() {
+		int address = popAddress();
+		boolean isso = popIsso();
+		if(isso) {
+			instructionPointer = address;
+		}	
+	}
+
+	private void jmp() {
+		int address = popAddress();
+		instructionPointer = address;
+	}
+
+
+	private void ohr() {
+		boolean a = popIsso();
+		boolean b = popIsso();
+		boolean result = b || a;
+		pushIsso(result);
+		
+	}
+
+	private void psa(String firstParam) {
+		pushAddress(Integer.parseInt(firstParam));
+		
+	}
+
+	private void psi(String firstParam) {
+		pushIsso(parseIsso(firstParam));
+		
+	}
+
+	private boolean parseIsso(String firstParam) {
+		int isso = Integer.parseInt(firstParam);
+		return isso !=0 ? true : false;
+	}
+
+	private void sva() {
+		int address = popAddress();
+		int storeAddress = popAddress();
+		programmMemory[storeAddress] = address;		
+	}
+	
+	private void svi() {
+		int address = popAddress();
+		boolean isso = popIsso();
+		programmMemory[address] = isso;		
+	}
+	
+	private void svz() {
+		int address = popAddress();
+		double zal = popZal();
+		programmMemory[address] = zal;
+		
+	}
+
+	private void gtr() {
+		double a = popZal();
+		double b = popZal();
+		boolean result = b > a;
+		pushIsso(result);
+		
+	}
+
+	private void div() {
+		double a = popZal();
+		double b = popZal();
+		double result = b / a;
+		pushZal(result);		
+	}
+
+	private void and() {
+		boolean a = popIsso();
+		boolean b = popIsso();
+		boolean result = b && a;
+		pushIsso(result);		
+	}
+
+	private void aal() {
+		System.out.println("Halo I bims 1 aal vong Halo Wörlt her");
+	}
+
+	private void end() {
+		running = false;
+	}
+
+	private void mul() {
+		double a = popZal();
+		double b = popZal();
+		pushZal(b * a);
+	}
+
+	private void psz(String arg) {
+		pushZal(Double.parseDouble(arg));
+	}
+
+	private void print() {
+		String out = stack.pop().toString();
+		System.out.println(out);
+	}
+
+	private void add() {
+		double a = popZal();
+		double b = popZal();
+		double result = b + a;
+		pushZal(result);
+	}
+    
+    private void pushZal(double zal) {
+    	StackElement element = new StackElement(Type.ZAL, zal);
+    	stack.push(element);
+    }
+    
+    private void pushAddress(int address) {
+    	StackElement element = new StackElement(Type.ADDRESS, address);
+    	stack.push(element);
+    }
+    
+    private void pushIsso(boolean isso) {
+    	StackElement element = new StackElement(Type.ISSO, isso);
+    	stack.push(element);
+    }
+    
+    private double popZal() {
+    	StackElement element = stack.pop();
+    	double zal;
+    	if(element.getType() == Type.ADDRESS) {
+    		zal = loadZal((int) element.getValue());
+    	}else {
+    		zal = (double) element.getValue();
+    	}
+    	return zal;
+    }
+    
+    private int popAddress() {
+    	StackElement element = stack.pop();
+    	int address = (int) element.getValue();
+    	return address;
+    }
+    
+    private boolean popIsso() {
+    	StackElement element = stack.pop();
+    	boolean isso;
+    	if(element.getType() == Type.ADDRESS) {
+    		isso = loadIsso((int) element.getValue());
+    	}else {
+    		isso = (boolean) element.getValue();
+    	}
+    	return isso;
+    }
+    
+    private double loadZal(int address) {
+    	double zal = (double) programmMemory[address];
+    	return zal;
+    }
+ 
+    /*
+     * TODO add for pointer support
+    private int loadAddress(int pAddress) {
+    	int address = (int) programmMemory[pAddress];
+    	return address;
+    }
+    
+    */
+    private boolean loadIsso(int address) {
+    	boolean isso = (boolean) programmMemory[address];
+    	return isso;
+    }
+
+
     
 }
