@@ -50,6 +50,34 @@ public class ByteCodeWriter {
 		linesToWrite.addAll(commands);
 	}
 	
+	void eof() {
+		try {
+			linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
+			writeToFile();
+		} catch (WrongNumberOfArgumentsException e) {
+			logger.error("could not write the END operation", e);
+			return;
+		}
+	}
+	
+	void addPrt() {
+		try {
+			linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
+		} catch (WrongNumberOfArgumentsException e) {
+			logger.error("could not write the PRT operation", e);
+			return;
+		}
+	}
+	
+	void addAAL() {
+		try {
+			linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
+		} catch (WrongNumberOfArgumentsException e) {
+			logger.error("could not write the AAL operation", e);
+			return;
+		}
+	}
+	
 	boolean writeToFile() {
 		try {
 			FileWriter fw = new FileWriter(new File("./" + filename + ".vch"));

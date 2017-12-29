@@ -6,6 +6,7 @@ import java.util.Map;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.steakmachine.OperationEnum;
 
+//TODO: change addOperation to only get String
 class RegisterHandler {
 	
 	private static RegisterHandler instance;
@@ -28,8 +29,9 @@ class RegisterHandler {
 		return instance;
 	}
 	
-	void addVariable(String name) {
+	int addVariable(String name) {
 		dataRegister.put(name, dataPointer++);
+		return dataPointer;
 	}
 	
 	int getVariableAddress(String name) {
@@ -51,7 +53,7 @@ class RegisterHandler {
 		return operationBuilder.toString();
 	}
 	
-	String addOperation(OperationEnum operation, int parameter) throws WrongNumberOfArgumentsException {
+	String addOperation(OperationEnum operation, double parameter) throws WrongNumberOfArgumentsException {
 		if (operation.getArgCount() != 1)
 			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 1");
 		operationAdded(operation);
@@ -79,6 +81,14 @@ class RegisterHandler {
 	
 	String addOperation(OperationEnum operation, String address, int count) throws WrongNumberOfArgumentsException {
 		return addOperation(operation, getVariableAddress(address), count);
+	}
+	
+	public String addJumpOperation(String address) {
+		operationAdded(OperationEnum.PSA);
+		StringBuilder operationBuilder = new StringBuilder(OperationEnum.PSA.ordinal());
+		operationBuilder.append(" ");
+		operationBuilder.append(addressMarkerRegister.get(address));
+		return operationBuilder.toString();
 	}
 	
 	void operationAdded(OperationEnum operation) {

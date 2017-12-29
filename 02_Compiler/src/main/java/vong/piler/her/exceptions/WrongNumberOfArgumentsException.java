@@ -2,6 +2,8 @@ package vong.piler.her.exceptions;
 
 public class WrongNumberOfArgumentsException extends Exception {
 
+	private static final long serialVersionUID = 8902670740532435948L;
+
 	public WrongNumberOfArgumentsException() {
 		super();
 	}
