@@ -41,6 +41,7 @@ public class Lexer {
                 default:
                     tokenList.add(token);
                     logger.debug(token);
+                    System.out.println(token);
                 }
             } else {
                 logger.error("invalid token!\n" + this.source);
@@ -64,9 +65,9 @@ public class Lexer {
                 switch (tokenType) {
                 case VTYPE:
                 case VNAME:
-                case CZAL:
-                case CWORD:
-                case CISSO:
+                case CONST_ZAL:
+                case CONST_WORD:
+                case CONST_ISSO:
                     token = new Token(line, tokenType, matcher.group(1));
                     break;
                 default:
@@ -80,7 +81,7 @@ public class Lexer {
                 case NEWLINE:
                 case END:
                     break;
-                case CWORD:
+                case CONST_WORD:
                     matchlength += 2;
                     break;
                 default:
