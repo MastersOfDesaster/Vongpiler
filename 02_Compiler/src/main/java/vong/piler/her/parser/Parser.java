@@ -4,14 +4,14 @@ import java.util.List;
 
 import vong.piler.her.lexer.Token;
 
-public class Parser {
-    private List<Token> tokenList;
-    
-    public Parser(List<Token> tokenList) {
-        this.tokenList = tokenList;
+public class Parser {    
+    public Parser() {
     }
     
-    public void parse() {
+    public void parse(List<Token> tokenList) {
+    }
+    
+    private void parseItem() {
         
     }
 }
