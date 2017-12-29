@@ -28,8 +28,12 @@ public class Token {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     public String toString() {
-        return "(" + this.type.name() + "," + this.value + ")"; 
+        if (this.value != null) {
+            return "(" + this.type.name() + "," + this.value + ")";
+        } else {
+            return "(" + this.type.name() + ")";
+        }
     }
 }

@@ -6,45 +6,52 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
-    int index;
+    String source;
 
     public Lexer() {
     }
 
     public List<Token> lex(String source) throws Exception {
-        System.out.println(source);
+        this.source = source;
+
         List<Token> tokenList = new ArrayList<Token>();
 
-        if (source.isEmpty()) {
+        if (this.source.isEmpty()) {
             return tokenList;
         }
 
-        index = 0;
         do {
-            Token token = nextToken(source);
+            Token token = nextToken();
             if (token != null) {
                 if (token.getType() != TokenTypeEnum.WHITESPACE) {
                     tokenList.add(token);
                     System.out.println(token);
                 }
             } else {
-                System.out.println("invalid token!");
+                System.out.println("invalid token!\n" + this.source);
+                // System.out.println(source.substring(index));
                 break;
             }
-        } while (index < source.length());
+        } while (!this.source.isEmpty());
 
         return tokenList;
     }
 
-    private Token nextToken(String source) {
+    private Token nextToken() {
         Token token = null;
 
         for (TokenTypeEnum tokenType : TokenTypeEnum.values()) {
-            Pattern pattern = Pattern.compile(".{" + index + "}" + tokenType.getRegEx(), Pattern.DOTALL);
+            // Pattern pattern = Pattern.compile("^.{" + index + "}" +
+            // tokenType.getRegEx(), Pattern.DOTALL);
+            Pattern pattern = Pattern.compile(tokenType.getRegEx(), Pattern.DOTALL);
+
             Matcher matcher = pattern.matcher(source);
 
             if (matcher.matches()) {
+                // create token with or without value
                 switch (tokenType) {
+                case VTYPE:
+                case VNAME:
                 case CZAL:
                 case CWORD:
                 case CISSO:
@@ -54,7 +61,19 @@ public class Lexer {
                     token = new Token(tokenType);
                 }
 
-                index += matcher.group(1).length() + 1;
+                // calculate lexed-length and cut from source-string
+                int matchlength = matcher.group(1).length();
+                switch (tokenType) {
+                case WHITESPACE:
+                case END:
+                    break;
+                case CWORD:
+                    matchlength += 2;
+                    break;
+                default:
+                    matchlength++;
+                }
+                this.source = this.source.substring(matchlength);
                 break;
             }
         }
