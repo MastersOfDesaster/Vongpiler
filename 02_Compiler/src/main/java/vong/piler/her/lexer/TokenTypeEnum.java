@@ -6,14 +6,14 @@ public enum TokenTypeEnum {
     
     // variable
     VZAL("\\b(i bims 1 zal)\\b.*"), // type is zal
-    VWORD("\\b(i bims 1 zal)\\b.*"), // type is word
-    VISSO("\\b(i bims 1 zal)\\b.*"), // type is isso
+    VWORD("\\b(i bims 1 word)\\b.*"), // type is word
+    VISSO("\\b(i bims 1 isso)\\b.*"), // type is isso
     VNAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*"), // set name of var
     VASSI("\\b(gönn dir)\\b.*"), // assign value
     
     // constants
     CZAL("\\b(\\d{1,9})\\b.*"),
-    CWORD(""),
+    CWORD("\'(.*?)\'"),
     CISSO("\\b(yup|nope)\\b.*"),
     
     // whitespace
