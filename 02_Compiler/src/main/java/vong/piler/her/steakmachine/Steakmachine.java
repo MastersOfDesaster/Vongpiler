@@ -26,7 +26,7 @@ public class Steakmachine {
 	public static void main(String[] args) {
 		Steakmachine steack = new Steakmachine();
 		steack.init();
-		URL url = steack.getClass().getResource("variablenDeklarationDiesDas.vch");
+		URL url = steack.getClass().getResource("Fibonacci.vch");
 		steack.load(new File(url.getPath()));
 		steack.run();
 	}
@@ -169,10 +169,47 @@ public class Steakmachine {
 		case SVI:
     		svi();
 			break;
+		case EQW:
+			eqw();
+			break;
+		case NQW:
+			nqw();
+			break;
+		case PSW:
+			psw(command.getFirstParam());
+			break;
+		case SVW:
+			svw();
+			break;
 		default:
 			break;
     	}
     }
+
+	private void svw() {
+		String word = popWord();
+		int address = popAddress();
+		StackElement element = new StackElement(Type.WORD, word);
+		programmMemory[address] = element;		
+	}
+
+	private void psw(String word) {
+		pushWord(word);
+	}
+
+	private void nqw() {
+		String w1 = popWord();
+		String w2 = popWord();
+		boolean isso = !w1.equals(w2);
+		pushIsso(isso);
+	}
+
+	private void eqw() {
+		String w1 = popWord();
+		String w2 = popWord();
+		boolean isso = w1.equals(w2);
+		pushIsso(isso);		
+	}
 
 	private void eqz() {
 		double a = popZal();
@@ -270,15 +307,15 @@ public class Steakmachine {
 	}
 	
 	private void svi() {
-		int address = popAddress();
 		boolean isso = popIsso();
+		int address = popAddress();
 		StackElement element = new StackElement(Type.ISSO, isso);
 		programmMemory[address] = element;		
 	}
 	
 	private void svz() {
-		int address = popAddress();
 		double zal = popZal();
+		int address = popAddress();
 		StackElement element = new StackElement(Type.ZAL, zal);
 		programmMemory[address] = element;			
 	}
@@ -357,6 +394,11 @@ public class Steakmachine {
     	stack.push(element);
     }
     
+    private void pushWord(String word) {
+    	StackElement element = new StackElement(Type.WORD, word);
+    	stack.push(element);
+    }
+    
     private double popZal() {
     	StackElement element = stack.pop();
     	double zal;
@@ -385,6 +427,17 @@ public class Steakmachine {
     	return isso;
     }
     
+    private String popWord() {
+    	StackElement element = stack.pop();
+    	String word;
+    	if(element.getType() == Type.ADDRESS) {
+    		word = loadWord((int) element.getValue());
+    	}else {
+    		word = (String) element.getValue();
+    	}
+    	return word;
+    }
+    
     private double loadZal(int address) {
     	double zal = (double) programmMemory[address].getValue();
     	return zal;
@@ -403,6 +456,9 @@ public class Steakmachine {
     	return isso;
     }
 
-
+    private String loadWord(int address) {
+    	String word = (String) programmMemory[address].getValue();
+    	return word;
+    }
     
 }
