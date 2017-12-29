@@ -3,12 +3,15 @@ package vong.piler.her.lexer;
 public class Token {
     private TokenTypeEnum type;
     private String value;
+    private int line;
 
-    public Token(TokenTypeEnum type) {
+    public Token(int line, TokenTypeEnum type) {
+        this.line = line;
         this.type = type;
     }
 
-    public Token(TokenTypeEnum type, String value) {
+    public Token(int line, TokenTypeEnum type, String value) {
+        this.line = line;
         this.type = type;
         this.value = value;
     }
@@ -31,9 +34,9 @@ public class Token {
 
     public String toString() {
         if (this.value != null) {
-            return "(" + this.type.name() + "," + this.value + ")";
+            return this.line + ": (" + this.type.name() + "," + this.value + ")";
         } else {
-            return "(" + this.type.name() + ")";
+            return this.line + ": (" + this.type.name() + ")";
         }
     }
 }

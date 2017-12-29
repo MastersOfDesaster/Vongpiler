@@ -16,7 +16,8 @@ public enum TokenTypeEnum {
     CISSO("\\b(yup|nope)\\b.*"),
     
     // whitespace
-    WHITESPACE("( |\n|!!!).*");
+    WHITESPACE("( |!!!).*"),
+    NEWLINE("(\n).*");
     
     // function call
 
