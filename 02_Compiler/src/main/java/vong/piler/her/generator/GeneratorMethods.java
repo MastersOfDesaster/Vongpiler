@@ -17,7 +17,7 @@ class GeneratorMethods {
 	private static Logger logger = LogManager.getLogger(Constants.loggerName);
 	private static RegisterHandler registerHandler = RegisterHandler.getInstance();
 	
-	static List<String> generateCalclations(OperationEnum calculationOperation, List<ValueModel> values){
+	static List<String> generateCalculations(OperationEnum calculationOperation, List<ValueModel> values){
 		List<String> operations = new ArrayList<>();
 		try {
 			operations.add(registerHandler.addOperation(values.get(0).getOperation(), values.get(0).getValue()));
