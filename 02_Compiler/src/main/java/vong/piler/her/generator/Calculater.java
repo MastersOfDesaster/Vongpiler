@@ -13,9 +13,9 @@ import vong.piler.her.steakmachine.OperationEnum;
 class Calculater {
 
 	private static Logger logger = LogManager.getLogger(Constants.loggerName);
+	private static RegisterHandler registerHandler = RegisterHandler.getInstance();
 	
 	static List<String> addition(List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try {
 			if (varNames.isEmpty()) {
@@ -26,7 +26,7 @@ class Calculater {
 				operations.add(registerHandler.addOperation(OperationEnum.PSA, varNames.get(0)));
 				varNames.remove(0);
 			}
-			operations.addAll(generateOperations(OperationEnum.ADD, constants, varNames));
+			generateOperations(OperationEnum.ADD, operations, constants, varNames);
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an addition", e);
 			return null;
@@ -35,11 +35,10 @@ class Calculater {
 	}
 	
 	static List<String> subtraction(int first, List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try {
 			operations.add(registerHandler.addOperation(OperationEnum.PSZ, first));
-			operations.addAll(generateOperations(OperationEnum.SUB, constants, varNames));
+			generateOperations(OperationEnum.SUB, operations, constants, varNames);
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an subtraction", e);
 			return null;
@@ -48,11 +47,10 @@ class Calculater {
 	}
 	
 	static List<String> subtraction(String first, List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try{
 			operations.add(registerHandler.addOperation(OperationEnum.PSA, first));
-			operations.addAll(generateOperations(OperationEnum.SUB, constants, varNames));		
+			generateOperations(OperationEnum.SUB, operations, constants, varNames);		
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an subtraction", e);
 			return null;
@@ -61,7 +59,6 @@ class Calculater {
 	}
 	
 	static List<String> multiplication(List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try {
 			if (varNames.isEmpty()) {
@@ -72,7 +69,7 @@ class Calculater {
 				operations.add(registerHandler.addOperation(OperationEnum.PSA, varNames.get(0)));
 				varNames.remove(0);
 			}
-			operations.addAll(generateOperations(OperationEnum.MUL, constants, varNames));
+			generateOperations(OperationEnum.MUL, operations, constants, varNames);
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an multiplication", e);
 			return null;
@@ -81,11 +78,10 @@ class Calculater {
 	}
 	
 	static List<String> division(int first, List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try {
 			operations.add(registerHandler.addOperation(OperationEnum.PSZ, first));
-			operations.addAll(generateOperations(OperationEnum.DIV, constants, varNames));
+			generateOperations(OperationEnum.DIV, operations, constants, varNames);
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an subtraction", e);
 			return null;
@@ -94,11 +90,10 @@ class Calculater {
 	}
 	
 	static List<String> division(String first, List<Integer> constants, List<String> varNames) {
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
 		List<String> operations = new ArrayList<>();
 		try{
 			operations.add(registerHandler.addOperation(OperationEnum.PSA, first));
-			operations.addAll(generateOperations(OperationEnum.DIV, constants, varNames));		
+			generateOperations(OperationEnum.DIV, operations, constants, varNames);		
 		} catch (WrongNumberOfArgumentsException | RuntimeException e) {
 			logger.error("could not write the operations for an subtraction", e);
 			return null;
@@ -106,9 +101,7 @@ class Calculater {
 		return operations;
 	}
 	
-	private static List<String> generateOperations(OperationEnum operation, List<Integer> constants, List<String> varNames){
-		RegisterHandler registerHandler = RegisterHandler.getInstance();
-		List<String> operations = new ArrayList<>();
+	private static void generateOperations(OperationEnum operation, List<String> operations, List<Integer> constants, List<String> varNames){
 		varNames.forEach(varName -> {
 			try{
 				operations.add(registerHandler.addOperation(OperationEnum.PSA, varName));
@@ -125,6 +118,5 @@ class Calculater {
 				throw new RuntimeException(wnoae);
 			}
 		});
-		return operations;
 	}
 }
