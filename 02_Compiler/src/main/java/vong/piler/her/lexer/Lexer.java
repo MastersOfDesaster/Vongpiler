@@ -16,12 +16,14 @@ public class Lexer {
     private static Logger logger = LogManager.getLogger(Constants.loggerName);
 
     public Lexer() {
+        // Print Token-Grammar
+        // System.out.println(TokenTypeEnum.toMarkdown());
     }
 
     public List<Token> lex(String source) throws Exception {
         this.source = source;
         this.line = 1;
-        
+
         List<Token> tokenList = new ArrayList<Token>();
 
         if (this.source.isEmpty()) {
@@ -31,7 +33,7 @@ public class Lexer {
         do {
             Token token = nextToken();
             if (token != null) {
-                switch(token.getType()) {
+                switch (token.getType()) {
                 case WHITESPACE:
                     break;
                 case NEWLINE:
@@ -63,8 +65,8 @@ public class Lexer {
             if (matcher.matches()) {
                 // create token with or without value
                 switch (tokenType) {
-                case VTYPE:
-                case VNAME:
+                case TYPE:
+                case NAME:
                 case CONST_ZAL:
                 case CONST_WORD:
                 case CONST_ISSO:
