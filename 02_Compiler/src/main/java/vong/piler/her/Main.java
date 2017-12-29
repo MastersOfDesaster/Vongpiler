@@ -9,10 +9,10 @@ import vong.piler.her.steakmachine.Steakmachine;
 
 public class Main {
     public static void main(String[] args) {
-        File sourceFile;
+        File sourceFile = new File("");
         Lexer lexer = new Lexer(sourceFile);
         Generator generator = new Generator();
         Parser parser = new Parser(lexer.lex());
-        Steakmachine steakmachine = new Steakmachine(parser.parse());
+//        Steakmachine steakmachine = new Steakmachine(parser.parse());
     }
 }
