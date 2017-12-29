@@ -41,8 +41,6 @@ public class Lexer {
         Token token = null;
 
         for (TokenTypeEnum tokenType : TokenTypeEnum.values()) {
-            // Pattern pattern = Pattern.compile("^.{" + index + "}" +
-            // tokenType.getRegEx(), Pattern.DOTALL);
             Pattern pattern = Pattern.compile(tokenType.getRegEx(), Pattern.DOTALL);
 
             Matcher matcher = pattern.matcher(source);
