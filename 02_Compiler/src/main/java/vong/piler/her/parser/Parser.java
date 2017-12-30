@@ -20,9 +20,10 @@ public class Parser {
 	
 	   
 	
-    public Parser() {
-    
+    public Parser() {    
     ruleMap.put(TokenTypeEnum.START,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.START, TokenTypeEnum.VAR}));
+    ruleMap.put(TokenTypeEnum.VSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.START, TokenTypeEnum.VAR}));
+    
     }
     
     public void parse(List<Token> tokenList) {
