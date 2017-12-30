@@ -13,7 +13,7 @@ import vong.piler.her.steakmachine.StackElement.Type;
 public class Steakmachine {
 
 	private static final int PROGRAM_MEMORY_SIZE = 100;
-	private static final int CODE_MEMORY_SIZE = 10;
+	private static final int CODE_MEMORY_SIZE = 100;
 	private Stack<StackElement> stack;
 	private StackElement[] programmMemory;
 	private String[] codeMemory;
@@ -45,6 +45,8 @@ public class Steakmachine {
 			System.out.println("Programmcode doesn't fit in programmregister which supports " + CODE_MEMORY_SIZE + " commands");
 		}
 	}
+	
+	
 
 	public void init() {
 		stack = new Stack<>();
@@ -63,11 +65,11 @@ public class Steakmachine {
 				executeCommand(command);
 			} catch (UnsupportedNumberofArgumentsException e) {
 				System.out.println("Wrong number of arguments submitted for operation");
+				running = false;
 			} catch (InstructionPointerOutOfBoundsException e) {
 				System.out.println("Instruciton pointer ran out of bounds");
-			} finally {
 				running = false;
-			}
+			} 
 		}
 
 	}
@@ -81,6 +83,24 @@ public class Steakmachine {
 		}
 
 	}
+	
+	 private Command decodeCommandOrdinal(String rawCommand) {
+    	Command command = new Command();
+    	String[] commandParts = rawCommand.split(" ");
+    	int cmd = Integer.parseInt(commandParts[0]);
+    	switch(commandParts.length) {
+    	case 1:
+    		command.setOpCode(OperationEnum.values()[cmd]);
+    		break;
+    	case 2: 
+    		command.setOpCode(OperationEnum.values()[cmd]);
+    		command.setFirstParam(commandParts[1]);
+    		break;
+    		default:
+    			//TODO throw exception
+    	}
+    	return command;
+    }
 
 	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException {
 		Command command = new Command();
@@ -99,17 +119,18 @@ public class Steakmachine {
 		return command;
 	}
 
-	private void executeCommand(Command command) {
-		switch (command.getOpCode()) {
-		case PSZ:
-			psz(command.getFirstParam());
-			break;
-		case ADD:
-			add();
-			break;
-		case PRT:
-			prt();
-			break;
+    
+    private void executeCommand(Command command) {
+    	switch(command.getOpCode()) {
+    	case PSZ:
+    		psz(command.getFirstParam());
+    		break;
+    	case ADD:
+    		add();
+    		break;
+    	case PRT:
+    		prt();
+    		break;
 		case AAL:
 			aal();
 			break;
