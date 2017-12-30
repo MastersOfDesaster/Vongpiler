@@ -2,7 +2,8 @@ package vong.piler.her.lexer;
 
 public class Token {
     private TokenTypeEnum type;
-    private String value;
+    private String content = "";
+    private String label = "";
     private int line;
 
     public Token(int line, TokenTypeEnum type) {
@@ -10,33 +11,35 @@ public class Token {
         this.type = type;
     }
 
-    public Token(int line, TokenTypeEnum type, String value) {
-        this.line = line;
-        this.type = type;
-        this.value = value;
-    }
-
     public TokenTypeEnum getType() {
         return type;
     }
 
-    public void setType(TokenTypeEnum type) {
-        this.type = type;
+    public String getContent() {
+        return content;
     }
-
-    public String getValue() {
-        return value;
+    
+    public void setContent(String content) {
+        this.content = content;
     }
-
-    public void setValue(String value) {
-        this.value = value;
+    
+    public String getLabel() {
+        return this.label;
+    }
+    
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
+    public int getLine() {
+        return this.line;
     }
 
     public String toString() {
-        if (this.value != null) {
-            return this.line + ": (" + this.type.name() + "," + this.value + ")";
+        if (!this.content.isEmpty()) {
+            return this.line + ": " + this.type.name() + ": " + this.content + "";
         } else {
-            return this.line + ": (" + this.type.name() + ")";
+            return this.line + ": " + this.type.name();//  + "(" + this.label + ")";
         }
     }
 }
