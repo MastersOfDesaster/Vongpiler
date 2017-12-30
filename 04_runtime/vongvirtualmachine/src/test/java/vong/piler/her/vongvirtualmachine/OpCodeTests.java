@@ -21,7 +21,8 @@ public class OpCodeTests {
 	@Before
 	public void init() {
 		vvm.setStandardOut(new PrintStream(standardOut));
-		vvm.setErrorOut(new PrintStream(errorOut));
+		//vvm.setErrorOut(new PrintStream(errorOut));
+		vvm.setReadAssembler(true);
 		vvm.init();
 	}
 	
@@ -44,6 +45,27 @@ public class OpCodeTests {
 		loadFile("addWithNegativeAndPositive.vch");
 		vvm.run();
 		assertEquals("zal: -2.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testSubWithPositives(){
+		loadFile("subWithPositives.vch");
+		vvm.run();
+		assertEquals("zal: 8.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testSubWithNegatives(){
+		loadFile("subWithNegatives.vch");
+		vvm.run();
+		assertEquals("zal: 2.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testSubWithNegativeAndPositive(){
+		loadFile("subWithNegativeAndPositive.vch");
+		vvm.run();
+		assertEquals("zal: -16.0", standardOut.toString());
 	}
 	
 	private void loadFile(String name) {

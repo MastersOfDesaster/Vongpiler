@@ -8,6 +8,7 @@ import java.io.PrintStream;
 import java.util.Stack;
 
 import vong.piler.her.vongruntime.virtualmachine.model.StackElement.Type;
+import vong.piler.her.vongruntime.exception.EmptyLineException;
 import vong.piler.her.vongruntime.exception.InstructionPointerOutOfBoundsException;
 import vong.piler.her.vongruntime.exception.UnknownCommandException;
 import vong.piler.her.vongruntime.exception.UnsupportedNumberofArgumentsException;
@@ -20,6 +21,7 @@ public class Steakmachine {
 	private PrintStream standardOut = System.out;
 	private PrintStream errorOut = System.out;
 	private boolean debugOutput = false;
+	private boolean readAssembler = false;
 	
 	private static final int PROGRAM_MEMORY_SIZE = 100;
 	private static final int CODE_MEMORY_SIZE = 100;
@@ -39,6 +41,18 @@ public class Steakmachine {
 
 	public static int getCodeMemorySize() {
 		return CODE_MEMORY_SIZE;
+	}
+
+
+
+	public boolean isReadAssembler() {
+		return readAssembler;
+	}
+
+
+
+	public void setReadAssembler(boolean readAssembler) {
+		this.readAssembler = readAssembler;
 	}
 
 
@@ -110,6 +124,9 @@ public class Steakmachine {
 			} catch (UnknownCommandException e) {
 				printErrorOutput("Encountered unknown command");
 				running = false;
+			} catch (EmptyLineException e) {
+				printErrorOutput("Encountered empty line in codefile");
+				running = false;
 			} 
 		}
 
@@ -124,37 +141,27 @@ public class Steakmachine {
 		}
 
 	}
-	
-	 private Command decodeCommandOrdinal(String rawCommand) throws UnsupportedNumberofArgumentsException {
-    	Command command = new Command();
-    	String[] commandParts = rawCommand.split(" ");
-    	int cmd = Integer.parseInt(commandParts[0]);
-    	switch(commandParts.length) {
-    	case 1:
-    		command.setOpCode(OperationEnum.values()[cmd]);
-    		break;
-    	case 2: 
-    		command.setOpCode(OperationEnum.values()[cmd]);
-    		command.setFirstParam(commandParts[1]);
-    		break;
-    		default:
-    			throw new UnsupportedNumberofArgumentsException();
-    	}
-    	return command;
-    }
 
-	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException {
+	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException, EmptyLineException {
 		Command command = new Command();
 		String[] commandParts = rawCommand.split(" ");
-		switch (commandParts.length) {
-		case 1:
-			command.setOpCode(OperationEnum.valueOf(commandParts[0]));
-			break;
-		case 2:
-			command.setOpCode(OperationEnum.valueOf(commandParts[0]));
+		if(commandParts.length == 0) {
+			throw new EmptyLineException();
+		}
+		
+		
+		if(readAssembler) {
+			command.setOpCode(OperationEnum.valueOf(commandParts[0]));			
+		}else {
+			command.setOpCode(OperationEnum.values()[Integer.parseInt(commandParts[0])]);
+		
+		}
+		
+		if(commandParts.length == 2) {
 			command.setFirstParam(commandParts[1]);
-			break;
-		default:
+		}else if(commandParts.length == 3) {
+			
+		}else if(commandParts.length != 1){
 			throw new UnsupportedNumberofArgumentsException();
 		}
 		return command;
