@@ -1,14 +1,19 @@
-package vong.piler.her.steakmachine;
+package vong.piler.her.vongruntime.virtualmachine;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Stack;
 
-import vong.piler.her.steakmachine.StackElement.Type;
+import vong.piler.her.vongruntime.virtualmachine.model.StackElement.Type;
+import vong.piler.her.vongruntime.exception.InstructionPointerOutOfBoundsException;
+import vong.piler.her.vongruntime.exception.UnknownCommandException;
+import vong.piler.her.vongruntime.exception.UnsupportedNumberofArgumentsException;
+import vong.piler.her.vongruntime.virtualmachine.model.Command;
+import vong.piler.her.vongruntime.virtualmachine.model.OperationEnum;
+import vong.piler.her.vongruntime.virtualmachine.model.StackElement;
 
 public class Steakmachine {
 
@@ -20,14 +25,6 @@ public class Steakmachine {
 
 	private int instructionPointer = 0;
 	private boolean running;
-
-	public static void main(String[] args) {
-		Steakmachine steack = new Steakmachine();
-		steack.init();
-		URL url = steack.getClass().getResource("Fibonacci.vch");
-		steack.load(new File(url.getPath()));
-		steack.run();
-	}
 
 	private void load(File file) {
 		BufferedReader br = null;
@@ -49,7 +46,7 @@ public class Steakmachine {
 	
 
 	public void init() {
-		stack = new Stack<>();
+		stack = new Stack<StackElement>();
 		codeMemory = new String[CODE_MEMORY_SIZE];
 		programmMemory = new StackElement[PROGRAM_MEMORY_SIZE];
 		instructionPointer = 0;
@@ -67,8 +64,10 @@ public class Steakmachine {
 				System.out.println("Wrong number of arguments submitted for operation");
 				running = false;
 			} catch (InstructionPointerOutOfBoundsException e) {
-				System.out.println("Instruciton pointer ran out of bounds");
+				System.out.println("Instruction pointer ran out of bounds");
 				running = false;
+			} catch (UnknownCommandException e) {
+				System.out.println("Encountered unknown command");
 			} 
 		}
 
@@ -84,7 +83,7 @@ public class Steakmachine {
 
 	}
 	
-	 private Command decodeCommandOrdinal(String rawCommand) {
+	 private Command decodeCommandOrdinal(String rawCommand) throws UnsupportedNumberofArgumentsException {
     	Command command = new Command();
     	String[] commandParts = rawCommand.split(" ");
     	int cmd = Integer.parseInt(commandParts[0]);
@@ -97,7 +96,7 @@ public class Steakmachine {
     		command.setFirstParam(commandParts[1]);
     		break;
     		default:
-    			//TODO throw exception
+    			throw new UnsupportedNumberofArgumentsException();
     	}
     	return command;
     }
@@ -120,7 +119,7 @@ public class Steakmachine {
 	}
 
     
-    private void executeCommand(Command command) {
+    private void executeCommand(Command command) throws UnknownCommandException {
     	switch(command.getOpCode()) {
     	case PSZ:
     		psz(command.getFirstParam());
@@ -207,7 +206,7 @@ public class Steakmachine {
 			svw();
 			break;
 		default:
-			break;
+			throw new UnknownCommandException();
 		}
 	}
 
@@ -367,7 +366,7 @@ public class Steakmachine {
 	}
 
 	private void aal() {
-		System.out.println("Halo I bims 1 aal vong Halo Wörlt her");
+		System.out.println("Halo I bims 1 aal vong Halo Wï¿½rlt her");
 	}
 
 	private void end() {

@@ -1,5 +1,4 @@
-package vong.piler.her.steakmachine;
-
+package vong.piler.her.vongruntime.virtualmachine.model;
 
 public class Command {
 	private OperationEnum opCode;
