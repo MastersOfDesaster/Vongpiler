@@ -6,9 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import vong.piler.her.generator.Generator;
 import vong.piler.her.lexer.Lexer;
 import vong.piler.her.lexer.Token;
 import vong.piler.her.parser.Parser;
+import vong.piler.her.parser.TreeNode;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +25,11 @@ public class Main {
             
             // parse token-list
             Parser parser = new Parser();
-            parser.parse(tokenList);
+            TreeNode root = parser.parse(tokenList);
+            
+            //Code generation
+            Generator genertor = new Generator(sourceUri);
+            genertor.generate(root);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (Exception e) {

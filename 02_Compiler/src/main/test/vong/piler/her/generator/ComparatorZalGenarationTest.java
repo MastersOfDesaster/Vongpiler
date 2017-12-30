@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import vong.piler.her.generator.model.ValueModel;
 import vong.piler.her.steakmachine.OperationEnum;
 
 public class ComparatorZalGenarationTest {
@@ -29,7 +30,7 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void lesTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/les.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/les.vsh");
 		Collections.reverse(values);
 		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.LES, values));
 		writer.addPrt();
@@ -44,7 +45,7 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void gtrTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/gtr.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/gtr.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.GTR, values));
 		writer.addPrt();
 		writer.eof();
@@ -58,7 +59,7 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void eqzTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/eqz.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/eqz.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQZ, values));
 		writer.addPrt();
 		writer.eof();
@@ -72,7 +73,7 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void nqzTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/nqz.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/nqz.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.NQZ, values));
 		writer.addPrt();
 		writer.eof();

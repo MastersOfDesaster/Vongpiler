@@ -1,4 +1,4 @@
-package vong.piler.her.generator;
+package vong.piler.her.generator.model;
 
 import vong.piler.her.steakmachine.OperationEnum;
 
@@ -16,18 +16,21 @@ public class ValueModel {
 		this.zal = zal;
 		this.isso = null;
 		this.var = null;
+		this.isVar = false;
 	}
 
 	public ValueModel(Boolean isso) {
 		this.isso = isso;
 		this.zal = null;
 		this.var = null;
+		this.isVar = false;
 	}
 
 	public ValueModel(String word, boolean isVar) {
 		this.var = word;
 		this.zal = null;
 		this.isso = null;
+		this.isVar = isVar;
 	}
 
 	public Double getZal() {
@@ -38,6 +41,7 @@ public class ValueModel {
 		this.zal = zal;
 		this.isso = null;
 		this.var = null;
+		this.isVar = false;
 	}
 
 	public Boolean getIsso() {
@@ -48,6 +52,7 @@ public class ValueModel {
 		this.isso = isso;
 		this.zal = null;
 		this.var = null;
+		this.isVar = false;
 	}
 
 	public String getVarName() {

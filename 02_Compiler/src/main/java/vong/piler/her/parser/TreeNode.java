@@ -19,16 +19,18 @@ public class TreeNode {
     }
     
     public void setLeft(String left) {
-        
         this.left = left;
     }
     
     public Object getLeft() {
-        
         return this.left;
     }
     
     public TreeNode getRight() {
-    	return right;
+    		return right;
+    }
+    
+    public TokenTypeEnum getName() {
+    		return name;
     }
 }

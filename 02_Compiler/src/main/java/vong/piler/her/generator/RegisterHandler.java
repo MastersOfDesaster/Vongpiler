@@ -23,6 +23,7 @@ class RegisterHandler {
 	private RegisterHandler() {
 		this.addressPointer = 0;
 		this.addressMarkerRegister = new HashMap<>();
+		this.dataPointer = 0;
 		this.dataRegister = new HashMap<>();
 		logger.debug("new RegisterHandler");
 	}
@@ -35,9 +36,9 @@ class RegisterHandler {
 	}
 	
 	int addVariable(String name) {
-		dataRegister.put(name, dataPointer++);
-		logger.debug("added Varaiable " + name + " at address " + (dataPointer-1));
-		return dataPointer;
+		dataRegister.put(name, dataPointer);
+		logger.debug("added Varaiable " + name + " at address " + (dataPointer));
+		return dataPointer++;
 	}
 	
 	String getVariableAddress(String name) {
@@ -57,14 +58,14 @@ class RegisterHandler {
 		operationAdded(operation);
 		StringBuilder operationBuilder = new StringBuilder();
 		operationBuilder.append(operation.ordinal());
-		logger.debug("added operation" +  operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
 	String addOperation(OperationEnum operation, String parameter) throws WrongNumberOfArgumentsException {
 		if (operation.getArgCount() != 1)
 			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 1");
-		if (operation.equals(OperationEnum.PSA)) {
+		if (operation.equals(OperationEnum.PSA) && parameterIsNoNumber(parameter)) {
 			parameter = getVariableAddress(parameter);
 		}
 		operationAdded(operation);
@@ -72,10 +73,10 @@ class RegisterHandler {
 		operationBuilder.append(operation.ordinal());
 		operationBuilder.append(" ");
 		operationBuilder.append(parameter);
-		logger.debug("added operation" +  operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
-	
+
 	String addOperation(OperationEnum operation, int address, int count) throws WrongNumberOfArgumentsException {
 		if (operation.getArgCount() != 2)
 			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 2");
@@ -86,7 +87,7 @@ class RegisterHandler {
 		operationBuilder.append(address);
 		operationBuilder.append(" ");
 		operationBuilder.append(count);
-		logger.debug("added operation" +  operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
@@ -100,13 +101,22 @@ class RegisterHandler {
 		operationBuilder.append(OperationEnum.PSA.ordinal());
 		operationBuilder.append(" ");
 		operationBuilder.append(addressMarkerRegister.get(address));
-		logger.debug("added operation" +  operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
 	void operationAdded(OperationEnum operation) {
-		logger.debug("Opeartion will be added to address" + addressPointer);
+		logger.debug("Opeartion will be added to address " + addressPointer);
 		addressPointer += (operation.getArgCount() + 1);
+	}
+	
+	private boolean parameterIsNoNumber(String parameter) {
+		try {
+			Integer.parseInt(parameter);
+			return false;
+		} catch (Exception e) {
+			return true;
+		}
 	}
 
 }
