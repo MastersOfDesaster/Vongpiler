@@ -3,10 +3,15 @@ package vong.piler.her.generator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
+import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
 class RegisterHandler {
+	
+	private static Logger logger = LoggerVongManagerHer.getLogger(RegisterHandler.class);
 	
 	private static RegisterHandler instance;
 	
@@ -19,6 +24,7 @@ class RegisterHandler {
 		this.addressPointer = 0;
 		this.addressMarkerRegister = new HashMap<>();
 		this.dataRegister = new HashMap<>();
+		logger.debug("new RegisterHandler");
 	}
 	
 	static RegisterHandler getInstance() {
@@ -30,6 +36,7 @@ class RegisterHandler {
 	
 	int addVariable(String name) {
 		dataRegister.put(name, dataPointer++);
+		logger.debug("added Varaiable " + name + " at address " + (dataPointer-1));
 		return dataPointer;
 	}
 	
@@ -50,6 +57,7 @@ class RegisterHandler {
 		operationAdded(operation);
 		StringBuilder operationBuilder = new StringBuilder();
 		operationBuilder.append(operation.ordinal());
+		logger.debug("added operation" +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
@@ -64,6 +72,7 @@ class RegisterHandler {
 		operationBuilder.append(operation.ordinal());
 		operationBuilder.append(" ");
 		operationBuilder.append(parameter);
+		logger.debug("added operation" +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
@@ -77,6 +86,7 @@ class RegisterHandler {
 		operationBuilder.append(address);
 		operationBuilder.append(" ");
 		operationBuilder.append(count);
+		logger.debug("added operation" +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
@@ -90,11 +100,13 @@ class RegisterHandler {
 		operationBuilder.append(OperationEnum.PSA.ordinal());
 		operationBuilder.append(" ");
 		operationBuilder.append(addressMarkerRegister.get(address));
+		logger.debug("added operation" +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
 	
 	void operationAdded(OperationEnum operation) {
-		addressPointer += operation.getArgCount() + 1;
+		logger.debug("Opeartion will be added to address" + addressPointer);
+		addressPointer += (operation.getArgCount() + 1);
 	}
 
 }

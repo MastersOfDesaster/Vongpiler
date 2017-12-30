@@ -5,10 +5,11 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import vong.piler.her.Constants;
+import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Generator {
 	
-	private static Logger logger = LogManager.getLogger(Constants.loggerName);
+	private static Logger logger = LoggerVongManagerHer.getLogger(Generator.class);
 	
     public Generator() {
         
