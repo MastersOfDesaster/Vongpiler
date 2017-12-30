@@ -46,34 +46,56 @@ public class Parser {
     	
     	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();    	
 
-    	
-    	for (Token t : tokenList) {
-    		
-    		// Token != START
-    		if (!(t.getType().equals(TokenTypeEnum.START))) {    			
-    			// Syntax ok
-    			if(rule.contains(t.getType())){    				
-    				//parseItem(t);	
-    				
-    			}
-    			//Syntax fail
-    			else {    				
-    				logger.error("syntax error in line " + t.getLine());
-    				System.exit(0);
-    			}
-    		// Token == START and first token
-    		}else if(t.getType().equals(TokenTypeEnum.START) && rule.isEmpty()){
-    			logger.debug("Token: " + t.getType());
-    			
-    			
-    		}else {
-				logger.error("syntax error in line " + t.getLine() + ": START is missing" );
-				System.exit(0);
-    		}
-    		
-    		parseItem(t);
-    		
-			rule = ruleMap.get(t.getType());    		
+    	if(tokenList.get(tokenList.size()-1).getType().equals(TokenTypeEnum.END)) {
+	    	for (Token t : tokenList) {
+	    		
+	    		// Token != START
+	    		if (!(t.getType().equals(TokenTypeEnum.START)) && !(rule.isEmpty())) {    			
+	    			// Syntax ok
+	    			if(rule.contains(t.getType())){    				
+	     			}
+	    			//Syntax fail
+	    			else {
+	    				String error = new String();
+	    				for(TokenTypeEnum tte : rule) {
+	    					error = error + tte.getRegEx() +"|";
+	    				}
+	    				if(t.getContent().isEmpty()) {
+	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getLabel() + " -->  Expected: " + error.substring(0, (error.length()-1)));
+	    				}
+	    				else {
+	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " -->  Expected: " + error.substring(0, (error.length()-1)));
+	    				}
+	    				System.exit(0);
+	    			}
+	    		}
+	    		// Token != START and first token
+	    		else if(!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()){
+	    			if(t.getContent().isEmpty()) {
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getLabel() + " --> Expected: was ist das fuer 1 code?");
+	    			}
+	    			else {
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " --> Expected: was ist das fuer 1 code?");
+	    			}
+					System.exit(0);    		    			
+	    		}
+	    		else {
+	
+	    		}
+	    		
+	    		parseItem(t);
+	    		
+				rule = ruleMap.get(t.getType());    		
+	    	}
+    	}
+    	else {
+			if(tokenList.get(tokenList.size()-1).getContent().isEmpty()) {
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getLabel() + " --> Expected: 1 nicer!!!");
+			}
+			else {
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getContent() + " --> Expected: 1 nicer!!!");
+			}
+			System.exit(0);  
     	}
     	
     	return root;
@@ -84,19 +106,20 @@ public class Parser {
     	
     	// Root node
     	if (root == null) {
-          root = new TreeNode(t.getType());
-          parent = root;
+    		logger.debug("Token: " + t.getType());
+			root = new TreeNode(t.getType(), null);
+			parent = root;
     	}
     	// Node without value
     	else if(t.getContent().isEmpty()) {
     		logger.debug("Token: " + t.getType());
-	        parent.setRight(new TreeNode(t.getType()));
+ 	        parent.setRight(new TreeNode(t.getType(),parent));
 	        parent = parent.getRight();
 
 	    // Node with value
 		}else {
-			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());
-			parent.setRight(new TreeNode(t.getType()));
+			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());			
+			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
            	parent.setLeft(t.getContent());
 		}       
