@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import vong.piler.her.Constants;
+import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Lexer {
     String source;
     int line;
-    private static Logger logger = LogManager.getLogger(Constants.loggerName);
+    private static Logger logger = LoggerVongManagerHer.getLogger(Lexer.class);
 
     public Lexer() {
         // Print Token-Grammar
@@ -43,7 +42,6 @@ public class Lexer {
                 default:
                     tokenList.add(token);
                     logger.debug(token);
-                    System.out.println(token);
                 }
             } else {
                 logger.error("invalid token!\n" + this.source);
