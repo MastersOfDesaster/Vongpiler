@@ -77,8 +77,8 @@ public class ValueModel {
 			return OperationEnum.PSZ;
 		if (isso != null)
 			return OperationEnum.PSI;
-		/*if (var != null && !isVar)
-			return OperationEnum.PSW;*/
+		if (var != null && !isVar)
+			return OperationEnum.PSW;
 		if (var != null && isVar) {
 			return OperationEnum.PSA;
 		}

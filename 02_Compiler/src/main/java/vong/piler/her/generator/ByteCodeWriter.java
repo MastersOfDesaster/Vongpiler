@@ -12,11 +12,12 @@ import org.apache.log4j.Logger;
 
 import vong.piler.her.Constants;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
+import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
 public class ByteCodeWriter {
 	
-	private static Logger logger = LogManager.getLogger(Constants.loggerName);
+	private static Logger logger = LoggerVongManagerHer.getLogger(ByteCodeWriter.class);
 	
 	private List<String> linesToWrite;
 	
@@ -81,9 +82,10 @@ public class ByteCodeWriter {
 	private boolean writeToFile() {
 		try {
 			File file = new File(filename + ".vch");
+			logger.debug("ByteCode will be written to file " + file.getAbsolutePath());
 			if (!file.exists()) {
-				System.out.println(file.getAbsolutePath());
 				file.createNewFile();
+				logger.debug("File was created");
 			}
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -103,6 +105,7 @@ public class ByteCodeWriter {
 			e.printStackTrace();
 			return false;
 		}
+		logger.debug("vong class her was successfully written");
 		return true;
 	}
 }

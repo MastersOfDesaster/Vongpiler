@@ -9,12 +9,13 @@ import org.apache.log4j.Logger;
 import vong.piler.her.Constants;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.exceptions.WrongOperationException;
+import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
 //TODO: Check type of value
 class GeneratorMethods {
-
-	private static Logger logger = LogManager.getLogger(Constants.loggerName);
+	
+	private static Logger logger = LoggerVongManagerHer.getLogger(GeneratorMethods.class);
 	private static RegisterHandler registerHandler = RegisterHandler.getInstance();
 	
 	static List<String> generateCalculations(OperationEnum calculationOperation, List<ValueModel> values){
@@ -108,9 +109,9 @@ class GeneratorMethods {
 				case PSI:
 					operations.add(registerHandler.addOperation(OperationEnum.SVI));
 					break;
-				/*case PSW:
+				case PSW:
 					operations.add(registerHandler.addOperation(OperationEnum.SVW));
-					break;*/
+					break;
 				case PSZ:
 					operations.add(registerHandler.addOperation(OperationEnum.SVZ));
 					break;
@@ -121,7 +122,6 @@ class GeneratorMethods {
 			logger.error("could not write the operations for a variable save", e);
 			return null;
 		}
-
 		return operations;
 	}
 }
