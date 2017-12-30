@@ -74,7 +74,6 @@ public class Lexer {
                     token.setContent(matcher.group(1));
                     break;
                 default:
-                    token.setLabel(matcher.group(1));
                 }
 
                 // calculate lexed-length and cut from source-string
