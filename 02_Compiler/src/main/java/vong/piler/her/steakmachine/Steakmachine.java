@@ -11,7 +11,7 @@ import java.util.Stack;
 import vong.piler.her.steakmachine.StackElement.Type;
 
 public class Steakmachine {
-	
+
 	private static final int PROGRAM_MEMORY_SIZE = 100;
 	private static final int CODE_MEMORY_SIZE = 100;
 	private Stack<StackElement> stack;
@@ -304,7 +304,7 @@ public class Steakmachine {
 	}
 
 	private void aal() {
-		System.out.println("Halo I bims 1 aal vong Halo Wörlt her");
+		System.out.println("Halo I bims 1 aal vong Halo Wï¿½rlt her");
 	}
 
 	private void end() {

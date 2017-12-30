@@ -1,5 +1,7 @@
 package vong.piler.her.lexer;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 public enum TokenTypeEnum {
     START("(was ist das für 1 code?).*"), // start of program
     END("(1 nicer!!!).*"), // end of program
