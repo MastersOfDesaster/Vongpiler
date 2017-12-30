@@ -36,7 +36,7 @@ public class TreeNode {
     public void setLeft(String left) {        
         this.left = left;
     }
-    
+        
     public Object getLeft() {        
         return this.left;
     }

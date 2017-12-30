@@ -26,7 +26,7 @@ fName = (name | Fdef | pStart);
 
 pStart = "vong" para;
 
-fdef = "sume" | "abziehung" | "mahl" | "teilung" | "r‰st" | "ism‰r" | "isweniga" | "same");
+fdef = ("sume" | "abziehung" | "mahl" | "teilung" | "r√§st" | "ism√§r" | "isweniga" | "same");
 
 para = value (pEnd|pNext)
 

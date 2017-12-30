@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import vong.piler.her.Constants;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.exceptions.WrongOperationException;
+import vong.piler.her.generator.model.ValueModel;
 import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
@@ -103,7 +104,8 @@ class GeneratorMethods {
 	static List<String> generateSaveVar(String name, ValueModel value){
 		List<String> operations = new ArrayList<>();
 		try {
-			operations.add(registerHandler.addOperation(OperationEnum.PSA, registerHandler.addVariable(name)+""));
+			int address = registerHandler.addVariable(name);
+			operations.add(registerHandler.addOperation(OperationEnum.PSA, address + ""));
 			operations.add(registerHandler.addOperation(value.getOperation(), value.getValue()));
 			switch(value.getOperation()) {
 				case PSI:

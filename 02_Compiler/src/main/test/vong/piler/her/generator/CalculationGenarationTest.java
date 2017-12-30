@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import vong.piler.her.generator.model.ValueModel;
 import vong.piler.her.steakmachine.OperationEnum;
 
 public class CalculationGenarationTest {
@@ -42,7 +43,7 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void substraktionTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/sub.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/sub.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.SUB, values));
 		writer.addPrt();
 		writer.eof();
@@ -56,7 +57,7 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void multiplicationTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/mul.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/mul.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MUL, values));
 		writer.addPrt();
 		writer.eof();
@@ -70,7 +71,7 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void divisionTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/div.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/div.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.DIV, values));
 		writer.addPrt();
 		writer.eof();
@@ -84,7 +85,7 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void moduloTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/mod.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/mod.vsh");
 		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MOD, values));
 		writer.addPrt();
 		writer.eof();

@@ -44,7 +44,7 @@ public class Lexer {
                     logger.debug(token);
                 }
             } else {
-                logger.error("invalid token!\n" + this.source);
+                logger.error("tokeng unbekamd:" + this.source);
                 break;
             }
         } while (!this.source.isEmpty());

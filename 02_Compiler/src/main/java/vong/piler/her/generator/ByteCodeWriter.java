@@ -81,7 +81,7 @@ public class ByteCodeWriter {
 	
 	private boolean writeToFile() {
 		try {
-			File file = new File(filename + ".vch");
+			File file = new File("gen/" + filename + ".vch");
 			logger.debug("ByteCode will be written to file " + file.getAbsolutePath());
 			if (!file.exists()) {
 				file.createNewFile();
