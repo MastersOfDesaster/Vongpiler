@@ -11,51 +11,43 @@ import java.util.Stack;
 import vong.piler.her.steakmachine.StackElement.Type;
 
 public class Steakmachine {
-	
+
 	private static final int PROGRAM_MEMORY_SIZE = 100;
 	private static final int CODE_MEMORY_SIZE = 100;
 	private Stack<StackElement> stack;
 	private StackElement[] programmMemory;
 	private String[] codeMemory;
-	
+
 	private int instructionPointer = 0;
 	private boolean running;
-	
-	
-	
+
 	public static void main(String[] args) {
 		Steakmachine steack = new Steakmachine();
 		steack.init();
-//		URL url = steack.getClass().getResource("../../../../../../../gen/generatorTester/add.vch");
-//		steack.load(new File(url.getPath()));
-		File file = new File("gen/generatorTester/gtr.vch");
-		steack.load(file);
+		URL url = steack.getClass().getResource("Fibonacci.vch");
+		steack.load(new File(url.getPath()));
 		steack.run();
 	}
-	
+
 	private void load(File file) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(file));
-		String line;
-		int i = 0;
-		while((line = br.readLine()) != null) {
-			codeMemory[i] = line;
-			i++;			
-		}
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			String line;
+			int i = 0;
+			while ((line = br.readLine()) != null) {
+				codeMemory[i] = line;
+				i++;
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch (ArrayIndexOutOfBoundsException e) {
-			e.printStackTrace();
+			System.out.println("Could not read file at: " + file.getAbsolutePath());
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("Programmcode doesn't fit in programmregister which supports " + CODE_MEMORY_SIZE + " commands");
 		}
 	}
 	
 	
-	
+
 	public void init() {
 		stack = new Stack<>();
 		codeMemory = new String[CODE_MEMORY_SIZE];
@@ -65,22 +57,34 @@ public class Steakmachine {
 
 	public void run() {
 		running = true;
-		while(running) {
-    		String rawCommand = readCommand();
-    		instructionPointer++;
-    		Command command = decodeCommand(rawCommand);
-    		executeCommand(command);
-   		
-    	}
-        
-    }
+		while (running) {
+			try {
+				String rawCommand = readCommand();
+				instructionPointer++;
+				Command command = decodeCommand(rawCommand);
+				executeCommand(command);
+			} catch (UnsupportedNumberofArgumentsException e) {
+				System.out.println("Wrong number of arguments submitted for operation");
+				running = false;
+			} catch (InstructionPointerOutOfBoundsException e) {
+				System.out.println("Instruciton pointer ran out of bounds");
+				running = false;
+			} 
+		}
+
+	}
+
+	private String readCommand() throws InstructionPointerOutOfBoundsException {
+		try {
+			String rawCommand = codeMemory[instructionPointer];
+			return rawCommand;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new InstructionPointerOutOfBoundsException();
+		}
+
+	}
 	
-    private String readCommand() {
-    	String rawCommand = codeMemory[instructionPointer];
-    	return rawCommand;
-    }
-    
-    private Command decodeCommand(String rawCommand) {
+	 private Command decodeCommandOrdinal(String rawCommand) {
     	Command command = new Command();
     	String[] commandParts = rawCommand.split(" ");
     	int cmd = Integer.parseInt(commandParts[0]);
@@ -97,6 +101,24 @@ public class Steakmachine {
     	}
     	return command;
     }
+
+	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException {
+		Command command = new Command();
+		String[] commandParts = rawCommand.split(" ");
+		switch (commandParts.length) {
+		case 1:
+			command.setOpCode(OperationEnum.valueOf(commandParts[0]));
+			break;
+		case 2:
+			command.setOpCode(OperationEnum.valueOf(commandParts[0]));
+			command.setFirstParam(commandParts[1]);
+			break;
+		default:
+			throw new UnsupportedNumberofArgumentsException();
+		}
+		return command;
+	}
+
     
     private void executeCommand(Command command) {
     	switch(command.getOpCode()) {
@@ -143,7 +165,7 @@ public class Steakmachine {
 			mod();
 			break;
 		case MUL:
-    		mul();
+			mul();
 			break;
 		case NQI:
 			nqi();
@@ -161,16 +183,16 @@ public class Steakmachine {
 			psi(command.getFirstParam());
 			break;
 		case SUB:
-    		sub();
+			sub();
 			break;
 		case SVA:
-    		sva();
+			sva();
 			break;
 		case SVZ:
-    		svz();
+			svz();
 			break;
 		case SVI:
-    		svi();
+			svi();
 			break;
 		case EQW:
 			eqw();
@@ -186,14 +208,14 @@ public class Steakmachine {
 			break;
 		default:
 			break;
-    	}
-    }
+		}
+	}
 
 	private void svw() {
 		String word = popWord();
 		int address = popAddress();
 		StackElement element = new StackElement(Type.WORD, word);
-		programmMemory[address] = element;		
+		programmMemory[address] = element;
 	}
 
 	private void psw(String word) {
@@ -211,35 +233,35 @@ public class Steakmachine {
 		String w1 = popWord();
 		String w2 = popWord();
 		boolean isso = w1.equals(w2);
-		pushIsso(isso);		
+		pushIsso(isso);
 	}
 
 	private void eqz() {
 		double a = popZal();
 		double b = popZal();
 		boolean isso = b == a;
-		pushIsso(isso);	
+		pushIsso(isso);
 	}
-	
+
 	private void eqi() {
 		boolean a = popIsso();
 		boolean b = popIsso();
 		boolean isso = b == a;
-		pushIsso(isso);	
+		pushIsso(isso);
 	}
-	
+
 	private void nqz() {
 		double a = popZal();
 		double b = popZal();
 		boolean isso = b != a;
 		pushIsso(isso);
 	}
-	
+
 	private void nqi() {
 		boolean a = popIsso();
 		boolean b = popIsso();
 		boolean isso = b != a;
-		pushIsso(isso);	
+		pushIsso(isso);
 	}
 
 	private void sub() {
@@ -254,7 +276,7 @@ public class Steakmachine {
 		double b = popZal();
 		double result = b % a;
 		pushZal(result);
-		
+
 	}
 
 	private void les() {
@@ -262,15 +284,15 @@ public class Steakmachine {
 		double b = popZal();
 		boolean result = b < a;
 		pushIsso(result);
-		
+
 	}
 
 	private void jmt() {
 		int address = popAddress();
 		boolean isso = popIsso();
-		if(isso) {
+		if (isso) {
 			instructionPointer = address;
-		}	
+		}
 	}
 
 	private void jmp() {
@@ -278,49 +300,48 @@ public class Steakmachine {
 		instructionPointer = address;
 	}
 
-
 	private void ohr() {
 		boolean a = popIsso();
 		boolean b = popIsso();
 		boolean result = b || a;
 		pushIsso(result);
-		
+
 	}
 
 	private void psa(String firstParam) {
 		pushAddress(Integer.parseInt(firstParam));
-		
+
 	}
 
 	private void psi(String firstParam) {
 		pushIsso(parseIsso(firstParam));
-		
+
 	}
 
 	private boolean parseIsso(String firstParam) {
 		int isso = Integer.parseInt(firstParam);
-		return isso !=0 ? true : false;
+		return isso != 0 ? true : false;
 	}
 
 	private void sva() {
 		int address = popAddress();
 		int storeAddress = popAddress();
 		StackElement element = new StackElement(Type.ADDRESS, address);
-		programmMemory[storeAddress] = element;		
+		programmMemory[storeAddress] = element;
 	}
-	
+
 	private void svi() {
 		boolean isso = popIsso();
 		int address = popAddress();
 		StackElement element = new StackElement(Type.ISSO, isso);
-		programmMemory[address] = element;		
+		programmMemory[address] = element;
 	}
-	
+
 	private void svz() {
 		double zal = popZal();
 		int address = popAddress();
 		StackElement element = new StackElement(Type.ZAL, zal);
-		programmMemory[address] = element;			
+		programmMemory[address] = element;
 	}
 
 	private void gtr() {
@@ -328,25 +349,25 @@ public class Steakmachine {
 		double b = popZal();
 		boolean result = b > a;
 		pushIsso(result);
-		
+
 	}
 
 	private void div() {
 		double a = popZal();
 		double b = popZal();
 		double result = b / a;
-		pushZal(result);		
+		pushZal(result);
 	}
 
 	private void and() {
 		boolean a = popIsso();
 		boolean b = popIsso();
 		boolean result = b && a;
-		pushIsso(result);		
+		pushIsso(result);
 	}
 
 	private void aal() {
-		System.out.println("Halo I bims 1 aal vong Halo Wï¿½rlt her");
+		System.out.println("Halo I bims 1 aal vong Halo Wörlt her");
 	}
 
 	private void end() {
@@ -367,11 +388,11 @@ public class Steakmachine {
 	private void prt() {
 		StackElement element = stack.pop();
 		String out = element.toString();
-		if(element.getType() == Type.ADDRESS) {
+		if (element.getType() == Type.ADDRESS) {
 			int address = (int) element.getValue();
 			StackElement global = programmMemory[address];
 			out = out + " -> " + global.toString();
-		}		
+		}
 		System.out.println(out);
 	}
 
@@ -381,87 +402,79 @@ public class Steakmachine {
 		double result = b + a;
 		pushZal(result);
 	}
-    
-    private void pushZal(double zal) {
-    	StackElement element = new StackElement(Type.ZAL, zal);
-    	stack.push(element);
-    }
-    
-    private void pushAddress(int address) {
-    	StackElement element = new StackElement(Type.ADDRESS, address);
-    	stack.push(element);
-    }
-    
-    private void pushIsso(boolean isso) {
-    	StackElement element = new StackElement(Type.ISSO, isso);
-    	stack.push(element);
-    }
-    
-    private void pushWord(String word) {
-    	StackElement element = new StackElement(Type.WORD, word);
-    	stack.push(element);
-    }
-    
-    private double popZal() {
-    	StackElement element = stack.pop();
-    	double zal;
-    	if(element.getType() == Type.ADDRESS) {
-    		zal = loadZal((int) element.getValue());
-    	}else {
-    		zal = (double) element.getValue();
-    	}
-    	return zal;
-    }
-    
-    private int popAddress() {
-    	StackElement element = stack.pop();
-    	int address = (int) element.getValue();
-    	return address;
-    }
-    
-    private boolean popIsso() {
-    	StackElement element = stack.pop();
-    	boolean isso;
-    	if(element.getType() == Type.ADDRESS) {
-    		isso = loadIsso((int) element.getValue());
-    	}else {
-    		isso = (boolean) element.getValue();
-    	}
-    	return isso;
-    }
-    
-    private String popWord() {
-    	StackElement element = stack.pop();
-    	String word;
-    	if(element.getType() == Type.ADDRESS) {
-    		word = loadWord((int) element.getValue());
-    	}else {
-    		word = (String) element.getValue();
-    	}
-    	return word;
-    }
-    
-    private double loadZal(int address) {
-    	double zal = (double) programmMemory[address].getValue();
-    	return zal;
-    }
- 
-    /*
-     * TODO add for pointer support
-    private int loadAddress(int pAddress) {
-    	int address = (int) programmMemory[pAddress];
-    	return address;
-    }
-    
-    */
-    private boolean loadIsso(int address) {
-    	boolean isso = (boolean) programmMemory[address].getValue();
-    	return isso;
-    }
 
-    private String loadWord(int address) {
-    	String word = (String) programmMemory[address].getValue();
-    	return word;
-    }
-    
+	private void pushZal(double zal) {
+		StackElement element = new StackElement(Type.ZAL, zal);
+		stack.push(element);
+	}
+
+	private void pushAddress(int address) {
+		StackElement element = new StackElement(Type.ADDRESS, address);
+		stack.push(element);
+	}
+
+	private void pushIsso(boolean isso) {
+		StackElement element = new StackElement(Type.ISSO, isso);
+		stack.push(element);
+	}
+
+	private void pushWord(String word) {
+		StackElement element = new StackElement(Type.WORD, word);
+		stack.push(element);
+	}
+
+	private double popZal() {
+		StackElement element = stack.pop();
+		double zal;
+		if (element.getType() == Type.ADDRESS) {
+			zal = loadZal((int) element.getValue());
+		} else {
+			zal = (double) element.getValue();
+		}
+		return zal;
+	}
+
+	private int popAddress() {
+		StackElement element = stack.pop();
+		int address = (int) element.getValue();
+		return address;
+	}
+
+	private boolean popIsso() {
+		StackElement element = stack.pop();
+		boolean isso;
+		if (element.getType() == Type.ADDRESS) {
+			isso = loadIsso((int) element.getValue());
+		} else {
+			isso = (boolean) element.getValue();
+		}
+		return isso;
+	}
+
+	private String popWord() {
+		StackElement element = stack.pop();
+		String word;
+		if (element.getType() == Type.ADDRESS) {
+			word = loadWord((int) element.getValue());
+		} else {
+			word = (String) element.getValue();
+		}
+		return word;
+	}
+
+	private double loadZal(int address) {
+		double zal = (double) programmMemory[address].getValue();
+		return zal;
+	}
+
+	private boolean loadIsso(int address) {
+		boolean isso = (boolean) programmMemory[address].getValue();
+		return isso;
+	}
+
+	private String loadWord(int address) {
+		String word = (String) programmMemory[address].getValue();
+		return word;
+	}
+
 }
