@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import vong.piler.her.Constants;
+import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Lexer {
     String source;
     int line;
-    private static Logger logger = LogManager.getLogger(Constants.loggerName);
+    private static Logger logger = LoggerVongManagerHer.getLogger(Lexer.class);
 
     public Lexer() {
         // Print Token-Grammar
@@ -43,7 +42,6 @@ public class Lexer {
                 default:
                     tokenList.add(token);
                     logger.debug(token);
-                    System.out.println(token);
                 }
             } else {
                 logger.error("invalid token!\n" + this.source);
@@ -63,17 +61,20 @@ public class Lexer {
             Matcher matcher = pattern.matcher(source);
 
             if (matcher.matches()) {
-                // create token with or without value
+                // create token
+                token = new Token(line, tokenType);
+
+                // set value or label
                 switch (tokenType) {
                 case TYPE:
                 case NAME:
                 case CONST_ZAL:
                 case CONST_WORD:
                 case CONST_ISSO:
-                    token = new Token(line, tokenType, matcher.group(1));
+                    token.setContent(matcher.group(1));
                     break;
                 default:
-                    token = new Token(line, tokenType);
+                    token.setLabel(matcher.group(1));
                 }
 
                 // calculate lexed-length and cut from source-string
@@ -84,6 +85,7 @@ public class Lexer {
                 case END:
                     break;
                 case CONST_WORD:
+                    // we have to skip the quotation mark at end
                     matchlength += 2;
                     break;
                 default:
