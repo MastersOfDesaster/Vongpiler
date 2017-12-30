@@ -6,16 +6,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import vong.piler.her.Constants;
 import vong.piler.her.lexer.Token;
 import vong.piler.her.lexer.TokenTypeEnum;
+import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Parser { 
 	
-	private static Logger logger = LogManager.getLogger(Constants.loggerName);
+	private static Logger logger = LoggerVongManagerHer.getLogger(Parser.class);
 	
 	private TreeNode parent;
 	private TreeNode root;
@@ -44,32 +43,56 @@ public class Parser {
     	
     	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();    	
 
-    	
-    	for (Token t : tokenList) {
-    		
-    		// Toke != START
-    		if (!(t.getType().equals(TokenTypeEnum.START))) {    			
-    			// Syntax ok
-    			if(rule.contains(t.getType())){    				
-    				parseItem(t);		
-    				
-    			}
-    			//Syntax fail
-    			else {    				
-    				System.out.println("Syntax error:" + t);
-    				System.exit(0);
-    			}
-    		// Token == START and first token
-    		}else if(t.getType().equals(TokenTypeEnum.START) && rule.isEmpty()){
-    			System.out.println("Token:" + t.getType());
-    			parseItem(t);
-    			
-    		}else {
-				System.out.println("Syntax error: START missing" + t);
-				System.exit(0);
-    		}
-    		
-			rule = ruleMap.get(t.getType());    		
+    	if(tokenList.get(tokenList.size()-1).getType().equals(TokenTypeEnum.END)) {
+	    	for (Token t : tokenList) {
+	    		
+	    		// Token != START
+	    		if (!(t.getType().equals(TokenTypeEnum.START)) && !(rule.isEmpty())) {    			
+	    			// Syntax ok
+	    			if(rule.contains(t.getType())){    				
+	     			}
+	    			//Syntax fail
+	    			else {
+	    				String error = new String();
+	    				for(TokenTypeEnum tte : rule) {
+	    					error = error + tte.getLabel() +"|";
+	    				}
+	    				if(t.getContent().isEmpty()) {
+	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " -->  Expected: " + error.substring(0, (error.length()-1)));
+	    				}
+	    				else {
+	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " -->  Expected: " + error.substring(0, (error.length()-1)));
+	    				}
+	    				System.exit(0);
+	    			}
+	    		}
+	    		// Token != START and first token
+	    		else if(!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()){
+	    			if(t.getContent().isEmpty()) {
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " --> Expected: " + TokenTypeEnum.START.getLabel());
+	    			}
+	    			else {
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " --> Expected: "  + TokenTypeEnum.START.getLabel() );
+	    			}
+					System.exit(0);    		    			
+	    		}
+	    		else {
+	
+	    		}
+	    		
+	    		parseItem(t);
+	    		
+				rule = ruleMap.get(t.getType());    		
+	    	}
+    	}
+    	else {
+			if(tokenList.get(tokenList.size()-1).getContent().isEmpty()) {
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getType().getLabel() + " --> Expected: " + TokenTypeEnum.END.getLabel());
+			}
+			else {
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getContent() + " --> Expected: " + TokenTypeEnum.END.getLabel());
+			}
+			System.exit(0);  
     	}
     	
     	return root;
@@ -80,19 +103,20 @@ public class Parser {
     	
     	// Root node
     	if (root == null) {
-          root = new TreeNode(t.getType());
-          parent = root;
+    		logger.debug("Token: " + t.getType());
+			root = new TreeNode(t.getType(), null);
+			parent = root;
     	}
     	// Node without value
     	else if(t.getContent().isEmpty()) {
-			System.out.println("Token: " + t.getType());
-	        parent.setRight(new TreeNode(t.getType()));
+    		logger.debug("Token: " + t.getType());
+ 	        parent.setRight(new TreeNode(t.getType(),parent));
 	        parent = parent.getRight();
 
 	    // Node with value
 		}else {
-			System.out.println("Value: " + t.getContent() + " Token: " + t.getType());
-			parent.setRight(new TreeNode(t.getType()));
+			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());			
+			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
            	parent.setLeft(t.getContent());
 		}       
