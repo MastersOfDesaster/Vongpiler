@@ -84,6 +84,7 @@ public class Lexer {
                 case END:
                     break;
                 case CONST_WORD:
+                    // we have to skip the quotation mark at end
                     matchlength += 2;
                     break;
                 default:
