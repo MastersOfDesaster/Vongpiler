@@ -41,7 +41,10 @@ public class Parser {
     
     public TreeNode parse(List<Token> tokenList) {
     	
-    	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();    	
+    	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();  
+    	
+    	String type = null;
+    	
 
     	if(tokenList.get(tokenList.size()-1).getType().equals(TokenTypeEnum.END)) {
 	    	for (Token t : tokenList) {
@@ -49,7 +52,14 @@ public class Parser {
 	    		// Token != START
 	    		if (!(t.getType().equals(TokenTypeEnum.START)) && !(rule.isEmpty())) {    			
 	    			// Syntax ok
-	    			if(rule.contains(t.getType())){    				
+	    			if(rule.contains(t.getType())){ 
+	    				if(t.getType().equals(TokenTypeEnum.TYPE)) {
+	    					type = t.getContent();
+	    				}
+	    				if((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso")) || (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word")) || (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")) ) {
+	    					logger.error("type error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " -->  Expected: " + type);
+	    					System.exit(0);
+	    				}
 	     			}
 	    			//Syntax fail
 	    			else {

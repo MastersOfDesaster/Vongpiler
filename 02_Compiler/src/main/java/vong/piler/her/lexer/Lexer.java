@@ -80,7 +80,7 @@ public class Lexer {
                 int matchlength = matcher.group(1).length();
                 // we have to skip the quotation mark at end
                 if (tokenType == TokenTypeEnum.CONST_WORD) {
-                    matchlength += 1;
+                    matchlength += 2;
                 }
                 this.source = this.source.substring(matchlength);
                 break;
