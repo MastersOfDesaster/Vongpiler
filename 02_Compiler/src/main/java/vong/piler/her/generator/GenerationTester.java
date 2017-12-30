@@ -12,7 +12,7 @@ public class GenerationTester {
 	
 	public static void main(String[] args) {
 		calculationTester();
-		comparatorZalTester();
+//		comparatorZalTester();
 	}
 
 	private static void calculationTester() {
@@ -23,43 +23,48 @@ public class GenerationTester {
 		values.add(new ValueModel(1.0));
 		Executor executor = Executors.newCachedThreadPool();
 		executor.execute(() -> addTester(values));
-		executor.execute(() -> subTester(values));
+		/*executor.execute(() -> subTester(values));
 		executor.execute(() -> mulTester(values));
 		executor.execute(() -> divTester(values));
-		executor.execute(() -> modTester(values));
+		executor.execute(() -> modTester(values));*/
 	}
 	
 	private static void addTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/add.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.ADD, values));
+		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.ADD, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void subTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/sub.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.SUB, values));
+		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.SUB, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void mulTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/mul.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MUL, values));
+		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MUL, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void divTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/div.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.DIV, values));
+		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.DIV, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void modTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/mod.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MOD, values));
+		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MOD, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
@@ -78,30 +83,34 @@ public class GenerationTester {
 	}
 
 	private static void lesTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/les.vsh");
-		Collections.reverse(values);
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.LES, values));
+		Collections.reverse(innerValues);
+		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.LES, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void gtrTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/gtr.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.GTR, values));
+		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.GTR, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void eqiTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/eqi.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.EQI, values));
+		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQI, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
 	
 	private static void nqiTester(List<ValueModel> values) {
+		List<ValueModel> innerValues = values;
 		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/nqi.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.NQI, values));
+		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.NQI, innerValues));
 		writer.addPrt();
 		writer.eof();
 	}
