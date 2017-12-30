@@ -21,7 +21,7 @@ public class OpCodeTests {
 	@Before
 	public void init() {
 		vvm.setStandardOut(new PrintStream(standardOut));
-		//vvm.setErrorOut(new PrintStream(errorOut));
+		vvm.setErrorOut(new PrintStream(errorOut));
 		vvm.setReadAssembler(true);
 		vvm.init();
 	}
@@ -151,6 +151,20 @@ public class OpCodeTests {
 		loadFile("gtrWhenFalse.vch");
 		vvm.run();
 		assertEquals("isso: nope", standardOut.toString());
+	}
+	
+	@Test
+	public void testJmpToLegalLine(){
+		loadFile("jmpToLegalLine.vch");
+		vvm.run();
+		assertEquals("Halo I bims 1 aal vong Halo Wörlt her", standardOut.toString());
+	}
+	
+	@Test
+	public void testJmpToIllegalLine(){
+		loadFile("jmpToIllegalLine.vch");
+		vvm.run();
+		assertEquals("instruction-pointer at empty register", errorOut.toString());
 	}
 	
 	private void loadFile(String name) {

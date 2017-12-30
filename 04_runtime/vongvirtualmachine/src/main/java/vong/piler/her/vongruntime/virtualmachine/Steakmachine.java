@@ -10,6 +10,7 @@ import java.util.Stack;
 import vong.piler.her.vongruntime.virtualmachine.model.StackElement.Type;
 import vong.piler.her.vongruntime.exception.EmptyLineException;
 import vong.piler.her.vongruntime.exception.InstructionPointerOutOfBoundsException;
+import vong.piler.her.vongruntime.exception.ReadEmptyRegisterException;
 import vong.piler.her.vongruntime.exception.UnknownCommandException;
 import vong.piler.her.vongruntime.exception.UnsupportedNumberofArgumentsException;
 import vong.piler.her.vongruntime.virtualmachine.model.Command;
@@ -19,7 +20,7 @@ import vong.piler.her.vongruntime.virtualmachine.model.StackElement;
 public class Steakmachine {
 
 	private PrintStream standardOut = System.out;
-	private PrintStream errorOut = System.out;
+	private PrintStream errorOut = System.err;
 	private boolean debugOutput = false;
 	private boolean readAssembler = false;
 	
@@ -119,7 +120,7 @@ public class Steakmachine {
 				printErrorOutput("Wrong number of arguments submitted for operation");
 				running = false;
 			} catch (InstructionPointerOutOfBoundsException e) {
-				printErrorOutput("Instruction pointer ran out of bounds");
+				printErrorOutput("Instruction-pointer ran out of bounds");
 				running = false;
 			} catch (UnknownCommandException e) {
 				printErrorOutput("Encountered unknown command");
@@ -127,14 +128,20 @@ public class Steakmachine {
 			} catch (EmptyLineException e) {
 				printErrorOutput("Encountered empty line in codefile");
 				running = false;
+			} catch (ReadEmptyRegisterException e) {
+				printErrorOutput("instruction-pointer at empty register");
+				running = false;
 			} 
 		}
 
 	}
 
-	private String readCommand() throws InstructionPointerOutOfBoundsException {
+	private String readCommand() throws InstructionPointerOutOfBoundsException, ReadEmptyRegisterException {
 		try {
 			String rawCommand = codeMemory[instructionPointer];
+			if(rawCommand == null) {
+				throw new ReadEmptyRegisterException();
+			}
 			return rawCommand;
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InstructionPointerOutOfBoundsException();
@@ -415,7 +422,7 @@ public class Steakmachine {
 	}
 
 	private void aal() {
-		printOutput("Halo I bims 1 aal vong Halo W�rlt her");
+		printOutput("Halo I bims 1 aal vong Halo Wörlt her");
 	}
 
 	private void end() {
@@ -526,7 +533,7 @@ public class Steakmachine {
 	}
 	
 	private void printErrorOutput(String error) {
-		errorOut.println(error);
+		errorOut.print(error);
 	}
 	
 	private void printOutput(String message) {
