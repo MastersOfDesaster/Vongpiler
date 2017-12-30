@@ -6,7 +6,6 @@ import java.util.Map;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.steakmachine.OperationEnum;
 
-//TODO: change addOperation to only get String
 class RegisterHandler {
 	
 	private static RegisterHandler instance;

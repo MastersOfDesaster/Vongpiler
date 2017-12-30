@@ -26,8 +26,10 @@ public class Steakmachine {
 	public static void main(String[] args) {
 		Steakmachine steack = new Steakmachine();
 		steack.init();
-		URL url = steack.getClass().getResource("Fibonacci.vch");
-		steack.load(new File(url.getPath()));
+//		URL url = steack.getClass().getResource("../../../../../../../gen/generatorTester/add.vch");
+//		steack.load(new File(url.getPath()));
+		File file = new File("gen/generatorTester/gtr.vch");
+		steack.load(file);
 		steack.run();
 	}
 	
@@ -81,12 +83,13 @@ public class Steakmachine {
     private Command decodeCommand(String rawCommand) {
     	Command command = new Command();
     	String[] commandParts = rawCommand.split(" ");
+    	int cmd = Integer.parseInt(commandParts[0]);
     	switch(commandParts.length) {
     	case 1:
-    		command.setOpCode(OperationEnum.valueOf(commandParts[0]));
+    		command.setOpCode(OperationEnum.values()[cmd]);
     		break;
     	case 2: 
-    		command.setOpCode(OperationEnum.valueOf(commandParts[0]));
+    		command.setOpCode(OperationEnum.values()[cmd]);
     		command.setFirstParam(commandParts[1]);
     		break;
     		default:
@@ -343,7 +346,7 @@ public class Steakmachine {
 	}
 
 	private void aal() {
-		System.out.println("Halo I bims 1 aal vong Halo Wörlt her");
+		System.out.println("Halo I bims 1 aal vong Halo Wï¿½rlt her");
 	}
 
 	private void end() {
