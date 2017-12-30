@@ -5,7 +5,7 @@ package vong.piler.her.steakmachine;
 
 public class StackElement {
 	public enum Type{
-		ADDRESS, ZAL, ISSO
+		ADDRESS, ZAL, ISSO, WORD
 	}
 	
 	public StackElement(Type type, Object value) {
@@ -24,6 +24,8 @@ public class StackElement {
 			return "isso: " + (((boolean) value)? "yup" : "nope");
 		case ZAL:
 			return "zal: " + value.toString();
+		case WORD:
+			return "word: " + value.toString();
 		default:
 			return "unknown type on stack";		
 		}
