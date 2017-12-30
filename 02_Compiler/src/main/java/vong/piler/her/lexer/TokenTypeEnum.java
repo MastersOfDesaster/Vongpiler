@@ -3,14 +3,14 @@ package vong.piler.her.lexer;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
-    START("(was ist das fuer 1 code?).*"), // start of program
+    START("(was ist das fuer 1 code\\?).*"), // start of program
     END("(1 nicer!!!).*"), // end of program
     
     // function
     CMD("(was ist das fuer 1).*"), // call function
     PSTART("(vong).*"), // start of parameters
     PNEXT("(,).*"), // next parameter
-    PEND("(her?).*"), // end of parameter
+    PEND("(her\\?).*"), // end of parameter
     
     // variable
     VSTART("(i bims 1).*"), // declare variable

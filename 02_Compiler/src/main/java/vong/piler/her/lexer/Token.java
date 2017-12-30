@@ -39,7 +39,7 @@ public class Token {
         if (!this.content.isEmpty()) {
             return this.line + ": " + this.type.name() + ": " + this.content + "";
         } else {
-            return this.line + ": " + this.type.name();//  + "(" + this.label + ")";
+            return this.line + ": " + this.type.name() + "(" + this.label + ")";
         }
     }
 }
