@@ -110,6 +110,21 @@ public class OpCodeTests {
 		assertEquals("zal: -16.0", standardOut.toString());
 	}
 	
+	@Test
+	public void modWithRemainderTest(){
+		loadFile("modWithRemainder.vch");
+		vvm.run();
+		assertEquals("zal: 1.0", standardOut.toString());
+	}
+	
+	
+	@Test
+	public void modWithoutRemainderTest(){
+		loadFile("modWithoutRemainder.vch");
+		vvm.run();
+		assertEquals("zal: 0.0", standardOut.toString());
+	}
+	
 	private void loadFile(String name) {
 		File file = new File(getClass().getClassLoader().getResource(name).getFile());
 		vvm.load(file);
