@@ -6,11 +6,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import vong.piler.her.Constants;
-import vong.piler.her.lexer.Lexer;
 import vong.piler.her.lexer.Token;
 import vong.piler.her.lexer.TokenTypeEnum;
 import vong.piler.her.logger.LoggerVongManagerHer;
@@ -58,10 +55,10 @@ public class Parser {
 	    			else {
 	    				String error = new String();
 	    				for(TokenTypeEnum tte : rule) {
-	    					error = error + tte.getRegEx() +"|";
+	    					error = error + tte.getLabel() +"|";
 	    				}
 	    				if(t.getContent().isEmpty()) {
-	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getLabel() + " -->  Expected: " + error.substring(0, (error.length()-1)));
+	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " -->  Expected: " + error.substring(0, (error.length()-1)));
 	    				}
 	    				else {
 	    					logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " -->  Expected: " + error.substring(0, (error.length()-1)));
@@ -72,10 +69,10 @@ public class Parser {
 	    		// Token != START and first token
 	    		else if(!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()){
 	    			if(t.getContent().isEmpty()) {
-	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getLabel() + " --> Expected: was ist das fuer 1 code?");
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " --> Expected: " + TokenTypeEnum.START.getLabel());
 	    			}
 	    			else {
-	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " --> Expected: was ist das fuer 1 code?");
+	    				logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent() + " --> Expected: "  + TokenTypeEnum.START.getLabel() );
 	    			}
 					System.exit(0);    		    			
 	    		}
@@ -90,10 +87,10 @@ public class Parser {
     	}
     	else {
 			if(tokenList.get(tokenList.size()-1).getContent().isEmpty()) {
-				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getLabel() + " --> Expected: 1 nicer!!!");
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getType().getLabel() + " --> Expected: " + TokenTypeEnum.END.getLabel());
 			}
 			else {
-				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getContent() + " --> Expected: 1 nicer!!!");
+				logger.error("syntax error in line " + tokenList.get(tokenList.size()-1).getLine() + ": Got: " + tokenList.get(tokenList.size()-1).getContent() + " --> Expected: " + TokenTypeEnum.END.getLabel());
 			}
 			System.exit(0);  
     	}
