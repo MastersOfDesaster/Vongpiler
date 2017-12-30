@@ -84,17 +84,17 @@ public class Parser {
           parent = root;
     	}
     	// Node without value
-    	else if(t.getValue().isEmpty()) {
+    	else if(t.getContent().isEmpty()) {
 			System.out.println("Token: " + t.getType());
 	        parent.setRight(new TreeNode(t.getType()));
 	        parent = parent.getRight();
 
 	    // Node with value
 		}else {
-			System.out.println("Value: " + t.getValue() + " Token: " + t.getType());
+			System.out.println("Value: " + t.getContent() + " Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType()));
 			parent = parent.getRight();
-           	parent.setLeft(t.getValue());
+           	parent.setLeft(t.getContent());
 		}       
     }
 }
