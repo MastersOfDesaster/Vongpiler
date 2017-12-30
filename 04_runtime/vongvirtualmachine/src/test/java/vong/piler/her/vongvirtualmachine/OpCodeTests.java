@@ -111,7 +111,7 @@ public class OpCodeTests {
 	}
 	
 	@Test
-	public void modWithRemainderTest(){
+	public void testModWithRemainder(){
 		loadFile("modWithRemainder.vch");
 		vvm.run();
 		assertEquals("zal: 1.0", standardOut.toString());
@@ -119,10 +119,38 @@ public class OpCodeTests {
 	
 	
 	@Test
-	public void modWithoutRemainderTest(){
+	public void testModWithoutRemainder(){
 		loadFile("modWithoutRemainder.vch");
 		vvm.run();
 		assertEquals("zal: 0.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testLesWhenTrue(){
+		loadFile("lesWhenTrue.vch");
+		vvm.run();
+		assertEquals("isso: yup", standardOut.toString());
+	}
+	
+	@Test
+	public void testLesWhenFalse(){
+		loadFile("lesWhenFalse.vch");
+		vvm.run();
+		assertEquals("isso: nope", standardOut.toString());
+	}
+	
+	@Test
+	public void testGtrWhenTrue(){
+		loadFile("gtrWhenTrue.vch");
+		vvm.run();
+		assertEquals("isso: yup", standardOut.toString());
+	}
+	
+	@Test
+	public void testGtrWhenFalse(){
+		loadFile("gtrWhenFalse.vch");
+		vvm.run();
+		assertEquals("isso: nope", standardOut.toString());
 	}
 	
 	private void loadFile(String name) {
