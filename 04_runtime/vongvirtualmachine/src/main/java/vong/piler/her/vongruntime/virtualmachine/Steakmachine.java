@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.PrintStream;
 import java.util.Stack;
 
 import vong.piler.her.vongruntime.virtualmachine.model.StackElement.Type;
@@ -17,16 +17,57 @@ import vong.piler.her.vongruntime.virtualmachine.model.StackElement;
 
 public class Steakmachine {
 
+	private PrintStream standardOut = System.out;
+	private PrintStream errorOut = System.out;
+	private boolean debugOutput = false;
+	
 	private static final int PROGRAM_MEMORY_SIZE = 100;
 	private static final int CODE_MEMORY_SIZE = 100;
 	private Stack<StackElement> stack;
 	private StackElement[] programmMemory;
 	private String[] codeMemory;
 
-	private int instructionPointer = 0;
+	private int instructionPointer;
 	private boolean running;
+	
+	
+	public static int getProgramMemorySize() {
+		return PROGRAM_MEMORY_SIZE;
+	}
 
-	private void load(File file) {
+
+
+	public static int getCodeMemorySize() {
+		return CODE_MEMORY_SIZE;
+	}
+
+
+
+	public PrintStream getStandardOut() {
+		return standardOut;
+	}
+
+
+
+	public void setStandardOut(PrintStream standardOut) {
+		this.standardOut = standardOut;
+	}
+
+
+
+	public PrintStream getErrorOut() {
+		return errorOut;
+	}
+
+
+
+	public void setErrorOut(PrintStream errorOut) {
+		this.errorOut = errorOut;
+	}
+
+
+
+	public void load(File file) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(file));
@@ -37,9 +78,9 @@ public class Steakmachine {
 				i++;
 			}
 		} catch (IOException e) {
-			System.out.println("Could not read file at: " + file.getAbsolutePath());
+			printErrorOutput("Could not read file at: " + file.getAbsolutePath());
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("Programmcode doesn't fit in programmregister which supports " + CODE_MEMORY_SIZE + " commands");
+			printErrorOutput("Programmcode doesn't fit in programmregister which supports " + CODE_MEMORY_SIZE + " commands");
 		}
 	}
 	
@@ -61,13 +102,14 @@ public class Steakmachine {
 				Command command = decodeCommand(rawCommand);
 				executeCommand(command);
 			} catch (UnsupportedNumberofArgumentsException e) {
-				System.out.println("Wrong number of arguments submitted for operation");
+				printErrorOutput("Wrong number of arguments submitted for operation");
 				running = false;
 			} catch (InstructionPointerOutOfBoundsException e) {
-				System.out.println("Instruction pointer ran out of bounds");
+				printErrorOutput("Instruction pointer ran out of bounds");
 				running = false;
 			} catch (UnknownCommandException e) {
-				System.out.println("Encountered unknown command");
+				printErrorOutput("Encountered unknown command");
+				running = false;
 			} 
 		}
 
@@ -366,12 +408,12 @@ public class Steakmachine {
 	}
 
 	private void aal() {
-		System.out.println("Halo I bims 1 aal vong Halo W�rlt her");
+		printOutput("Halo I bims 1 aal vong Halo W�rlt her");
 	}
 
 	private void end() {
 		running = false;
-		System.out.println("Programm exited without error");
+		printDebugOutput("Programm exited without error");
 	}
 
 	private void mul() {
@@ -392,7 +434,7 @@ public class Steakmachine {
 			StackElement global = programmMemory[address];
 			out = out + " -> " + global.toString();
 		}
-		System.out.println(out);
+		printOutput(out);
 	}
 
 	private void add() {
@@ -475,5 +517,18 @@ public class Steakmachine {
 		String word = (String) programmMemory[address].getValue();
 		return word;
 	}
-
+	
+	private void printErrorOutput(String error) {
+		errorOut.println(error);
+	}
+	
+	private void printOutput(String message) {
+		standardOut.print(message);
+	}
+	
+	private void printDebugOutput(String message) {
+		if(debugOutput) {
+			standardOut.println(message);	
+		}
+	}
 }
