@@ -79,17 +79,9 @@ public class Lexer {
 
                 // calculate lexed-length and cut from source-string
                 int matchlength = matcher.group(1).length();
-                switch (tokenType) {
-                case WHITESPACE:
-                case NEWLINE:
-                case END:
-                    break;
-                case CONST_WORD:
-                    // we have to skip the quotation mark at end
-                    matchlength += 2;
-                    break;
-                default:
-                    matchlength++;
+                // we have to skip the quotation mark at end
+                if (tokenType == TokenTypeEnum.CONST_WORD) {
+                    matchlength += 1;
                 }
                 this.source = this.source.substring(matchlength);
                 break;
