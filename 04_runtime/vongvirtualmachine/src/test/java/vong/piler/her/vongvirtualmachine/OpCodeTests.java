@@ -48,6 +48,48 @@ public class OpCodeTests {
 	}
 	
 	@Test
+	public void testMulWithPositives(){
+		loadFile("mulWithPositives.vch");
+		vvm.run();
+		assertEquals("zal: 35.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testMulWithNegatives(){
+		loadFile("mulWithNegatives.vch");
+		vvm.run();
+		assertEquals("zal: 40.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testMulWithNegativeAndPositive(){
+		loadFile("mulWithNegativeAndPositive.vch");
+		vvm.run();
+		assertEquals("zal: -35.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testDivWithPositives(){
+		loadFile("divWithPositives.vch");
+		vvm.run();
+		assertEquals("zal: 2.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testDivWithNegatives(){
+		loadFile("divWithNegatives.vch");
+		vvm.run();
+		assertEquals("zal: 2.0", standardOut.toString());
+	}
+	
+	@Test
+	public void testDivWithNegativeAndPositive(){
+		loadFile("divWithNegativeAndPositive.vch");
+		vvm.run();
+		assertEquals("zal: -2.0", standardOut.toString());
+	}
+	
+	@Test
 	public void testSubWithPositives(){
 		loadFile("subWithPositives.vch");
 		vvm.run();
