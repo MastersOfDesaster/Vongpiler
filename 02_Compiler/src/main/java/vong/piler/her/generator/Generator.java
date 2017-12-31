@@ -39,7 +39,7 @@ public class Generator {
 				variableDeclaration(right);
 				break;
 			case CMD:
-				predefinedFunctionCalls(right);
+				predefinedFunctionCalls(right, false);
 				break;
 			case PRINT:
 				printFunction(right);
@@ -65,6 +65,14 @@ public class Generator {
 			case GOTOSTART:
 				jump(right);
 				break;
+			case NAME:
+				if (right.getRight().getRight().getName().equals(TokenTypeEnum.CMD)) {
+					varGetFromFunction(right);
+				}
+				else {
+					variableDeclaration(root);
+				}
+				break;
 			case END:
 				writer.eof();
 				break;
@@ -83,15 +91,20 @@ public class Generator {
 	private void variableDeclaration(TreeNode node) throws GenerationsFails {
 		String name = null;
 		ValueModel value = null;
-		TreeNode right = node.getRight();
+		TreeNode right = null;
+		right = node.getRight();
 		while (!right.getName().equals(TokenTypeEnum.VEND)) {
 			switch (right.getName()) {
 				case TYPE:
-					break;
 				case ASSI:
 					break;
 				case NAME:
-					name = (String)right.getLeft();
+					if (name == null) {
+						name = (String)right.getLeft();
+					}
+					else {
+						value = new ValueModel(right.getLeft().toString(), true);
+					}
 					break;
 				case CONST_ZAL:
 					value = new ValueModel(Double.parseDouble(right.getLeft().toString()));
@@ -100,7 +113,7 @@ public class Generator {
 					value = new ValueModel((right.getLeft().equals("yup"))?true:false);
 					break;
 				case CONST_WORD:
-					value = new ValueModel((String)right.getLeft(), false);
+					value = new ValueModel(right.getLeft().toString(), false);
 					break;
 				default:
     					throw new GenerationsFails("Generation fails at Token" + right);
@@ -115,10 +128,19 @@ public class Generator {
 		}
 		generate(right);
     }
+	
+	private void varGetFromFunction(TreeNode node) throws GenerationsFails {
+		String varName = node.getLeft().toString();
+		writer.addCommand(OperationEnum.PSA, varName);
+		TreeNode right = node.getRight().getRight();
+		TreeNode next = predefinedFunctionCalls(right, true);
+		writer.addCommand(OperationEnum.SAV);
+		generate(next);
+	}
 
 	private void printFunction(TreeNode node) throws GenerationsFails {
 		List<ValueModel> values = new ArrayList<>();
-		while (!node.getName().equals(TokenTypeEnum.PEND)) {
+		while (!node.getName().equals(TokenTypeEnum.PEND) && !node.getName().equals(TokenTypeEnum.VEND)) {
 			if (node.getName().equals(TokenTypeEnum.PRINT) || node.getName().equals(TokenTypeEnum.PNEXT)) {
 				node = node.getRight();
 				values.add(buildParameter(node));
@@ -159,7 +181,7 @@ public class Generator {
 		generate(right);
 	}
 	
-    private void predefinedFunctionCalls(TreeNode node) throws GenerationsFails {
+    private TreeNode predefinedFunctionCalls(TreeNode node, boolean ignoreNextCall) throws GenerationsFails {
     		OperationEnum operation = null;
 		List<ValueModel> values = new ArrayList<>();
 		while (!node.getName().equals(TokenTypeEnum.PEND)) {
@@ -174,6 +196,8 @@ public class Generator {
 				case PSTART:
 					node = node.getRight();
 					values.add(buildParameter(node));
+					break;
+				case PEND:
 					break;
 				default:
 					throw new GenerationsFails("Generation fails at Token" + node);
@@ -194,7 +218,13 @@ public class Generator {
 		else{
 			throw new GenerationsFails("Generation fails at Token" + node);
 		}
-		generate(node);
+		if (ignoreNextCall) {
+			return node;
+		}
+		else{
+			generate(node);
+			return null;
+		}
     }
     
 	private OperationEnum choosePredefinedOperation(TreeNode node) {
