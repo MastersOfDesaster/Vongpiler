@@ -12,6 +12,12 @@ public enum TokenTypeEnum {
     PNEXT("(,).*", ","), // next parameter
     PEND("(her\\?).*", "her?"), // end of parameter
     
+    // print
+    PRINT("(gieb).*", "gieb"),
+    
+    // comment
+    COMMENT("(:X).*"),
+    
     // variable
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
     ASSI("(goenn dir).*", "goenn dir"), // assign value

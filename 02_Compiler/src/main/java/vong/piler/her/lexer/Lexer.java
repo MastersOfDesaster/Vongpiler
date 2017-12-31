@@ -10,8 +10,9 @@ import org.apache.log4j.Logger;
 import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Lexer {
-    String source;
-    int line;
+    private String source;
+    private int line;
+    private boolean comment = false;
     private static Logger logger = LoggerVongManagerHer.getLogger(Lexer.class);
 
     public Lexer() {
@@ -33,15 +34,21 @@ public class Lexer {
             Token token = nextToken();
             if (token != null) {
                 switch (token.getType()) {
+                case COMMENT:
+                    this.comment = true;
+                    break;
                 case WHITESPACE:
                     break;
                 case NEWLINE:
                     // increase line number
+                    this.comment = false;
                     line++;
                     break;
                 default:
-                    tokenList.add(token);
-                    logger.debug(token);
+                    if (!this.comment) {
+                        tokenList.add(token);
+                        logger.debug(token);
+                    }
                 }
             } else {
                 logger.error("tokeng unbekamd:" + this.source);
