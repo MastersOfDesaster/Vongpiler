@@ -40,7 +40,7 @@ public class Parser {
 	    ruleMap.put(TokenTypeEnum.AAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL, TokenTypeEnum.IFSTART, TokenTypeEnum.IFEND, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.END}));	
 	    ruleMap.put(TokenTypeEnum.IFSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PSTART}));
 	    ruleMap.put(TokenTypeEnum.IFEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL, TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.END}));
-	    ruleMap.put(TokenTypeEnum.HASHTAG,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.IFSTART, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND TokenTypeEnum.AAL}));
+	    ruleMap.put(TokenTypeEnum.HASHTAG,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.IFSTART, TokenTypeEnum.GOTOSTART, TokenTypeEnum.GOTOEND,TokenTypeEnum.AAL}));
 	    ruleMap.put(TokenTypeEnum.GOTOSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.HASHTAG}));
 	    ruleMap.put(TokenTypeEnum.GOTOEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL, TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.END,Arrays.asList(new TokenTypeEnum [] {}));	    
