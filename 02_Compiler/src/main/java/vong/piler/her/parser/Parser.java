@@ -31,12 +31,15 @@ public class Parser {
 	    ruleMap.put(TokenTypeEnum.CONST_ISSO,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
 	    ruleMap.put(TokenTypeEnum.CONST_WORD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
 	    ruleMap.put(TokenTypeEnum.CONST_ZAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
-	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD}));
+	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRT, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.CMD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.PSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.PEND, TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.PNEXT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
-	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRT, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.PRT,Arrays.asList(new TokenTypeEnum [] { TokenTypeEnum.CMD, TokenTypeEnum.PRT, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.END,Arrays.asList(new TokenTypeEnum [] {}));
+	    
+	    
     }
     
     public TreeNode parse(List<Token> tokenList) {
