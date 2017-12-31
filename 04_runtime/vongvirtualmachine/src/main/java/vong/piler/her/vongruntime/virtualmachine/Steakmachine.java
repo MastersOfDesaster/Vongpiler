@@ -13,6 +13,7 @@ import vong.piler.her.vongruntime.exception.InstructionPointerOutOfBoundsExcepti
 import vong.piler.her.vongruntime.exception.ReadEmptyRegisterException;
 import vong.piler.her.vongruntime.exception.UnknownCommandException;
 import vong.piler.her.vongruntime.exception.UnsupportedNumberofArgumentsException;
+import vong.piler.her.vongruntime.util.StringUtils;
 import vong.piler.her.vongruntime.virtualmachine.model.Command;
 import vong.piler.her.vongruntime.virtualmachine.model.OperationEnum;
 import vong.piler.her.vongruntime.virtualmachine.model.StackElement;
@@ -137,7 +138,7 @@ public class Steakmachine {
 				printErrorOutput("Instruction-pointer ran out of bounds");
 				running = false;
 			} catch (UnknownCommandException e) {
-				printErrorOutput("Encountered unknown command");
+				printErrorOutput(String.format("Encountered unknown command: %s", e.getMessage()));
 				running = false;
 			} catch (EmptyLineException e) {
 				printErrorOutput("Encountered empty line in codefile");
@@ -156,6 +157,7 @@ public class Steakmachine {
 			if(rawCommand == null) {
 				throw new ReadEmptyRegisterException();
 			}
+			printDebugOutput(String.format("Read raw command: %s", rawCommand));
 			return rawCommand;
 		} catch (ArrayIndexOutOfBoundsException e) {
 			throw new InstructionPointerOutOfBoundsException();
@@ -163,7 +165,7 @@ public class Steakmachine {
 
 	}
 
-	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException, EmptyLineException {
+	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException, EmptyLineException, UnknownCommandException {
 		Command command = new Command();
 		String[] commandParts = rawCommand.split(" ");
 		if(commandParts.length == 0) {
@@ -174,8 +176,12 @@ public class Steakmachine {
 		if(readAssembler) {
 			command.setOpCode(OperationEnum.valueOf(commandParts[0]));			
 		}else {
-			command.setOpCode(OperationEnum.values()[Integer.parseInt(commandParts[0])]);
-		
+			try {
+				command.setOpCode(OperationEnum.values()[Integer.parseInt(commandParts[0])]);	
+			}catch(ArrayIndexOutOfBoundsException e) {
+				throw new UnknownCommandException(commandParts[0]);
+			}
+			
 		}
 		
 		if(commandParts.length == 2) {
@@ -185,6 +191,7 @@ public class Steakmachine {
 		}else if(commandParts.length != 1){
 			throw new UnsupportedNumberofArgumentsException();
 		}
+		printDebugOutput(String.format("Decoded command to: %s", command.toString()));
 		return command;
 	}
 
@@ -255,9 +262,35 @@ public class Steakmachine {
 			sav();
 			break;
 		default:
-			throw new UnknownCommandException();
+			throw new UnknownCommandException(command.getOpCode().toString());
 		}
+    	printDebugOutput(String.format("Executed command: %s",command.getOpCode().toString()));
+    	printDebugOutput(String.format("Stack: %s", stack.toString()));
+    	printDebugOutput(String.format("Registers: %s", printRegisters()));
 	}
+
+	private String printRegisters() {
+		boolean empty = true;
+		String registers = "[";
+		for(int i = 0; i< PROGRAM_MEMORY_SIZE; i++) {
+			StackElement element = programmMemory[i];
+			if(element != null) {
+				empty = false;
+				String register = String.format("%d -> %s, ", i, element.toString());
+				registers = registers + register;
+			}
+		}
+		if(!empty) {
+			//remove last " ," from string
+			registers = StringUtils.removeLastCharacters(registers, 2);
+		}
+		registers = registers + "]";
+		return registers;
+	}
+
+	
+
+
 
 	private void sav() {
 		StackElement element = stack.pop();	
@@ -332,7 +365,6 @@ public class Steakmachine {
 
 	private void psa(String firstParam) {
 		pushAddress(Integer.parseInt(firstParam));
-
 	}
 
 	private void psi(String firstParam) {

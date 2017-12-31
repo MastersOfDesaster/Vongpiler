@@ -43,6 +43,7 @@ public class VongRuntime {
 					vvm.load(new File(filename));
 					vvm.run();		
 				}catch(IndexOutOfBoundsException e) {
+					e.printStackTrace();
 					System.err.println("I kan di Datei nit findn");
 				}
 
