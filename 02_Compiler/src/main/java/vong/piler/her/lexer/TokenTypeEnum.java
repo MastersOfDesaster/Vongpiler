@@ -32,7 +32,7 @@ public enum TokenTypeEnum {
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
     // whitespace
-    WHITESPACE("( ).*"), NEWLINE("(\n).*"), COMMENT("(:X).*"),
+    COMMENT(":X(.*?)\n.*"), WHITESPACE("( ).*"), NEWLINE("(\n).*"),
 
     // types
     TYPE("(zal|word|isso).*", "zal|word|isso"),

@@ -3,10 +3,8 @@ package vong.piler.her.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import vong.piler.her.Constants;
 import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.exceptions.WrongOperationException;
 import vong.piler.her.generator.model.ValueModel;

@@ -212,12 +212,6 @@ public class Steakmachine {
 		case END:
 			end();
 			break;
-		case EQZ:
-			eqz();
-			break;
-		case EQI:
-			eqi();
-			break;
 		case GTR:
 			gtr();
 			break;
@@ -236,12 +230,6 @@ public class Steakmachine {
 		case MUL:
 			mul();
 			break;
-		case NQI:
-			nqi();
-			break;
-		case NQZ:
-			nqz();
-			break;
 		case OHR:
 			ohr();
 			break;
@@ -254,83 +242,48 @@ public class Steakmachine {
 		case SUB:
 			sub();
 			break;
-		case SVA:
-			sva();
-			break;
-		case SVZ:
-			svz();
-			break;
-		case SVI:
-			svi();
-			break;
-		case EQW:
-			eqw();
-			break;
-		case NQW:
-			nqw();
-			break;
 		case PSW:
 			psw(command.getFirstParam());
 			break;
-		case SVW:
-			svw();
+		case EQL:
+			eql();
+			break;
+		case NOT:
+			not();
+			break;
+		case SAV:
+			sav();
 			break;
 		default:
 			throw new UnknownCommandException();
 		}
 	}
 
-	private void svw() {
-		String word = popWord();
+	private void sav() {
+		StackElement element = stack.pop();	
 		int address = popAddress();
-		StackElement element = new StackElement(Type.WORD, word);
 		programmMemory[address] = element;
+	}
+
+	private void not() {
+		boolean isso = popIsso();
+		isso = !isso;
+		pushIsso(isso);	
+	}
+
+	private void eql() {
+		StackElement arg1 = stack.pop();
+		StackElement arg2 = stack.pop();
+		
+		if(arg1.equals(arg2)) {
+			pushIsso(true);
+		}else {
+			pushIsso(false);
+		}
 	}
 
 	private void psw(String word) {
 		pushWord(word);
-	}
-
-	private void nqw() {
-		String w1 = popWord();
-		String w2 = popWord();
-		boolean isso = !w1.equals(w2);
-		pushIsso(isso);
-	}
-
-	private void eqw() {
-		String w1 = popWord();
-		String w2 = popWord();
-		boolean isso = w1.equals(w2);
-		pushIsso(isso);
-	}
-
-	private void eqz() {
-		double a = popZal();
-		double b = popZal();
-		boolean isso = b == a;
-		pushIsso(isso);
-	}
-
-	private void eqi() {
-		boolean a = popIsso();
-		boolean b = popIsso();
-		boolean isso = b == a;
-		pushIsso(isso);
-	}
-
-	private void nqz() {
-		double a = popZal();
-		double b = popZal();
-		boolean isso = b != a;
-		pushIsso(isso);
-	}
-
-	private void nqi() {
-		boolean a = popIsso();
-		boolean b = popIsso();
-		boolean isso = b != a;
-		pushIsso(isso);
 	}
 
 	private void sub() {
@@ -390,27 +343,6 @@ public class Steakmachine {
 	private boolean parseIsso(String firstParam) {
 		int isso = Integer.parseInt(firstParam);
 		return isso != 0 ? true : false;
-	}
-
-	private void sva() {
-		int address = popAddress();
-		int storeAddress = popAddress();
-		StackElement element = new StackElement(Type.ADDRESS, address);
-		programmMemory[storeAddress] = element;
-	}
-
-	private void svi() {
-		boolean isso = popIsso();
-		int address = popAddress();
-		StackElement element = new StackElement(Type.ISSO, isso);
-		programmMemory[address] = element;
-	}
-
-	private void svz() {
-		double zal = popZal();
-		int address = popAddress();
-		StackElement element = new StackElement(Type.ZAL, zal);
-		programmMemory[address] = element;
 	}
 
 	private void gtr() {
