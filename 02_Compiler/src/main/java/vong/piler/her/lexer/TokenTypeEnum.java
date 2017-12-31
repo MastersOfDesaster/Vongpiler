@@ -21,7 +21,12 @@ public enum TokenTypeEnum {
     IFSTART("(bist du).*", "bist du"),
     IFEND("(real rap).*", "real rap"),
     
-    // variable
+    // jump
+    HASHTAG("#\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "#"),
+    GOTOSTART("(gehe zu).*", "gehe zu"),
+    GOTOEND("(du larry!!!).*", "du larry!!!"),
+    
+    // declare variable
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
     ASSI("(goenn dir).*", "goenn dir"), // assign value
     VEND("(!!!).*", "!!!"), // end of variable declaration

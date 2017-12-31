@@ -17,7 +17,7 @@ public class Lexer {
 
     public Lexer() {
         // Print Token-Grammar
-         System.out.println(TokenTypeEnum.toMarkdown());
+        System.out.println(TokenTypeEnum.toMarkdown());
     }
 
     public List<Token> lex(String source) throws Exception {
@@ -78,6 +78,7 @@ public class Lexer {
                 case CONST_ZAL:
                 case CONST_WORD:
                 case CONST_ISSO:
+                case HASHTAG:
                     token.setContent(matcher.group(1));
                     break;
                 default:
@@ -85,9 +86,10 @@ public class Lexer {
 
                 // calculate lexed-length and cut from source-string
                 int matchlength = matcher.group(1).length();
-                // we have to skip the quotation mark at end
                 if (tokenType == TokenTypeEnum.CONST_WORD) {
-                    matchlength += 2;
+                    matchlength += 2; // skip the quotation marks at start and end
+                } else if (tokenType == TokenTypeEnum.HASHTAG) {
+                    matchlength++; // skip hashtag
                 }
                 this.source = this.source.substring(matchlength);
                 break;
