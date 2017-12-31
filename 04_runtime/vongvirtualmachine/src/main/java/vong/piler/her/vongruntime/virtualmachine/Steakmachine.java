@@ -343,8 +343,8 @@ public class Steakmachine {
 	}
 
 	private void jmt() {
-		int address = popAddress();
 		boolean isso = popIsso();
+		int address = popAddress();
 		if (isso) {
 			instructionPointer = address;
 		}
