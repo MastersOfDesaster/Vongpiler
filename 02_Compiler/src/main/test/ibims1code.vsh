@@ -6,7 +6,7 @@ i bims 1 isso varIsso goenn dir yup !!!
 
 was ist das fuer 1 sume vong var1, 12 her? :X LAWL
 
-gieb "DAFUQ" her?
+gieb "DAFUQ", 12 her?
 
 bist du vong varIsso, yup her?
     halo i bims!!!
