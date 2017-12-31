@@ -12,7 +12,6 @@ import vong.piler.her.logger.LoggerVongManagerHer;
 public class Lexer {
     private String source;
     private int line;
-    private boolean comment = false;
     private static Logger logger = LoggerVongManagerHer.getLogger(Lexer.class);
 
     public Lexer() {
@@ -34,21 +33,16 @@ public class Lexer {
             Token token = nextToken();
             if (token != null) {
                 switch (token.getType()) {
-                case COMMENT:
-                    this.comment = true;
-                    break;
                 case WHITESPACE:
                     break;
                 case NEWLINE:
+                case COMMENT:
                     // increase line number
-                    this.comment = false;
                     line++;
                     break;
                 default:
-                    if (!this.comment) {
-                        tokenList.add(token);
-                        logger.debug(token);
-                    }
+                    tokenList.add(token);
+                    logger.debug(token);
                 }
             } else {
                 logger.error("tokeng unbekamd:" + this.source);
@@ -86,10 +80,19 @@ public class Lexer {
 
                 // calculate lexed-length and cut from source-string
                 int matchlength = matcher.group(1).length();
-                if (tokenType == TokenTypeEnum.CONST_WORD) {
-                    matchlength += 2; // skip the quotation marks at start and end
-                } else if (tokenType == TokenTypeEnum.HASHTAG) {
+                switch (tokenType) {
+                case COMMENT:
+                    matchlength += 3; // skip ":X" and "\n"
+                    break;
+                case CONST_WORD:
+                    matchlength += 2; // skip the quotation marks at start and
+                                      // end
+                    break;
+                case HASHTAG:
                     matchlength++; // skip hashtag
+                    break;
+                default:
+                    break;
                 }
                 this.source = this.source.substring(matchlength);
                 break;
