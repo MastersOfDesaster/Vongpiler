@@ -28,15 +28,18 @@ public class Parser {
 	    ruleMap.put(TokenTypeEnum.TYPE,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.NAME,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.ASSI, TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.PSTART}));
 	    ruleMap.put(TokenTypeEnum.ASSI,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
-	    ruleMap.put(TokenTypeEnum.CONST_ISSO,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
-	    ruleMap.put(TokenTypeEnum.CONST_WORD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
-	    ruleMap.put(TokenTypeEnum.CONST_ZAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND}));
-	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD}));
+	    ruleMap.put(TokenTypeEnum.CONST_ISSO,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
+	    ruleMap.put(TokenTypeEnum.CONST_WORD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
+	    ruleMap.put(TokenTypeEnum.CONST_ZAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
+	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.CMD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.PSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.PEND, TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.PNEXT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
-	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.PRINT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
 	    ruleMap.put(TokenTypeEnum.END,Arrays.asList(new TokenTypeEnum [] {}));
+	    
+	    
     }
     
     public TreeNode parse(List<Token> tokenList) {
@@ -56,7 +59,10 @@ public class Parser {
 	    				if(t.getType().equals(TokenTypeEnum.TYPE)) {
 	    					type = t.getContent();
 	    				}
-	    				if((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso")) || (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word")) || (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")) ) {
+	    				if(t.getType().equals(TokenTypeEnum.PRINT)) {
+	    					type = null;
+	    				}
+	    				if(type != null &&((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso")) || (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word")) || (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal"))) ) {
 	    					logger.error("type error in line " + t.getLine() + ": Got: " + t.getType().getLabel() + " -->  Expected: " + type);
 	    					System.exit(0);
 	    				}
