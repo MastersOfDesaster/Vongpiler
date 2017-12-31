@@ -3,8 +3,9 @@ package vong.piler.her.lexer;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
-    START("(was ist das fuer 1 code\\?).*", "was ist das fuer 1 code?"), // start of program
-    END("(1 nicer!!!).*", "1 nicer!!!"), // end of program
+    // program
+    START("(was ist das fuer 1 code\\?).*", "was ist das fuer 1 code?"), // start
+    END("(1 nicer!!!).*", "1 nicer!!!"), // end
     
     // function
     CMD("(was ist das fuer 1).*", "was ist das fuer 1"), // call function
@@ -16,8 +17,9 @@ public enum TokenTypeEnum {
     PRINT("(gieb).*", "gieb"),
     AAL("(halo i bims!!!).*", "halo i bims!!!"),
     
-    // comment
-    COMMENT("(:X).*"),
+    // if
+    IFSTART("(bist du).*", "bist du"),
+    IFEND("(real rap).*", "real rap"),
     
     // variable
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
@@ -25,7 +27,7 @@ public enum TokenTypeEnum {
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
     // whitespace
-    WHITESPACE("( ).*"), NEWLINE("(\n).*"),
+    WHITESPACE("( ).*"), NEWLINE("(\n).*"), COMMENT("(:X).*"),
 
     // types
     TYPE("(zal|word|isso).*", "zal|word|isso"),
@@ -35,7 +37,8 @@ public enum TokenTypeEnum {
     CONST_ISSO("\\b(yup|nope)\\b.*", "isso"), // constant of type isso (boolean)
     CONST_WORD("\\\"(.*?)\\\".*", "word"), // constant of type word (string)
 
-    NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name"); // name/identifier
+    // name / identifier
+    NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name");
     
     private String regEx;
     private String label;
