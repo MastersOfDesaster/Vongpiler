@@ -294,6 +294,9 @@ public class Steakmachine {
 
 	private void sav() {
 		StackElement element = stack.pop();	
+		if(element.getType() == Type.ADDRESS) {
+			element = programmMemory[(int) element.getValue()];
+		}
 		int address = popAddress();
 		programmMemory[address] = element;
 	}
@@ -515,7 +518,7 @@ public class Steakmachine {
 	}
 	
 	private void printOutput(String message) {
-		standardOut.print(message);
+		standardOut.println(message);
 	}
 	
 	private void printDebugOutput(String message) {

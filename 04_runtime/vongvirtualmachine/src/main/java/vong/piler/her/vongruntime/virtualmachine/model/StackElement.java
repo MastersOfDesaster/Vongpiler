@@ -19,7 +19,7 @@ public class StackElement {
 	public String toString() {
 		switch(type) {
 		case ADDRESS:
-			return "adress: " + value.toString();
+			return "address: " + value.toString();
 		case ISSO:
 			return "isso: " + (((boolean) value)? "yup" : "nope");
 		case ZAL:
