@@ -311,6 +311,14 @@ public class Steakmachine {
 		StackElement arg1 = stack.pop();
 		StackElement arg2 = stack.pop();
 		
+		if(arg1.getType() == Type.ADDRESS) {
+			arg1 = programmMemory[(int) arg1.getValue()];
+		}
+		
+		if(arg2.getType() == Type.ADDRESS) {
+			arg2 = programmMemory[(int) arg2.getValue()];
+		}
+		
 		if(arg1.equals(arg2)) {
 			pushIsso(true);
 		}else {
