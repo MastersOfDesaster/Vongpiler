@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import vong.piler.her.vongruntime.virtualmachine.Steakmachine;
 
-public class OpCodeTests {
+public class OpCodeTest {
 	
 	Steakmachine vvm = new Steakmachine();
 	ByteArrayOutputStream standardOut = new ByteArrayOutputStream();
@@ -25,7 +25,7 @@ public class OpCodeTests {
 		vvm.setReadAssembler(true);
 		vvm.init();
 	}
-	
+
 	@Test
 	public void testAddWithPositives(){
 		loadFile("addWithPositives.vch");
@@ -164,7 +164,7 @@ public class OpCodeTests {
 	public void testJmpToIllegalLine(){
 		loadFile("jmpToIllegalLine.vch");
 		vvm.run();
-		assertEquals("instruction-pointer at empty register", errorOut.toString());
+		assertEquals("instruction-pointer at empty register\r\n", errorOut.toString());
 	}
 	
 	private void loadFile(String name) {
