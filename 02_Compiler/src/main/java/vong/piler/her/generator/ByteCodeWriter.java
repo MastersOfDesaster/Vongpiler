@@ -79,6 +79,27 @@ public class ByteCodeWriter {
 		}
 	}
 	
+	void addNOT() {
+		try {
+			linesToWrite.add(registerHandler.addOperation(OperationEnum.NOT));
+		} catch (WrongNumberOfArgumentsException e) {
+			logger.error("could not write the AAL operation", e);
+			return;
+		}
+	}
+	
+	void fillBlankAddress(String blank, String address) { //TODO: Maybe add start index to shorten the loop
+		blank = ":X" + blank + "X:";
+		int index = 0;
+		for (String line : linesToWrite) {
+			if (line.contains(blank)) {
+				linesToWrite.set(index, line.replace(blank, address));
+				break;
+			}
+			index++;
+		}
+	}
+	
 	private boolean writeToFile() {
 		try {
 			File file = new File("gen/" + filename + ".vch");

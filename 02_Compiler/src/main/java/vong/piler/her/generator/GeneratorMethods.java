@@ -83,19 +83,18 @@ class GeneratorMethods {
 		return operations;
 	}
 	
-	static List<String> generateJump(String address, Boolean isso){
+	static List<String> generateJump(String address, boolean isso){
 		List<String> operations = new ArrayList<>();
 		operations.add(registerHandler.addJumpOperation(address));
 		try {
-			if (isso != null) {
-				operations.add(registerHandler.addOperation(OperationEnum.PSI, isso.toString()));
+			if (isso) {
 				operations.add(registerHandler.addOperation(OperationEnum.JMT));
 			}
 			else {
 				operations.add(registerHandler.addOperation(OperationEnum.JMP));
 			}
 		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the operations for an " + ((isso != null)?OperationEnum.JMT:OperationEnum.JMP), e);
+			logger.error("could not write the operations for an " + ((isso)?OperationEnum.JMT:OperationEnum.JMP), e);
 			return null;
 		}
 		return operations;
@@ -107,21 +106,27 @@ class GeneratorMethods {
 			int address = registerHandler.addVariable(name);
 			operations.add(registerHandler.addOperation(OperationEnum.PSA, address + ""));
 			operations.add(registerHandler.addOperation(value.getOperation(), value.getValue()));
-			switch(value.getOperation()) {
-				case PSI:
-					operations.add(registerHandler.addOperation(OperationEnum.SVI));
-					break;
-				case PSW:
-					operations.add(registerHandler.addOperation(OperationEnum.SVW));
-					break;
-				case PSZ:
-					operations.add(registerHandler.addOperation(OperationEnum.SVZ));
-					break;
-				default:
-					throw new WrongOperationException("The Operation " + value.getOperation() + " has no corresponding Operation");
-			}
-		} catch (WrongNumberOfArgumentsException | WrongOperationException e) {
+			operations.add(registerHandler.addOperation(OperationEnum.SAV));
+		} catch (WrongNumberOfArgumentsException e) {
 			logger.error("could not write the operations for a variable save", e);
+			return null;
+		}
+		return operations;
+	}
+
+	static List<String> generatePrint(List<ValueModel> values) {
+		List<String> operations = new ArrayList<>();
+		try {
+			values.forEach(value -> {
+				try{
+					operations.add(registerHandler.addOperation(value.getOperation(), value.getValue()));
+					operations.add(registerHandler.addOperation(OperationEnum.PRT));
+				} catch (WrongNumberOfArgumentsException wnoae) {
+					throw new RuntimeException(wnoae);
+				}
+			});
+		} catch (RuntimeException e) {
+			logger.error("could not write the operations for an PRT", e);
 			return null;
 		}
 		return operations;

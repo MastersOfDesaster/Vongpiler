@@ -60,25 +60,11 @@ public class ComparatorZalGenarationTest {
 	@Test
 	public void eqzTest() {
 		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/eqz.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQZ, values));
+		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQL, values));
 		writer.addPrt();
 		writer.eof();
 		try {
 			assertTrue("Files are not equal", testFileContent("eqz.vch"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void nqzTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/nqz.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.NQZ, values));
-		writer.addPrt();
-		writer.eof();
-		try {
-			assertTrue("Files are not equal", testFileContent("nqz.vch"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail(e.getMessage());

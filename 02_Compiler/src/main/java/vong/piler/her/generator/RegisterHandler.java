@@ -48,8 +48,21 @@ class RegisterHandler {
 		return dataRegister.get(name)+"";
 	}
 	
-	void addJumpMarker(String name) {
-		addressMarkerRegister.put(name, addressPointer);
+	String getDataAddress(String name) {
+		if (!addressMarkerRegister.containsKey(name)) {
+			addJumpMarkerIfNotExists(name);
+		}
+		return addressMarkerRegister.get(name)+"";
+	}
+	
+	boolean addJumpMarkerIfNotExists(String name) {
+		if (!addressMarkerRegister.containsKey(name)) {
+			addressMarkerRegister.put(name, addressPointer);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	String addOperation(OperationEnum operation) throws WrongNumberOfArgumentsException {
@@ -95,12 +108,15 @@ class RegisterHandler {
 		return addOperation(operation, getVariableAddress(address), count);
 	}
 	
-	String addJumpOperation(String address) {
+	String addJumpOperation(String addressName) {
 		operationAdded(OperationEnum.PSA);
 		StringBuilder operationBuilder = new StringBuilder();
 		operationBuilder.append(OperationEnum.PSA.ordinal());
 		operationBuilder.append(" ");
-		operationBuilder.append(addressMarkerRegister.get(address));
+		if (addressMarkerRegister.containsKey(addressName))
+			operationBuilder.append(addressMarkerRegister.get(addressName));
+		else
+			operationBuilder.append(":X" + addressName + "X:");
 		logger.debug("added operation " +  operationBuilder.toString());
 		return operationBuilder.toString();
 	}
