@@ -249,27 +249,3 @@ public class Generator {
 		return -1;
 	}
 }
-
-//"sume" | "abziehung" | "mahl" | "teilung" | "räst" | "ismär" | "isweniga" | "same"
-/*private void testPrint(TreeNode root, int tabCount) {
-    		System.out.println("\t\t" + root.getName());
-    		leftPrint(root.getLeft(), tabCount-1);
-    		if (root.getRight() != null)
-    			testPrint(root.getRight(), ++tabCount);
-    }
-    
-    private void leftPrint(Object left, int tabCount) {
-    		for (int i = 0; i < tabCount; i++) {
-    			System.out.print("\t");
-		}
-    		if (left == null)
-    			System.out.print("null");
-    		else if (left instanceof Double) 
-			System.out.print(((Double) left));
-		else if (left instanceof Boolean) 
-			System.out.print(((Boolean) left));
-		else if (left instanceof String) 
-			System.out.print(((String) left));
-		else 
-			System.out.print(left.toString());
-    }*/

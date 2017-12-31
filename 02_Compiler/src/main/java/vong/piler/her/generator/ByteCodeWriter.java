@@ -11,7 +11,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import vong.piler.her.Constants;
-import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
@@ -31,19 +30,19 @@ public class ByteCodeWriter {
 		registerHandler = RegisterHandler.getInstance();
 	}
 
-	void addCommand(OperationEnum command) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command) {
 		linesToWrite.add(registerHandler.addOperation(command));
 	}
 
-	void addCommand(OperationEnum command, String para) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, String para) {
 		linesToWrite.add(registerHandler.addOperation(command, para));
 	}
 
-	void addCommand(OperationEnum command, int address, int count) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, int address, int count) {
 		linesToWrite.add(registerHandler.addOperation(command, address, count));
 	}
 
-	void addCommand(OperationEnum command, String address, int count) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, String address, int count) {
 		linesToWrite.add(registerHandler.addOperation(command, address, count));
 	}
 	

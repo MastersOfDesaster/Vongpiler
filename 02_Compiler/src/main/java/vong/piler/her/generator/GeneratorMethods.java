@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
-import vong.piler.her.exceptions.WrongOperationException;
 import vong.piler.her.generator.model.ValueModel;
 import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;

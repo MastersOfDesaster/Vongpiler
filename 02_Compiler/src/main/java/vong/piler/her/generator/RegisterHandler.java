@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
@@ -98,7 +97,7 @@ class RegisterHandler {
 		return operationBuilder.toString();
 	}
 	
-	String addOperation(OperationEnum operation, String address, int count) throws WrongNumberOfArgumentsException {
+	String addOperation(OperationEnum operation, String address, int count) {
 		return addOperation(operation, getVariableAddress(address), count);
 	}
 	
