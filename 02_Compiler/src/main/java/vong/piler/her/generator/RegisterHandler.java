@@ -65,9 +65,7 @@ class RegisterHandler {
 		}
 	}
 	
-	String addOperation(OperationEnum operation) throws WrongNumberOfArgumentsException {
-		if (operation.getArgCount() != 0)
-			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 0");
+	String addOperation(OperationEnum operation) {
 		operationAdded(operation);
 		StringBuilder operationBuilder = new StringBuilder();
 		operationBuilder.append(operation.ordinal());
@@ -75,9 +73,7 @@ class RegisterHandler {
 		return operationBuilder.toString();
 	}
 	
-	String addOperation(OperationEnum operation, String parameter) throws WrongNumberOfArgumentsException {
-		if (operation.getArgCount() != 1)
-			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 1");
+	String addOperation(OperationEnum operation, String parameter) {
 		if (operation.equals(OperationEnum.PSA) && parameterIsNoNumber(parameter)) {
 			parameter = getVariableAddress(parameter);
 		}
@@ -90,9 +86,7 @@ class RegisterHandler {
 		return operationBuilder.toString();
 	}
 
-	String addOperation(OperationEnum operation, int address, int count) throws WrongNumberOfArgumentsException {
-		if (operation.getArgCount() != 2)
-			throw new WrongNumberOfArgumentsException(operation + " has " + operation.getArgCount() + " arguments instead of 2");
+	String addOperation(OperationEnum operation, int address, int count) {
 		operationAdded(operation);
 		StringBuilder operationBuilder = new StringBuilder();
 		operationBuilder.append(operation.ordinal());
@@ -123,7 +117,7 @@ class RegisterHandler {
 	
 	void operationAdded(OperationEnum operation) {
 		logger.debug("Opeartion will be added to address " + addressPointer);
-		addressPointer += (operation.getArgCount() + 1);
+		addressPointer ++;
 	}
 	
 	private boolean parameterIsNoNumber(String parameter) {

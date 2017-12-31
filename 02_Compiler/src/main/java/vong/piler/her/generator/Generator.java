@@ -58,7 +58,7 @@ public class Generator {
 			case IFEND:
 				int free = findFreeIfCounter();
 				registerHandler.addJumpMarkerIfNotExists("IF" + free);
-				writer.fillBlankAddress("IF"+ifCounter, registerHandler.getDataAddress("IF"+ifCounter));
+				writer.fillBlankAddress("IF"+free, registerHandler.getDataAddress("IF"+free));
 				ifGenerated.add(free);
 				generate(right);
 				break;
@@ -75,7 +75,7 @@ public class Generator {
 
 	private void jump(TreeNode node) throws GenerationsFails {
 		TreeNode right = node.getRight();
-		writer.addMultiCommand(GeneratorMethods.generateJump(right.getLeft().toString(), false));
+		writer.addMultiCommand(GeneratorMethods.generateJump(right.getLeft().toString(), false, null));
 		right = right.getRight();
 		generate(right);
 	}
@@ -151,9 +151,10 @@ public class Generator {
 		else {
 			throw new GenerationsFails("Second parameter of if has to be CONST_ISSO");
 		}
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQL, values));
-		writer.addNOT();
-		writer.addMultiCommand(GeneratorMethods.generateJump("IF" + ++ifCounter, true));
+		List<String> operationBetween = new ArrayList<>();
+		operationBetween.addAll(GeneratorMethods.generateComparator(OperationEnum.EQL, values));
+		operationBetween.add(registerHandler.addOperation(OperationEnum.NOT));
+		writer.addMultiCommand(GeneratorMethods.generateJump("IF" + ++ifCounter, true, operationBetween));
 		right = right.getRight();
 		generate(right);
 	}

@@ -6,35 +6,25 @@ package vong.piler.her.steakmachine;
  */
 
 public enum OperationEnum {
-/*00*/    PSA(1), // push address to stack
-/*01*/    PSZ(1), // push number(zal) to stack
-/*02*/    PSI(1), // push boolean(isso) to stack
-/*03*/    PSW(1),
-/*04*/    ADD(0), // arg1 + arg2
-/*05*/    SUB(0), // arg1 - arg2
-/*06*/    MUL(0), // arg1 * arg2
-/*07*/    DIV(0), // arg1 / arg2
-/*08*/    MOD(0), // arg1 % arg2
-/*09*/    LES(0), // arg1 < arg2
-/*10*/    EQL(0), // arg1 == arg2
-/*11*/    NOT(0), // arg1 != arg2
-/*12*/    GTR(0), // arg1 > arg2
-/*13*/    AND(0), // arg1 && arg2
-/*14*/    OHR(0), // arg1 || arg2
-/*15*/    JMP(0), // jump to address(arg)
-/*16*/    JMT(0), // jump to address(arg) if previous compare was true
-/*17*/    PRT(0), // prints arg
-/*18*/    AAL(0), // prints "hello world!"
-/*19*/    SAV(0),
-/*20*/    END(0);  // end of code
-	
-	private int argCount;
-	
-	OperationEnum(int argCount) {
-		this.argCount = argCount;
-	}
-	
-	public int getArgCount() {
-		return argCount;
-	}
+/*00*/    PSA, // push address to stack
+/*01*/    PSZ, // push number(zal) to stack
+/*02*/    PSI, // push boolean(isso) to stack
+/*03*/    PSW,
+/*04*/    ADD, // arg1 + arg2
+/*05*/    SUB, // arg1 - arg2
+/*06*/    MUL, // arg1 * arg2
+/*07*/    DIV, // arg1 / arg2
+/*08*/    MOD, // arg1 % arg2
+/*09*/    LES, // arg1 < arg2
+/*10*/    EQL, // arg1 == arg2
+/*11*/    NOT, // arg1 != arg2
+/*12*/    GTR, // arg1 > arg2
+/*13*/    AND, // arg1 && arg2
+/*14*/    OHR, // arg1 || arg2
+/*15*/    JMP, // jump to address(arg)
+/*16*/    JMT, // jump to address(arg) if previous compare was true
+/*17*/    PRT, // prints arg
+/*18*/    AAL, // prints "hello world!"
+/*19*/    SAV,
+/*20*/    END;  // end of code
 }

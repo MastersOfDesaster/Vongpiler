@@ -52,40 +52,20 @@ public class ByteCodeWriter {
 	}
 	
 	void eof() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
-			writeToFile();
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the END operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
+		writeToFile();
 	}
 	
 	void addPrt() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the PRT operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
 	}
 	
 	void addAAL() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the AAL operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
 	}
 	
 	void addNOT() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.NOT));
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the AAL operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.NOT));
 	}
 	
 	void fillBlankAddress(String blank, String address) { //TODO: Maybe add start index to shorten the loop
