@@ -18,8 +18,8 @@ public enum TokenTypeEnum {
     AAL("(halo i bims!!!).*", "halo i bims!!!"),
     
     // if
-    IFSTART("(bist du).*"),
-    IFEND("(real rap).*"),
+    IFSTART("(bist du).*", "bist du"),
+    IFEND("(real rap).*", "real rap"),
     
     // variable
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
