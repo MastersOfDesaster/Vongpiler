@@ -44,6 +44,20 @@ public class Steakmachine {
 		return CODE_MEMORY_SIZE;
 	}
 
+	
+	
+
+
+	public boolean isDebugOutput() {
+		return debugOutput;
+	}
+
+
+
+	public void setDebugOutput(boolean debugOutput) {
+		this.debugOutput = debugOutput;
+	}
+
 
 
 	public boolean isReadAssembler() {
@@ -533,7 +547,7 @@ public class Steakmachine {
 	}
 	
 	private void printErrorOutput(String error) {
-		errorOut.print(error);
+		errorOut.println(error);
 	}
 	
 	private void printOutput(String message) {
