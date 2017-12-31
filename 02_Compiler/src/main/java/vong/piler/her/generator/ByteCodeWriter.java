@@ -11,7 +11,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import vong.piler.her.Constants;
-import vong.piler.her.exceptions.WrongNumberOfArgumentsException;
 import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
@@ -31,19 +30,19 @@ public class ByteCodeWriter {
 		registerHandler = RegisterHandler.getInstance();
 	}
 
-	void addCommand(OperationEnum command) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command) {
 		linesToWrite.add(registerHandler.addOperation(command));
 	}
 
-	void addCommand(OperationEnum command, String para) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, String para) {
 		linesToWrite.add(registerHandler.addOperation(command, para));
 	}
 
-	void addCommand(OperationEnum command, int address, int count) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, int address, int count) {
 		linesToWrite.add(registerHandler.addOperation(command, address, count));
 	}
 
-	void addCommand(OperationEnum command, String address, int count) throws WrongNumberOfArgumentsException {
+	void addCommand(OperationEnum command, String address, int count) {
 		linesToWrite.add(registerHandler.addOperation(command, address, count));
 	}
 	
@@ -52,30 +51,31 @@ public class ByteCodeWriter {
 	}
 	
 	void eof() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
-			writeToFile();
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the END operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
+		writeToFile();
 	}
 	
 	void addPrt() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the PRT operation", e);
-			return;
-		}
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
 	}
 	
 	void addAAL() {
-		try {
-			linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
-		} catch (WrongNumberOfArgumentsException e) {
-			logger.error("could not write the AAL operation", e);
-			return;
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
+	}
+	
+	void addNOT() {
+		linesToWrite.add(registerHandler.addOperation(OperationEnum.NOT));
+	}
+	
+	void fillBlankAddress(String blank, String address) { //TODO: Maybe add start index to shorten the loop
+		blank = ":X" + blank + "X:";
+		int index = 0;
+		for (String line : linesToWrite) {
+			if (line.contains(blank)) {
+				linesToWrite.set(index, line.replace(blank, address));
+				break;
+			}
+			index++;
 		}
 	}
 	
