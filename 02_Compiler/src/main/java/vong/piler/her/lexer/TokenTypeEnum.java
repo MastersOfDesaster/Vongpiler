@@ -14,6 +14,7 @@ public enum TokenTypeEnum {
     
     // print
     PRINT("(gieb).*", "gieb"),
+    AAL("(halo i bims!!!).*", "halo i bims!!!"),
     
     // comment
     COMMENT("(:X).*"),
