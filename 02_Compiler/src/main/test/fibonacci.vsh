@@ -10,7 +10,7 @@ i bims 1 isso help goenn dir nope!!!
 
 #start
 
-was ist das fuer 1 isweniga vong erg, 1000 her?
+help goenn dir was ist das fuer 1 isweniga vong erg, 1000 her?
 
 bist du vong help, yup her?
 

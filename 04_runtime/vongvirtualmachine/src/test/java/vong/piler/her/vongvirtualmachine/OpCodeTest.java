@@ -164,7 +164,7 @@ public class OpCodeTest {
 	public void testJmpToIllegalLine(){
 		loadFile("jmpToIllegalLine.vch");
 		vvm.run();
-		assertEquals("instruction-pointer at empty register\r\n", errorOut.toString());
+		assertEquals("instruction-pointer at empty register\n", errorOut.toString());
 	}
 	
 	@Test
