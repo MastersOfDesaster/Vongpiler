@@ -167,6 +167,34 @@ public class OpCodeTest {
 		assertEquals("instruction-pointer at empty register\r\n", errorOut.toString());
 	}
 	
+	@Test
+	public void testEqlWithWords(){
+		loadFile("eqlWithWords.vch");
+		vvm.run();
+		assertEquals("isso: yup", standardOut.toString());
+	}
+	
+	@Test
+	public void testEqlWithZals(){
+		loadFile("eqlWithZals.vch");
+		vvm.run();
+		assertEquals("isso: yup", standardOut.toString());
+	}
+	
+	@Test
+	public void testEqlWithIssos(){
+		loadFile("eqlWithIssos.vch");
+		vvm.run();
+		assertEquals("isso: yup", standardOut.toString());
+	}
+	
+	@Test
+	public void testEqlWithDifferentTypes(){
+		loadFile("eqlWithDifferentTypes.vch");
+		vvm.run();
+		assertEquals("isso: nope", standardOut.toString());
+	}
+	
 	private void loadFile(String name) {
 		File file = new File(getClass().getClassLoader().getResource(name).getFile());
 		vvm.load(file);
