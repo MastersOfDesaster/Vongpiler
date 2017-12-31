@@ -38,4 +38,11 @@ public class Command {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s %s %s", opCode, firstParam == null? "" : firstParam , secondParam == null?"": secondParam);
+	}
+	
+	
+
 }
