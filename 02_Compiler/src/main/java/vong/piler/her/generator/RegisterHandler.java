@@ -35,6 +35,9 @@ class RegisterHandler {
 	}
 	
 	int addVariable(String name) {
+		if (dataRegister.containsKey(name)) {
+			return dataRegister.get(name);
+		}
 		dataRegister.put(name, dataPointer);
 		logger.debug("added Varaiable " + name + " at address " + (dataPointer));
 		return dataPointer++;
