@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             // read source-file
-            URI sourceUri = Main.class.getClassLoader().getResource("ibims1code.vsh").toURI();
+            URI sourceUri = Main.class.getClassLoader().getResource("fibonacci.vsh").toURI();
             String source = new String(Files.readAllBytes(Paths.get(sourceUri)));
             
             // generate token-list
