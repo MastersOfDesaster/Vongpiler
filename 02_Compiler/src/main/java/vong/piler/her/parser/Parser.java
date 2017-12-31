@@ -23,7 +23,7 @@ public class Parser {
 	
     public Parser() {
     	// Add rules to map
-	    ruleMap.put(TokenTypeEnum.START,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART}));
+	    ruleMap.put(TokenTypeEnum.START,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.AAL}));
 	    ruleMap.put(TokenTypeEnum.VSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.TYPE}));
 	    ruleMap.put(TokenTypeEnum.TYPE,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.NAME,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.ASSI, TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.PSTART}));
@@ -31,12 +31,13 @@ public class Parser {
 	    ruleMap.put(TokenTypeEnum.CONST_ISSO,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
 	    ruleMap.put(TokenTypeEnum.CONST_WORD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
 	    ruleMap.put(TokenTypeEnum.CONST_ZAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.PEND, TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT}));
-	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.VEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.CMD,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.NAME}));
 	    ruleMap.put(TokenTypeEnum.PSTART,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.PEND, TokenTypeEnum.NAME}));
-	    ruleMap.put(TokenTypeEnum.PNEXT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
-	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.END}));
+	    ruleMap.put(TokenTypeEnum.PNEXT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.NAME}));
+	    ruleMap.put(TokenTypeEnum.PEND,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL, TokenTypeEnum.END}));
 	    ruleMap.put(TokenTypeEnum.PRINT,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL}));
+	    ruleMap.put(TokenTypeEnum.AAL,Arrays.asList(new TokenTypeEnum [] {TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.END}));		   
 	    ruleMap.put(TokenTypeEnum.END,Arrays.asList(new TokenTypeEnum [] {}));
 	    
 	    
