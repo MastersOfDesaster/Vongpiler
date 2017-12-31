@@ -8,10 +8,14 @@ was ist das fuer 1 sume vong var1, 12 her? :X LAWL
 
 gieb "DAFUQ", 12 her?
 
+#LOL
+
 bist du vong varIsso, yup her?
     halo i bims!!!
 bist du vong yup, nope her?
     gieb "nope!!!" her?
 real rap
+
+gehe zu #LOL du larry!!!
 
 1 nicer!!!
