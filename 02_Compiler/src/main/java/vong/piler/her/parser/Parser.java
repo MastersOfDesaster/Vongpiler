@@ -31,7 +31,7 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.NAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.ASSI, TokenTypeEnum.PEND,
 				TokenTypeEnum.PNEXT, TokenTypeEnum.PSTART, TokenTypeEnum.VEND }));
 		ruleMap.put(TokenTypeEnum.ASSI, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CONST_ISSO,
-				TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.CMD, TokenTypeEnum.NAME}));
+				TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.CMD, TokenTypeEnum.NAME }));
 		ruleMap.put(TokenTypeEnum.CONST_ISSO, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PEND,
 				TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT }));
 		ruleMap.put(TokenTypeEnum.CONST_WORD, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PEND,
@@ -68,7 +68,7 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.GOTOSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.HASHTAG }));
 		ruleMap.put(TokenTypeEnum.GOTOEND,
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL,
-						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.END }));
+						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND, TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 	}
 
@@ -76,7 +76,7 @@ public class Parser {
 
 		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
-		// String type = null;
+		String type = null;
 
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
 			for (Token t : tokenList) {
@@ -85,20 +85,23 @@ public class Parser {
 				if (!(t.getType().equals(TokenTypeEnum.START)) && !(rule.isEmpty())) {
 					// Syntax ok
 					if (rule.contains(t.getType())) {
-						// if(t.getType().equals(TokenTypeEnum.TYPE)) {
-						// type = t.getContent();
-						// }
-						// if(t.getType().equals(TokenTypeEnum.PRINT)) {
-						// type = null;
-						// }
-						// if(type != null &&((t.getType().equals(TokenTypeEnum.CONST_ISSO) &&
-						// !type.matches("isso")) || (t.getType().equals(TokenTypeEnum.CONST_WORD) &&
-						// !type.matches("word")) || (t.getType().equals(TokenTypeEnum.CONST_ZAL) &&
-						// !type.matches("zal"))) ) {
-						// logger.error("type error in line " + t.getLine() + ": Got: " +
-						// t.getType().getLabel() + " --> Expected: " + type);
-						// System.exit(0);
-						// }
+						// Check type
+						if (t.getType().equals(TokenTypeEnum.TYPE)) {
+							type = t.getContent();
+						}
+						// Check type when token == CONST_ISSO|CONST_WORD|CONST_ZAL
+						if (type != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso"))
+								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word"))
+								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")))) {
+							logger.error("type error in line " + t.getLine() + ": Got: " + t.getType().getLabel()
+									+ " --> Expected: " + type);
+							System.exit(0);
+						}
+						// Set type == null after check
+						if (t.getType().equals(TokenTypeEnum.CONST_ISSO) || t.getType().equals(TokenTypeEnum.CONST_WORD)
+								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
+							type = null;
+						}
 					}
 					// Syntax fail
 					else {
