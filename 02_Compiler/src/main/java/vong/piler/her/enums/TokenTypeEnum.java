@@ -1,4 +1,4 @@
-package vong.piler.her.lexer;
+package vong.piler.her.enums;
 
 import org.apache.commons.lang.StringEscapeUtils;
 

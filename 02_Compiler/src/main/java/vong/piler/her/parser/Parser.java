@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import vong.piler.her.enums.TokenTypeEnum;
 import vong.piler.her.lexer.Token;
-import vong.piler.her.lexer.TokenTypeEnum;
 
 public class Parser {
 

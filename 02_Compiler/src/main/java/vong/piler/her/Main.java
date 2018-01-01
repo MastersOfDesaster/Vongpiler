@@ -64,6 +64,8 @@ public class Main {
 						output = filename.replace(".vsh", ".vch");	
 					}
 					
+					testPrint(root, 2);
+					
 					generator = new Generator(output);
 					generator.generate(root);
 					

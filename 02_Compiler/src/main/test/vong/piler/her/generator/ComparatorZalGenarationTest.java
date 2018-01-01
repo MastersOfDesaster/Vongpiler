@@ -13,8 +13,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import vong.piler.her.enums.OperationEnum;
 import vong.piler.her.generator.model.ValueModel;
-import vong.piler.her.steakmachine.OperationEnum;
 
 public class ComparatorZalGenarationTest {
 	

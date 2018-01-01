@@ -1,6 +1,6 @@
 package vong.piler.her.parser;
 
-import vong.piler.her.lexer.TokenTypeEnum;
+import vong.piler.her.enums.TokenTypeEnum;
 
 public class TreeNode {
 

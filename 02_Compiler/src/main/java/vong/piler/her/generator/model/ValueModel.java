@@ -1,6 +1,6 @@
 package vong.piler.her.generator.model;
 
-import vong.piler.her.steakmachine.OperationEnum;
+import vong.piler.her.enums.OperationEnum;
 
 public class ValueModel {
 	
