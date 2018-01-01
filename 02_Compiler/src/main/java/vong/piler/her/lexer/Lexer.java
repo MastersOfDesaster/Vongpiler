@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
-import vong.piler.her.logger.LoggerVongManagerHer;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Lexer {
     private String source;
     private int line;
-    private static Logger logger = LoggerVongManagerHer.getLogger(Lexer.class);
+    private static Logger logger = LogManager.getLogger(Lexer.class);
 
     public Lexer() {
         // Print Token-Grammar

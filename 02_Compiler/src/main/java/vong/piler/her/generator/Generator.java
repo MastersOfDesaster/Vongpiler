@@ -1,32 +1,30 @@
 package vong.piler.her.generator;
 
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import vong.piler.her.exceptions.GenerationsFails;
 import vong.piler.her.generator.model.ValueModel;
 import vong.piler.her.lexer.TokenTypeEnum;
-import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.parser.TreeNode;
 import vong.piler.her.steakmachine.OperationEnum;
 
 public class Generator {
 	
-	private static Logger logger = LoggerVongManagerHer.getLogger(Generator.class);
-	private String filename;
+	private static Logger logger = LogManager.getLogger(Generator.class);
 	private ByteCodeWriter writer;
 	private RegisterHandler registerHandler;
 	private int ifCounter;
 	private List<Integer> ifGenerated;
 	
-    public Generator(URI sourceUri) {
-    		String[] uri = sourceUri.toString().split("/");
-        this.filename = uri[uri.length-1];
-        this.writer = new ByteCodeWriter(filename);
+    public Generator(String outputPath) {
+        this.writer = new ByteCodeWriter(new File(outputPath));
         this.registerHandler = RegisterHandler.getInstance();
         this.ifCounter = 0;
         this.ifGenerated = new ArrayList<>();

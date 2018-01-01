@@ -3,14 +3,14 @@ package vong.piler.her.generator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
-import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
 class RegisterHandler {
 	
-	private static Logger logger = LoggerVongManagerHer.getLogger(RegisterHandler.class);
+	private static Logger logger = LogManager.getLogger(RegisterHandler.class);
 	
 	private static RegisterHandler instance;
 	

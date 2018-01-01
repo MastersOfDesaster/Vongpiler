@@ -7,27 +7,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
-import vong.piler.her.Constants;
-import vong.piler.her.logger.LoggerVongManagerHer;
 import vong.piler.her.steakmachine.OperationEnum;
 
 public class ByteCodeWriter {
 	
-	private static Logger logger = LoggerVongManagerHer.getLogger(ByteCodeWriter.class);
+	private static Logger logger = LogManager.getLogger(ByteCodeWriter.class);
 	
 	private List<String> linesToWrite;
 	
-	private String filename;
+	private File file;
 	
 	private RegisterHandler registerHandler;
 	
-	public ByteCodeWriter(String filename) {
+	public ByteCodeWriter(File file) {
+		this.file = file;
 		linesToWrite = new ArrayList<>();
-		this.filename = filename.replace(".vsh", "");
 		registerHandler = RegisterHandler.getInstance();
+	}
+
+	public ByteCodeWriter(String string) {
+		this(new File(string));
 	}
 
 	void addCommand(OperationEnum command) {
@@ -81,7 +83,6 @@ public class ByteCodeWriter {
 	
 	private boolean writeToFile() {
 		try {
-			File file = new File("gen/" + filename + ".vch");
 			logger.debug("ByteCode will be written to file " + file.getAbsolutePath());
 			if (!file.exists()) {
 				file.createNewFile();
