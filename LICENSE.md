@@ -14,4 +14,4 @@ denken, das Material ist es wert, können Sie uns dafür ein Bier ausgeben. Vong
 Halo i bims 1 liezense!!!
 Das vongPiler Teams schrib disen VongPiler. Solange du Lauch dieseng Vermerk nit entfernenst, kanst
 du mid dems Matiral machen, was du möchteng vong Benutzung her. Weng wir uns 1es Tages trefeng unt du
-dängst, das Material isd es wert, gieb unse uns 1 🍺 aus du Larry. VongPiler Teams her?
+dängst, das Material isd es wert, gieb unse 1 🍺 aus du Larry. VongPiler Teams her?
