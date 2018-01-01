@@ -9,7 +9,7 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="vong.piler.her" level="ERROR" />
+		<Logger name="vong.piler.her" level="INFO" />
 		<Root level="ERROR">
 			<AppenderRef ref="STDOUT" />
 		</Root>

@@ -106,7 +106,7 @@ public class ByteCodeWriter {
 			e.printStackTrace();
 			return false;
 		}
-		logger.debug("vong class her was successfully written");
+		logger.info("vong class her was successfully written");
 		return true;
 	}
 }
