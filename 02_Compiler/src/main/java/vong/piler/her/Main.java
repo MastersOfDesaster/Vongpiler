@@ -86,7 +86,7 @@ public class Main {
     	Options options = new Options();
     	options.addOption(new Option("h", "Gibd dir dise nachricht du Larry!!"));
     	options.addOption(new Option("d", "Vongpiler talkt vong debug her!!"));
-    	options.addOption(new Option("o", "Fad wo du dens fertigem Dateikompilat haben wilst!!"));
+    	options.addOption(new Option("o", true, "Fad wo du dens fertigem Dateikompilat haben wilst!!"));
     	return options;
     }
     
