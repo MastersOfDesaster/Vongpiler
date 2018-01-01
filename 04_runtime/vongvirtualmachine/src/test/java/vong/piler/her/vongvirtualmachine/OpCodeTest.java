@@ -25,6 +25,20 @@ public class OpCodeTest {
 		vvm.setReadAssembler(true);
 		vvm.init();
 	}
+	
+	@Test
+	public void testWordOutputWithSpaces() {
+		loadFile("wordOutputWithSpaces.vch");
+		vvm.run();
+		assertEquals("s w a g", getCleanVvmOutput());
+	}
+	
+	@Test
+	public void testWordOutput() {
+		loadFile("wordOutput.vch");
+		vvm.run();
+		assertEquals("swag", getCleanVvmOutput());
+	}
 
 	@Test
 	public void testAddWithPositives(){
