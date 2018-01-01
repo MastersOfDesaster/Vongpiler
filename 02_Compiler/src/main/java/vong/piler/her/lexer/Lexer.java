@@ -67,6 +67,8 @@ public class Lexer {
                 // set value or label
                 switch (tokenType) {
                 case TYPE:
+                    token.setContent(matcher.group(1).trim());
+                    break;
                 case NAME:
                 case CONST_ZAL:
                 case CONST_WORD:
