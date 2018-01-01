@@ -30,8 +30,9 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.TYPE, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
 		ruleMap.put(TokenTypeEnum.NAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.ASSI, TokenTypeEnum.PEND,
 				TokenTypeEnum.PNEXT, TokenTypeEnum.PSTART, TokenTypeEnum.VEND }));
-		ruleMap.put(TokenTypeEnum.ASSI, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CONST_ISSO,
-				TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.CMD, TokenTypeEnum.NAME }));
+		ruleMap.put(TokenTypeEnum.ASSI,
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CONST_ISSO, TokenTypeEnum.CONST_WORD,
+						TokenTypeEnum.CONST_ZAL, TokenTypeEnum.CMD, TokenTypeEnum.NAME, TokenTypeEnum.INPUT }));
 		ruleMap.put(TokenTypeEnum.CONST_ISSO, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PEND,
 				TokenTypeEnum.PNEXT, TokenTypeEnum.VEND, TokenTypeEnum.PRINT }));
 		ruleMap.put(TokenTypeEnum.CONST_WORD, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PEND,
@@ -63,12 +64,16 @@ public class Parser {
 						TokenTypeEnum.AAL, TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART,
 						TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.HASHTAG,
-				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME, TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT,
-						TokenTypeEnum.IFSTART, TokenTypeEnum.GOTOSTART, TokenTypeEnum.GOTOEND, TokenTypeEnum.AAL }));
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME, TokenTypeEnum.VSTART, TokenTypeEnum.CMD,
+						TokenTypeEnum.PRINT, TokenTypeEnum.IFSTART, TokenTypeEnum.GOTOSTART, TokenTypeEnum.GOTOEND,
+						TokenTypeEnum.AAL }));
 		ruleMap.put(TokenTypeEnum.GOTOSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.HASHTAG }));
 		ruleMap.put(TokenTypeEnum.GOTOEND,
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL,
-						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND, TokenTypeEnum.END }));
+						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND,
+						TokenTypeEnum.END }));
+		ruleMap.put(TokenTypeEnum.INPUT,
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND}));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 	}
 
@@ -94,8 +99,8 @@ public class Parser {
 						if (type != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso"))
 								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word"))
 								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")))) {
-							logger.error("Fehler voms Tipe her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: " + t.getType().getLabel()
-									+ " --> Gieb: " + type);
+							logger.error("Fehler voms Tipe her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
+									+ t.getType().getLabel() + " --> Gieb: " + type);
 							System.exit(0);
 						}
 						// Set type == null after check
@@ -103,7 +108,7 @@ public class Parser {
 								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
 							type = null;
 						}
-						if(t.getType().equals(TokenTypeEnum.IFSTART)) {
+						if (t.getType().equals(TokenTypeEnum.IFSTART)) {
 							bistDu = true;
 						}
 					}
@@ -114,11 +119,13 @@ public class Parser {
 							error = error + tte.getLabel() + "|";
 						}
 						if (t.getContent().isEmpty()) {
-							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: " + t.getType().getLabel()
-									+ " -->  Gieb: " + error.substring(0, (error.length() - 1)));
+							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile " + t.getLine()
+									+ ": Hab: " + t.getType().getLabel() + " -->  Gieb: "
+									+ error.substring(0, (error.length() - 1)));
 						} else {
-							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile  " + t.getLine() + ": Hab: " + t.getContent()
-									+ " -->  Gieb: " + error.substring(0, (error.length() - 1)));
+							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile  " + t.getLine()
+									+ ": Hab: " + t.getContent() + " -->  Gieb: "
+									+ error.substring(0, (error.length() - 1)));
 						}
 						System.exit(0);
 					}
@@ -129,36 +136,32 @@ public class Parser {
 						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getType().getLabel()
 								+ " --> Gieb: " + TokenTypeEnum.START.getLabel());
 					} else {
-						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getContent()
-								+ " --> Gieb: " + TokenTypeEnum.START.getLabel());
+						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getContent() + " --> Gieb: "
+								+ TokenTypeEnum.START.getLabel());
 					}
 					System.exit(0);
 				} else {
 					// TODO
 				}
 
-				
-				
-				//Bist du
-				if(bistDu && t.getType().equals(TokenTypeEnum.IFSTART)) {
+				// Bist du
+				if (bistDu && t.getType().equals(TokenTypeEnum.IFSTART)) {
 					Token hT = new Token(0, TokenTypeEnum.PSTART);
 					parseItem(t);
 					parseItem(hT);
-					rule = ruleMap.get(TokenTypeEnum.PSTART);					
-				}else if(bistDu && t.getType().equals(TokenTypeEnum.CONST_ISSO)){
+					rule = ruleMap.get(TokenTypeEnum.PSTART);
+				} else if (bistDu && t.getType().equals(TokenTypeEnum.CONST_ISSO)) {
 					Token hT = new Token(0, TokenTypeEnum.PEND);
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PEND);
-					
-				}
-				else {
+
+				} else {
 					parseItem(t);
 					rule = ruleMap.get(t.getType());
-					
+
 				}
 
-				
 			}
 		} else {
 			if (tokenList.get(tokenList.size() - 1).getContent().isEmpty()) {

@@ -42,6 +42,9 @@ public enum TokenTypeEnum {
     CONST_ISSO("(yup|nope).*", "const_isso"), // constant of type isso (boolean)
     CONST_WORD("\\\"(.*?)\\\".*", "const_word"), // constant of type word (string)
 
+    // input
+    INPUT("(1gabe).*", "1gabe"), // screen input
+
     // name / identifier
     NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name");
     
