@@ -16,7 +16,7 @@ public class StackElement {
 	private Type type;
 	private Object value;
 	
-	public String toDebugString() {
+	public String toString() {
 		switch(type) {
 		case ADDRESS:
 			return "address: " + value.toString();
@@ -31,7 +31,7 @@ public class StackElement {
 		}
 	}
 	
-	public String toString() {
+	public String print() {
 		switch(type) {
 		case ADDRESS:
 			return value.toString();
