@@ -80,6 +80,14 @@ class GeneratorMethods {
 		return operations;
 	}
 
+	static List<String> generateSaveInput(String name, OperationEnum operation) {
+		List<String> operations = new ArrayList<>();
+		int address = registerHandler.addVariable(name);
+		operations.add(registerHandler.addOperation(OperationEnum.PSA, address + ""));
+		operations.add(registerHandler.addOperation(operation));
+		return operations;
+	}
+
 	static List<String> generatePrint(List<ValueModel> values) {
 		List<String> operations = new ArrayList<>();
 		values.forEach(value -> {
