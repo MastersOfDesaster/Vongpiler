@@ -30,91 +30,91 @@ public class OpCodeTest {
 	public void testAddWithPositives(){
 		loadFile("addWithPositives.vch");
 		vvm.run();
-		assertEquals("zal: 16.0", getCleanVvmOutput());
+		assertEquals("16.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testAddWithNegatives(){
 		loadFile("addWithNegatives.vch");
 		vvm.run();
-		assertEquals("zal: -16.0", getCleanVvmOutput());
+		assertEquals("-16.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testAddWithNegativeAndPositive(){
 		loadFile("addWithNegativeAndPositive.vch");
 		vvm.run();
-		assertEquals("zal: -2.0", getCleanVvmOutput());
+		assertEquals("-2.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testMulWithPositives(){
 		loadFile("mulWithPositives.vch");
 		vvm.run();
-		assertEquals("zal: 35.0", getCleanVvmOutput());
+		assertEquals("35.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testMulWithNegatives(){
 		loadFile("mulWithNegatives.vch");
 		vvm.run();
-		assertEquals("zal: 40.0", getCleanVvmOutput());
+		assertEquals("40.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testMulWithNegativeAndPositive(){
 		loadFile("mulWithNegativeAndPositive.vch");
 		vvm.run();
-		assertEquals("zal: -35.0", getCleanVvmOutput());
+		assertEquals("-35.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testDivWithPositives(){
 		loadFile("divWithPositives.vch");
 		vvm.run();
-		assertEquals("zal: 2.0", getCleanVvmOutput());
+		assertEquals("2.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testDivWithNegatives(){
 		loadFile("divWithNegatives.vch");
 		vvm.run();
-		assertEquals("zal: 2.0", getCleanVvmOutput());
+		assertEquals("2.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testDivWithNegativeAndPositive(){
 		loadFile("divWithNegativeAndPositive.vch");
 		vvm.run();
-		assertEquals("zal: -2.0", getCleanVvmOutput());
+		assertEquals("-2.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testSubWithPositives(){
 		loadFile("subWithPositives.vch");
 		vvm.run();
-		assertEquals("zal: 8.0", getCleanVvmOutput());
+		assertEquals("8.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testSubWithNegatives(){
 		loadFile("subWithNegatives.vch");
 		vvm.run();
-		assertEquals("zal: 2.0", getCleanVvmOutput());
+		assertEquals("2.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testSubWithNegativeAndPositive(){
 		loadFile("subWithNegativeAndPositive.vch");
 		vvm.run();
-		assertEquals("zal: -16.0", getCleanVvmOutput());
+		assertEquals("-16.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testModWithRemainder(){
 		loadFile("modWithRemainder.vch");
 		vvm.run();
-		assertEquals("zal: 1.0", getCleanVvmOutput());
+		assertEquals("1.0", getCleanVvmOutput());
 	}
 	
 	
@@ -122,35 +122,35 @@ public class OpCodeTest {
 	public void testModWithoutRemainder(){
 		loadFile("modWithoutRemainder.vch");
 		vvm.run();
-		assertEquals("zal: 0.0", getCleanVvmOutput());
+		assertEquals("0.0", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testLesWhenTrue(){
 		loadFile("lesWhenTrue.vch");
 		vvm.run();
-		assertEquals("isso: yup", getCleanVvmOutput());
+		assertEquals("yup", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testLesWhenFalse(){
 		loadFile("lesWhenFalse.vch");
 		vvm.run();
-		assertEquals("isso: nope", getCleanVvmOutput());
+		assertEquals("nope", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testGtrWhenTrue(){
 		loadFile("gtrWhenTrue.vch");
 		vvm.run();
-		assertEquals("isso: yup", getCleanVvmOutput());
+		assertEquals("yup", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testGtrWhenFalse(){
 		loadFile("gtrWhenFalse.vch");
 		vvm.run();
-		assertEquals("isso: nope", getCleanVvmOutput());
+		assertEquals("nope", getCleanVvmOutput());
 	}
 	
 	@Test
@@ -164,35 +164,35 @@ public class OpCodeTest {
 	public void testJmpToIllegalLine(){
 		loadFile("jmpToIllegalLine.vch");
 		vvm.run();
-		assertEquals("instruction-pointer at empty register\n", errorOut.toString());
+		assertEquals("instruction-pointer at empty register", getCleanVvmErrorOutput());
 	}
 	
 	@Test
 	public void testEqlWithWords(){
 		loadFile("eqlWithWords.vch");
 		vvm.run();
-		assertEquals("isso: yup", getCleanVvmOutput());
+		assertEquals("yup", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testEqlWithZals(){
 		loadFile("eqlWithZals.vch");
 		vvm.run();
-		assertEquals("isso: yup", getCleanVvmOutput());
+		assertEquals("yup", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testEqlWithIssos(){
 		loadFile("eqlWithIssos.vch");
 		vvm.run();
-		assertEquals("isso: yup", getCleanVvmOutput());
+		assertEquals("yup", getCleanVvmOutput());
 	}
 	
 	@Test
 	public void testEqlWithDifferentTypes(){
 		loadFile("eqlWithDifferentTypes.vch");
 		vvm.run();
-		assertEquals("isso: nope", getCleanVvmOutput());
+		assertEquals("nope", getCleanVvmOutput());
 	}
 	
 	private void loadFile(String name) {
@@ -202,6 +202,11 @@ public class OpCodeTest {
 	
 	private String getCleanVvmOutput() {
 		String raw = standardOut.toString();
+		return raw.replaceAll("\n", "").replaceAll("\r", "");
+	}
+	
+	private String getCleanVvmErrorOutput() {
+		String raw = errorOut.toString();
 		return raw.replaceAll("\n", "").replaceAll("\r", "");
 	}
 
