@@ -457,9 +457,9 @@ public class Steakmachine {
 		}else {
 			if (element.getType() == Type.ADDRESS) {
 				int address = (int) element.getValue();
-				element = programmMemory[address];
-				out = element.toString();
+				element = programmMemory[address];		
 			}
+			out = element.toString();
 		}
 
 		printOutput(out);
