@@ -187,13 +187,7 @@ public class Steakmachine {
 		//TODO refactor design
 	    //Hack to make words with whitespace work
 		if(command.getOpCode() == OperationEnum.PSW) {
-			String word;
-			if(readAssembler) {
-				word = rawCommand.substring(4);	
-			}else{
-				word = rawCommand.substring(1);	
-			}
-			
+			String word = rawCommand.substring(rawCommand.indexOf(" ") + 1);				
 			command.setFirstParam(word);
 			return command;
 		}
