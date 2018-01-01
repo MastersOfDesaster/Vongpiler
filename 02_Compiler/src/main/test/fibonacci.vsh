@@ -16,7 +16,7 @@ bist du ende? yup
 
     erg goenn dir was ist das fuer 1 sume vong var1, var2 her?
 
-    gieb "Fibonacci: " + var1 + " + l" + var2 + " = " + erg!!!
+    gieb "Fibonacci: " + var1 + " + " + var2 + " = " + erg!!!
 
     var1 goenn dir var2!!!
 
