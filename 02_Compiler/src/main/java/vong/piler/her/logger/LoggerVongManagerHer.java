@@ -10,9 +10,6 @@ public class LoggerVongManagerHer {
 
 	private static LoggerVongManagerHer instance;
 	
-	private LoggerVongManagerHer() {
-		PropertyConfigurator.configure("src/main/java/vong/piler/her/logger/log4j.configuration");
-	}
 	
 	public static Logger getLogger(Class calling) {
 		if (instance == null)
