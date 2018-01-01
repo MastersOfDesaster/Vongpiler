@@ -16,7 +16,7 @@ public class StackElement {
 	private Type type;
 	private Object value;
 	
-	public String toString() {
+	public String toDebugString() {
 		switch(type) {
 		case ADDRESS:
 			return "address: " + value.toString();
@@ -29,6 +29,21 @@ public class StackElement {
 		default:
 			return "unknown type on stack";		
 		}
+	}
+	
+	public String toString() {
+		switch(type) {
+		case ADDRESS:
+			return value.toString();
+		case ISSO:
+			return (((boolean) value)? "yup" : "nope");
+		case ZAL:
+			return value.toString();
+		case WORD:
+			return value.toString();
+		default:
+			return "unknown type on stack";		
+		}	
 	}
 
 	public Type getType() {

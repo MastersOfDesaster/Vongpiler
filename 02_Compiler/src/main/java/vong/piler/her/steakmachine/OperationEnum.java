@@ -26,5 +26,6 @@ public enum OperationEnum {
 /*17*/    PRT, // prints arg
 /*18*/    AAL, // prints "hello world!"
 /*19*/    SAV,
-/*20*/    END;  // end of code
+/*20*/    END,  // end of code
+/*21*/    NWL;  // print with newline 
 }
