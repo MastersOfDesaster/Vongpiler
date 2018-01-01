@@ -86,6 +86,7 @@ class GeneratorMethods {
 				operations.add(registerHandler.addOperation(value.getOperation(), value.getValue()));
 				operations.add(registerHandler.addOperation(OperationEnum.PRT));
 		});
+		operations.add(registerHandler.addOperation(OperationEnum.NWL));
 		return operations;
 	}
 }
