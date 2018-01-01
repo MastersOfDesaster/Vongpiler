@@ -1,10 +1,15 @@
 package vong.piler.her;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import vong.piler.her.generator.Generator;
 import vong.piler.her.lexer.Lexer;
@@ -14,30 +19,68 @@ import vong.piler.her.parser.TreeNode;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            // read source-file
-            URI sourceUri = Main.class.getClassLoader().getResource("fibonacci.vsh").toURI();
-            String source = new String(Files.readAllBytes(Paths.get(sourceUri)));
-            
-            // generate token-list
-            Lexer lexer = new Lexer();
-            List<Token> tokenList = lexer.lex(source);
-            
-            // parse token-list
-            Parser parser = new Parser();
-            TreeNode root = parser.parse(tokenList);
-            
-            testPrint(root, 2);
-            //Code generation
-            Generator generator = new Generator(sourceUri);
-            generator.generate(root);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    	Lexer lexer = new Lexer();
+    	Parser parser = new Parser();
+    	Generator generator;
+    	
+    	Options options = createOptions();
+    	
+		if(args.length == 0) {
+			printHelp(options);
+			return;
+		}
+		
+		CommandLineParser cliParser = new DefaultParser();
+		try {
+			CommandLine line = cliParser.parse(createOptions(), args);
+			
+			if(line.hasOption("d")) {
+				//TODO implement in lexer
+				//TODO implement in parser
+				//TODO implement in generator
+			}
+			if(line.hasOption("o")) {
+				//TODO implement in generator
+			}
+			if(line.hasOption("h")) {
+				printHelp(createOptions());
+			}else {
+				try {
+					String filename = line.getArgs()[0];
+					List<Token> tokenList = lexer.lex(filename);
+					TreeNode root = parser.parse(tokenList);
 
+					generator = new Generator(new URI(filename));
+					generator.generate(root);
+					
+				}catch(IndexOutOfBoundsException e) {
+					System.err.println("I kan di Datei nit findn");
+				} catch (Exception e) {
+					System.err.println("Halo I bims 1 Ausname:");
+					e.printStackTrace();
+				}
+
+			}
+						
+		} catch (ParseException e) {
+			System.err.println("Du hamst 1 Feler gem8 du Lauch");
+			printHelp(createOptions());
+		}
+    	
+          }
+    
+    private static Options createOptions() {
+    	Options options = new Options();
+    	options.addOption(new Option("h", "Gibd dir dise nachricht du Larry!!"));
+    	options.addOption(new Option("d", "Vongpiler talkt vong debug her!!"));
+    	options.addOption(new Option("o", "Fad wo du dens fertigem Dateikompilat haben wilst!!"));
+    	return options;
     }
+    
+	private static void printHelp(Options options) {
+		HelpFormatter helpFormatter = new HelpFormatter();
+		helpFormatter.printHelp("vongc", "\n", options, "\n", true);
+	}
     
     private static void testPrint(TreeNode root, int tabCount) {
 		System.out.println("\t\t" + root.getName());
