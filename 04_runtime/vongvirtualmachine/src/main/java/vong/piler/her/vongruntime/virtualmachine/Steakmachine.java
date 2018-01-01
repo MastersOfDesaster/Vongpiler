@@ -274,7 +274,7 @@ public class Steakmachine {
 
 	private void nwl() {
 		     String newLine = System.getProperty("line.separator");
-		     System.out.println(newLine);
+		     System.out.print(newLine);
 	}
 
 	private String printRegisters() {
@@ -439,17 +439,22 @@ public class Steakmachine {
 
 	private void prt() {
 		StackElement element = stack.pop();
-		String out;
+		String out = "";
 		if(debugOutput) {
 			out = element.toDebugString();
+			if (element.getType() == Type.ADDRESS) {
+				int address = (int) element.getValue();
+				StackElement global = programmMemory[address];
+				out = out + " -> " + (debugOutput? global.toDebugString() : global.toString());
+			}
 		}else {
-			out = element.toString();
+			if (element.getType() == Type.ADDRESS) {
+				int address = (int) element.getValue();
+				element = programmMemory[address];
+				out = element.toString();
+			}
 		}
-		if (element.getType() == Type.ADDRESS) {
-			int address = (int) element.getValue();
-			StackElement global = programmMemory[address];
-			out = out + " -> " + (debugOutput? global.toDebugString() : global.toString());
-		}
+
 		printOutput(out);
 	}
 
