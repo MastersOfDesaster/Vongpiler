@@ -22,7 +22,7 @@ bist du ende? yup
 
     var2 goenn dir erg!!!
     
-    gehe zu #start du larry!!!
+    g zu #start du larry!!!
 
 real rap
 

@@ -10,7 +10,7 @@ public enum TokenTypeEnum {
     // function
     CMD("(was ist das fuer 1).*", "was ist das fuer 1"), // call function
     PSTART("(vong).*", "vong"), // start of parameters
-    PNEXT("((,|\\?|\\+){1}).*", ",|?"), // next parameter
+    PNEXT("((,|\\?|\\+){1}).*", ",|?|+"), // next parameter
     PEND("(her\\?).*", "her?"), // end of parameter
     
     // print
@@ -23,7 +23,7 @@ public enum TokenTypeEnum {
     
     // jump
     HASHTAG("#\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "#"),
-    GOTOSTART("(gehe zu).*", "gehe zu"),
+    GOTOSTART("(g zu).*", "g zu"),
     GOTOEND("(du larry!!!).*", "du larry!!!"),
     
     // declare variable
@@ -32,7 +32,7 @@ public enum TokenTypeEnum {
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
     // whitespace
-    COMMENT(":X(.*?)\n.*"), WHITESPACE("( ).*"), NEWLINE("(\n).*"),
+    COMMENT(":X(.*?)\n.*"), WHITESPACE("( |\t).*"), NEWLINE("(\n).*"),
 
     // types
     TYPE("(zal|word|isso).*", "zal|word|isso"),
