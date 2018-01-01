@@ -10,8 +10,8 @@ gieb "DAFUQ", 12 her?
 
 #LOL
 
-bist du vong varIsso, yup her? :X If {
-    bist du vong yup, nope her? :X If {
+bist du varIsso? yup :X If {
+    bist du yup? nope :X If {
         gieb "nope!!!" her?
         halo i bims!!!
     real rap :X }

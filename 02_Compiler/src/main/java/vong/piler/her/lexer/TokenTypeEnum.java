@@ -35,12 +35,12 @@ public enum TokenTypeEnum {
     COMMENT(":X(.*?)\n.*"), WHITESPACE("( |\t).*"), NEWLINE("(\n).*"),
 
     // types
-    TYPE("(zal|word|isso).*", "zal|word|isso"),
+    TYPE("(zal\\h|word\\h|isso\\h).*", "zal|word|isso"),
 
     // constants
-    CONST_ZAL("\\b(\\d{1,9})\\b.*", "zal"), // constant of type zal (number)
-    CONST_ISSO("\\b(yup|nope)\\b.*", "isso"), // constant of type isso (boolean)
-    CONST_WORD("\\\"(.*?)\\\".*", "word"), // constant of type word (string)
+    CONST_ZAL("\\b(\\d{1,9})\\b.*", "const_zal"), // constant of type zal (number)
+    CONST_ISSO("(yup|nope).*", "const_isso"), // constant of type isso (boolean)
+    CONST_WORD("\\\"(.*?)\\\".*", "const_word"), // constant of type word (string)
 
     // name / identifier
     NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name");
