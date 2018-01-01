@@ -1,6 +1,7 @@
 package vong.piler.her;
 
-import java.net.URI;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -10,6 +11,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import vong.piler.her.generator.Generator;
 import vong.piler.her.lexer.Lexer;
@@ -18,6 +21,10 @@ import vong.piler.her.parser.Parser;
 import vong.piler.her.parser.TreeNode;
 
 public class Main {
+	
+	private static Logger logger = LogManager.getLogger(Main.class);
+	
+	
     public static void main(String[] args) {
     	Lexer lexer = new Lexer();
     	Parser parser = new Parser();
@@ -33,6 +40,7 @@ public class Main {
 		CommandLineParser cliParser = new DefaultParser();
 		try {
 			CommandLine line = cliParser.parse(createOptions(), args);
+			String output = null;
 			
 			if(line.hasOption("d")) {
 				//TODO implement in lexer
@@ -40,17 +48,23 @@ public class Main {
 				//TODO implement in generator
 			}
 			if(line.hasOption("o")) {
-				//TODO implement in generator
+				output = line.getOptionValue("o");
 			}
 			if(line.hasOption("h")) {
 				printHelp(createOptions());
 			}else {
 				try {
 					String filename = line.getArgs()[0];
-					List<Token> tokenList = lexer.lex(filename);
+					
+					String source = new String(Files.readAllBytes(new File(filename).toPath()));
+					List<Token> tokenList = lexer.lex(source);
 					TreeNode root = parser.parse(tokenList);
 
-					generator = new Generator(new URI(filename));
+					if(output == null) {
+						output = filename.replace(".vsh", ".vch");	
+					}
+					
+					generator = new Generator(output);
 					generator.generate(root);
 					
 				}catch(IndexOutOfBoundsException e) {
@@ -59,7 +73,6 @@ public class Main {
 					System.err.println("Halo I bims 1 Ausname:");
 					e.printStackTrace();
 				}
-
 			}
 						
 		} catch (ParseException e) {
