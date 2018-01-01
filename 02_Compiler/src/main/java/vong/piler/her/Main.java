@@ -12,6 +12,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import vong.piler.her.generator.Generator;
@@ -43,9 +45,7 @@ public class Main {
 			String output = null;
 			
 			if(line.hasOption("d")) {
-				//TODO implement in lexer
-				//TODO implement in parser
-				//TODO implement in generator
+				Configurator.setLevel("vong.piler.her", Level.DEBUG);
 			}
 			if(line.hasOption("o")) {
 				output = line.getOptionValue("o");

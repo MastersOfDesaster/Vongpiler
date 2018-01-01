@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="DEBUG" name="example-config">
+<Configuration status="ERROR" name="configuration">
 	<Properties>
 		<Property name="PATTERN">%d{dd.MM.yyyy HH:mm:ss} [%p] %c in %t: %m%n</Property>
 	</Properties>
@@ -9,7 +9,8 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Root level="DEBUG">
+		<Logger name="vong.piler.her" level="ERROR" />
+		<Root level="ERROR">
 			<AppenderRef ref="STDOUT" />
 		</Root>
 	</Loggers>
