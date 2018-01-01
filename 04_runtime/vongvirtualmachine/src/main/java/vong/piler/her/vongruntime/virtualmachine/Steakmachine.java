@@ -274,7 +274,7 @@ public class Steakmachine {
 
 	private void nwl() {
 		     String newLine = System.getProperty("line.separator");
-		     System.out.println(newLine);
+		     System.out.print(newLine);
 	}
 
 	private String printRegisters() {
