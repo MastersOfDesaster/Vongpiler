@@ -94,8 +94,8 @@ public class Parser {
 						if (type != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso"))
 								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word"))
 								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")))) {
-							logger.error("type error in line " + t.getLine() + ": Got: " + t.getType().getLabel()
-									+ " --> Expected: " + type);
+							logger.error("Fehler voms Tipe her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: " + t.getType().getLabel()
+									+ " --> Gieb: " + type);
 							System.exit(0);
 						}
 						// Set type == null after check
@@ -114,11 +114,11 @@ public class Parser {
 							error = error + tte.getLabel() + "|";
 						}
 						if (t.getContent().isEmpty()) {
-							logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel()
-									+ " -->  Expected: " + error.substring(0, (error.length() - 1)));
+							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: " + t.getType().getLabel()
+									+ " -->  Gieb: " + error.substring(0, (error.length() - 1)));
 						} else {
-							logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent()
-									+ " -->  Expected: " + error.substring(0, (error.length() - 1)));
+							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile  " + t.getLine() + ": Hab: " + t.getContent()
+									+ " -->  Gieb: " + error.substring(0, (error.length() - 1)));
 						}
 						System.exit(0);
 					}
@@ -126,11 +126,11 @@ public class Parser {
 				// Token != START and first token
 				else if (!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()) {
 					if (t.getContent().isEmpty()) {
-						logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getType().getLabel()
-								+ " --> Expected: " + TokenTypeEnum.START.getLabel());
+						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getType().getLabel()
+								+ " --> Gieb: " + TokenTypeEnum.START.getLabel());
 					} else {
-						logger.error("syntax error in line " + t.getLine() + ": Got: " + t.getContent()
-								+ " --> Expected: " + TokenTypeEnum.START.getLabel());
+						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getContent()
+								+ " --> Gieb: " + TokenTypeEnum.START.getLabel());
 					}
 					System.exit(0);
 				} else {
