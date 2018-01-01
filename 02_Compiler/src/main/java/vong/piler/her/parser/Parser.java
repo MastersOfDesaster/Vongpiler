@@ -77,6 +77,7 @@ public class Parser {
 		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
 		String type = null;
+		Boolean bistDu = false;
 
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
 			for (Token t : tokenList) {
@@ -101,6 +102,9 @@ public class Parser {
 						if (t.getType().equals(TokenTypeEnum.CONST_ISSO) || t.getType().equals(TokenTypeEnum.CONST_WORD)
 								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
 							type = null;
+						}
+						if(t.getType().equals(TokenTypeEnum.IFSTART)) {
+							bistDu = true;
 						}
 					}
 					// Syntax fail
@@ -133,9 +137,28 @@ public class Parser {
 					// TODO
 				}
 
-				parseItem(t);
+				
+				
+				//Bist du
+				if(bistDu && t.getType().equals(TokenTypeEnum.IFSTART)) {
+					Token hT = new Token(0, TokenTypeEnum.PSTART);
+					parseItem(t);
+					parseItem(hT);
+					rule = ruleMap.get(TokenTypeEnum.PSTART);					
+				}else if(bistDu && t.getType().equals(TokenTypeEnum.CONST_ISSO)){
+					Token hT = new Token(0, TokenTypeEnum.PEND);
+					parseItem(t);
+					parseItem(hT);
+					rule = ruleMap.get(TokenTypeEnum.PEND);
+					
+				}
+				else {
+					parseItem(t);
+					rule = ruleMap.get(t.getType());
+					
+				}
 
-				rule = ruleMap.get(t.getType());
+				
 			}
 		} else {
 			if (tokenList.get(tokenList.size() - 1).getContent().isEmpty()) {

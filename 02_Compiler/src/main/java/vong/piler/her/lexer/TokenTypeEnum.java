@@ -10,7 +10,7 @@ public enum TokenTypeEnum {
     // function
     CMD("(was ist das fuer 1).*", "was ist das fuer 1"), // call function
     PSTART("(vong).*", "vong"), // start of parameters
-    PNEXT("(,).*", ","), // next parameter
+    PNEXT("((,|\\?|\\+){1}).*", ",|?"), // next parameter
     PEND("(her\\?).*", "her?"), // end of parameter
     
     // print

@@ -16,7 +16,7 @@ public class Lexer {
 
     public Lexer() {
         // Print Token-Grammar
-        System.out.println(TokenTypeEnum.toMarkdown());
+        //System.out.println(TokenTypeEnum.toMarkdown());
     }
 
     public List<Token> lex(String source) throws Exception {
