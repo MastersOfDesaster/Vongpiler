@@ -27,5 +27,8 @@ public enum OperationEnum {
 /*18*/    AAL, // prints "hello world!"
 /*19*/    SAV,
 /*20*/    END,  // end of code
-/*21*/    NWL;  // print with newline 
+/*21*/    NWL,  // print with newline 
+/*22*/    IIN,  //
+/*23*/    WIN,
+/*24*/    ZIN;  
 }

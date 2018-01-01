@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 import java.util.Stack;
 
 import vong.piler.her.vongruntime.virtualmachine.model.StackElement.Type;
@@ -271,6 +274,15 @@ public class Steakmachine {
 		case NWL:
 			nwl();
 			break;
+		case IIN:
+			iin();
+			break;
+		case WIN:
+			win();
+			break;
+		case ZIN:
+			zin();
+			break;
 		default:
 			throw new UnknownCommandException(command.getOpCode().toString());
 		}
@@ -278,6 +290,80 @@ public class Steakmachine {
     	printDebugOutput(String.format("Stack: %s", stack.toString()));
     	printDebugOutput(String.format("Registers: %s", printRegisters()));
 	}
+
+
+
+	private void zin() {
+		int address = popAddress();
+		double zal = readZal();
+		StackElement element = new StackElement(Type.ZAL, zal);
+		programmMemory[address] = element;
+	}
+
+
+
+	private double readZal() {
+		Scanner scanner = new Scanner(System.in);
+		double zal = 0;
+		boolean read = false;
+		while(!read) {
+			try {
+				zal = scanner.nextDouble();	
+				read = true;
+			}catch(InputMismatchException e) {	
+				System.out.println("Du must 1 Zal 1geben du Lauch!!!");
+				scanner.nextLine();
+			}	
+		}
+		scanner.close();
+		return zal;
+	}
+	
+	private String readWord() {
+		Scanner scanner = new Scanner(System.in);
+		String word = scanner.nextLine();
+		scanner.close();
+		return word;
+	}
+
+	private boolean readIsso() {
+		Scanner scanner = new Scanner(System.in);
+		boolean isso = false;
+		boolean read = false;
+		while(!read) {
+			String input = scanner.nextLine();
+			if(input.equals("yup")) {
+				isso = true;
+				read = true;
+			}else if(input.equals("nope")) {
+				isso = false;
+				read = true;
+			}else {
+				System.out.println("Du must 1 isso 1geben du Lauch!!");
+			}
+		}
+		scanner.close();
+		return isso;
+	}
+
+
+	private void win() {
+		int address = popAddress();
+		String word = readWord();
+		StackElement element = new StackElement(Type.WORD, word);
+		programmMemory[address] = element;	
+	}
+
+
+
+	private void iin() {
+		int address = popAddress();
+		boolean isso = readIsso();
+		StackElement element = new StackElement(Type.ISSO, isso);
+		programmMemory[address] = element;
+	}
+
+
 
 	private void nwl() {
 		     String newLine = System.getProperty("line.separator");
