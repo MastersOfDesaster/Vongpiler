@@ -27,6 +27,13 @@ public class OpCodeTest {
 	}
 	
 	@Test
+	public void testWordOutputWithSpaces() {
+		loadFile("wordOutputWithSpaces.vch");
+		vvm.run();
+		assertEquals("s w a g", getCleanVvmOutput());
+	}
+	
+	@Test
 	public void testWordOutput() {
 		loadFile("wordOutput.vch");
 		vvm.run();
