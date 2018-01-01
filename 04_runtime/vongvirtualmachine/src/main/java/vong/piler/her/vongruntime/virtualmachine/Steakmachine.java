@@ -261,12 +261,20 @@ public class Steakmachine {
 		case SAV:
 			sav();
 			break;
+		case NWL:
+			nwl();
+			break;
 		default:
 			throw new UnknownCommandException(command.getOpCode().toString());
 		}
     	printDebugOutput(String.format("Executed command: %s",command.getOpCode().toString()));
     	printDebugOutput(String.format("Stack: %s", stack.toString()));
     	printDebugOutput(String.format("Registers: %s", printRegisters()));
+	}
+
+	private void nwl() {
+		     String newLine = System.getProperty("line.separator");
+		     System.out.println(newLine);
 	}
 
 	private String printRegisters() {
@@ -431,11 +439,16 @@ public class Steakmachine {
 
 	private void prt() {
 		StackElement element = stack.pop();
-		String out = element.toString();
+		String out;
+		if(debugOutput) {
+			out = element.toDebugString();
+		}else {
+			out = element.toString();
+		}
 		if (element.getType() == Type.ADDRESS) {
 			int address = (int) element.getValue();
 			StackElement global = programmMemory[address];
-			out = out + " -> " + global.toString();
+			out = out + " -> " + (debugOutput? global.toDebugString() : global.toString());
 		}
 		printOutput(out);
 	}
@@ -526,7 +539,7 @@ public class Steakmachine {
 	}
 	
 	private void printOutput(String message) {
-		standardOut.println(message);
+		standardOut.print(message);
 	}
 	
 	private void printDebugOutput(String message) {
