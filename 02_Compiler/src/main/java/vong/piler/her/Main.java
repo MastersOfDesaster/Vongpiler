@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.runners.parameterized.TestWithParameters;
-
 import vong.piler.her.generator.Generator;
 import vong.piler.her.lexer.Lexer;
 import vong.piler.her.lexer.Token;
