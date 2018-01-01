@@ -6,15 +6,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import vong.piler.her.lexer.Token;
 import vong.piler.her.lexer.TokenTypeEnum;
-import vong.piler.her.logger.LoggerVongManagerHer;
 
 public class Parser {
 
-	private static Logger logger = LoggerVongManagerHer.getLogger(Parser.class);
+	private static Logger logger = LogManager.getLogger(Parser.class);
 
 	private TreeNode parent;
 	private TreeNode root;
