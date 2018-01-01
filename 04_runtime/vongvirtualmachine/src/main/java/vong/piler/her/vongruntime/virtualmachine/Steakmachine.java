@@ -167,6 +167,7 @@ public class Steakmachine {
 
 	private Command decodeCommand(String rawCommand) throws UnsupportedNumberofArgumentsException, EmptyLineException, UnknownCommandException {
 		Command command = new Command();
+		
 		String[] commandParts = rawCommand.split(" ");
 		if(commandParts.length == 0) {
 			throw new EmptyLineException();
@@ -180,14 +181,20 @@ public class Steakmachine {
 				command.setOpCode(OperationEnum.values()[Integer.parseInt(commandParts[0])]);	
 			}catch(ArrayIndexOutOfBoundsException e) {
 				throw new UnknownCommandException(commandParts[0]);
-			}
-			
+			}		
 		}
+		
+		//TODO refactor design
+	    //Hack to make words with whitespace work
+		if(command.getOpCode() == OperationEnum.PSW) {
+			String word = rawCommand.substring(4);
+			command.setFirstParam(word);
+			return command;
+		}
+		
 		
 		if(commandParts.length == 2) {
 			command.setFirstParam(commandParts[1]);
-		}else if(commandParts.length == 3) {
-			
 		}else if(commandParts.length != 1){
 			throw new UnsupportedNumberofArgumentsException();
 		}
