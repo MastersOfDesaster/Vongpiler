@@ -303,10 +303,6 @@ public class Steakmachine {
 		return registers;
 	}
 
-	
-
-
-
 	private void sav() {
 		StackElement element = stack.pop();	
 		if(element.getType() == Type.ADDRESS) {
@@ -448,18 +444,18 @@ public class Steakmachine {
 		StackElement element = stack.pop();
 		String out = "";
 		if(debugOutput) {
-			out = element.toDebugString();
+			out = element.toString();
 			if (element.getType() == Type.ADDRESS) {
 				int address = (int) element.getValue();
 				StackElement global = programmMemory[address];
-				out = out + " -> " + (debugOutput? global.toDebugString() : global.toString());
+				out = out + " -> " + global.toString();
 			}
 		}else {
 			if (element.getType() == Type.ADDRESS) {
 				int address = (int) element.getValue();
 				element = programmMemory[address];		
 			}
-			out = element.toString();
+			out = element.print();
 		}
 
 		printOutput(out);
