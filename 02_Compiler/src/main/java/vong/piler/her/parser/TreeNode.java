@@ -33,7 +33,7 @@ public class TreeNode {
 		this.right = right;
 	}
 
-	public void setLeft(String left) {
+	public void setLeft(Object left) {
 		this.left = left;
 	}
 

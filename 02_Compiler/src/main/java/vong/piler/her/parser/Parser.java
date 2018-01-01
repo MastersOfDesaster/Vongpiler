@@ -3,12 +3,14 @@ package vong.piler.her.parser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import vong.piler.her.enums.DataTypeEnum;
 import vong.piler.her.enums.TokenTypeEnum;
 import vong.piler.her.lexer.Token;
 
@@ -21,6 +23,8 @@ public class Parser {
 
 	Map<TokenTypeEnum, List<TokenTypeEnum>> ruleMap = new EnumMap<TokenTypeEnum, List<TokenTypeEnum>>(
 			TokenTypeEnum.class);
+
+	Map<String, DataTypeEnum> dataType = new HashMap<String, DataTypeEnum>();
 
 	public Parser() {
 		// Add rules to map
@@ -72,8 +76,7 @@ public class Parser {
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL,
 						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND,
 						TokenTypeEnum.END }));
-		ruleMap.put(TokenTypeEnum.INPUT,
-				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND}));
+		ruleMap.put(TokenTypeEnum.INPUT, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 	}
 
@@ -81,8 +84,10 @@ public class Parser {
 
 		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
-		String type = null;
-		Boolean bistDu = false;
+		String vType = null;
+		String vName = null;
+		boolean vStart = false;
+		boolean bistDu = false;
 
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
 			for (Token t : tokenList) {
@@ -93,20 +98,43 @@ public class Parser {
 					if (rule.contains(t.getType())) {
 						// Check type
 						if (t.getType().equals(TokenTypeEnum.TYPE)) {
-							type = t.getContent();
+							vType = t.getContent();
+						}else if (t.getType().equals(TokenTypeEnum.NAME)) {
+							vName = t.getContent();
+						}else if (t.getType().equals(TokenTypeEnum.VSTART)) {
+							vStart = true;
+						}else if (t.getType().equals(TokenTypeEnum.VEND)) {
+							vStart = false;
 						}
+						
+						
 						// Check type when token == CONST_ISSO|CONST_WORD|CONST_ZAL
-						if (type != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !type.matches("isso"))
-								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !type.matches("word"))
-								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !type.matches("zal")))) {
+						if (vType != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !vType.matches("isso"))
+								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !vType.matches("word"))
+								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !vType.matches("zal")))) {
 							logger.error("Fehler voms Tipe her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
-									+ t.getType().getLabel() + " --> Gieb: " + type);
+									+ t.getType().getLabel() + " --> Gieb: " + vType);
 							System.exit(0);
 						}
 						// Set type == null after check
 						if (t.getType().equals(TokenTypeEnum.CONST_ISSO) || t.getType().equals(TokenTypeEnum.CONST_WORD)
 								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
-							type = null;
+							System.out.println(vType);
+							if(vStart) {
+								switch(vType) {
+									case "isso":
+										dataType.put(vName, DataTypeEnum.ISSO);
+										break;
+									case "word":
+										dataType.put(vName, DataTypeEnum.WORD);
+										break;
+									case "zal":
+										dataType.put(vName, DataTypeEnum.ZAL);
+										break;
+								}
+							}							
+							vType = null;
+							vName = null;
 						}
 						if (t.getType().equals(TokenTypeEnum.IFSTART)) {
 							bistDu = true;
@@ -163,20 +191,22 @@ public class Parser {
 				}
 
 			}
-		} else {
-			if (tokenList.get(tokenList.size() - 1).getContent().isEmpty()) {
-				logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
-						+ tokenList.get(tokenList.size() - 1).getType().getLabel() + " --> Expected: "
-						+ TokenTypeEnum.END.getLabel());
-			} else {
-				logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
-						+ tokenList.get(tokenList.size() - 1).getContent() + " --> Expected: "
-						+ TokenTypeEnum.END.getLabel());
-			}
-			System.exit(0);
-		}
+		}else
 
-		return root;
+	{
+		if (tokenList.get(tokenList.size() - 1).getContent().isEmpty()) {
+			logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
+					+ tokenList.get(tokenList.size() - 1).getType().getLabel() + " --> Expected: "
+					+ TokenTypeEnum.END.getLabel());
+		} else {
+			logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
+					+ tokenList.get(tokenList.size() - 1).getContent() + " --> Expected: "
+					+ TokenTypeEnum.END.getLabel());
+		}
+		System.exit(0);
+	}
+
+	return root;
 
 	}
 
@@ -188,6 +218,13 @@ public class Parser {
 			root = new TreeNode(t.getType(), null);
 			parent = root;
 		}
+		else if (t.getType().equals(TokenTypeEnum.INPUT)) {
+			logger.debug("Value: " + parent.getParent().getParent().getLeft().toString() + " Token: " + t.getType());
+			parent.setRight(new TreeNode(t.getType(), parent));
+			parent = parent.getRight();
+			parent.setLeft(dataType.get(parent.getParent().getParent().getLeft().toString()));
+			
+		}		
 		// Node without value
 		else if (t.getContent().isEmpty()) {
 			logger.debug("Token: " + t.getType());
