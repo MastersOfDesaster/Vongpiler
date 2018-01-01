@@ -25,6 +25,13 @@ public class OpCodeTest {
 		vvm.setReadAssembler(true);
 		vvm.init();
 	}
+	
+	@Test
+	public void testWordOutput() {
+		loadFile("wordOutput.vch");
+		vvm.run();
+		assertEquals("swag", getCleanVvmOutput());
+	}
 
 	@Test
 	public void testAddWithPositives(){
