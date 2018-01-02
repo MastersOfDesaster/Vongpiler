@@ -6,16 +6,19 @@ i bims 1 zal lauch2 goenn dir 1!!!
 
 i bims 1 zal erg goenn dir 0!!!
 
+i bims 1 zal max goenn dir 0!!!
+
 i bims 1 zal zaehl goenn dir 0!!!
 
 i bims 1 isso ende goenn dir nope!!!
 
+gieb "gieb anz fibonacci"!!! 
+
+max goenn dir 1gabe!!!
 
 #start
 
-zaehl goenn dir 1gabe!!!
-
-ende goenn dir was ist das fuer 1 isweniga vong zaehl, 10 her?
+ende goenn dir was ist das fuer 1 isweniga vong zaehl, max her?
 
 bist du ende? yup
 

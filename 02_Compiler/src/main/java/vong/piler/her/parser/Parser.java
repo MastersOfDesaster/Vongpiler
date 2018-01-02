@@ -119,7 +119,6 @@ public class Parser {
 						// Set type == null after check
 						if (t.getType().equals(TokenTypeEnum.CONST_ISSO) || t.getType().equals(TokenTypeEnum.CONST_WORD)
 								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
-							System.out.println(vType);
 							if(vStart) {
 								switch(vType) {
 									case "isso":
@@ -219,7 +218,7 @@ public class Parser {
 			parent = root;
 		}
 		else if (t.getType().equals(TokenTypeEnum.INPUT)) {
-			logger.debug("Value: " + parent.getParent().getParent().getLeft().toString() + " Token: " + t.getType());
+			//TODO: some is null: logger.debug("Value: " + parent.getParent().getParent().getLeft().toString() + " Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
 			parent.setLeft(dataType.get(parent.getParent().getParent().getLeft().toString()));
