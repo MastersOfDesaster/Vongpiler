@@ -9,11 +9,12 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import vong.piler.her.enums.DataTypeEnum;
+import vong.piler.her.enums.OperationEnum;
+import vong.piler.her.enums.TokenTypeEnum;
 import vong.piler.her.exceptions.GenerationsFails;
 import vong.piler.her.generator.model.ValueModel;
-import vong.piler.her.lexer.TokenTypeEnum;
 import vong.piler.her.parser.TreeNode;
-import vong.piler.her.steakmachine.OperationEnum;
 
 public class Generator {
 	
@@ -89,6 +90,7 @@ public class Generator {
 	private void variableDeclaration(TreeNode node) throws GenerationsFails {
 		String name = null;
 		ValueModel value = null;
+		OperationEnum operation = null;
 		TreeNode right = null;
 		right = node.getRight();
 		while (!right.getName().equals(TokenTypeEnum.VEND)) {
@@ -113,6 +115,9 @@ public class Generator {
 				case CONST_WORD:
 					value = new ValueModel(right.getLeft().toString(), false);
 					break;
+				case INPUT:
+					operation = getInputOperation(right);
+					break;
 				default:
     					throw new GenerationsFails("Generation fails at Token" + right);
 			}
@@ -121,11 +126,32 @@ public class Generator {
 		if (name != null && value != null) {
 			writer.addMultiCommand(GeneratorMethods.generateSaveVar(name, value));
 		}
+		else if (name != null && operation != null) {
+			writer.addMultiCommand(GeneratorMethods.generateSaveInput(name, operation));
+		}
 		else{
 			throw new GenerationsFails("Generation fails at Token" + right);
 		}
 		generate(right);
     }
+	
+	private OperationEnum getInputOperation(TreeNode node) throws GenerationsFails {
+		if (node.getLeft() instanceof DataTypeEnum) {
+			switch (((DataTypeEnum)node.getLeft())) {
+				case ISSO:
+					return OperationEnum.IIN;
+				case WORD:
+					return OperationEnum.WIN;
+				case ZAL:
+					return OperationEnum.ZIN;
+				default:
+					throw new GenerationsFails("Generation fails at Token" + node);
+			}
+		}
+		else{
+			throw new GenerationsFails("Generation fails at Token" + node);
+		}
+	}
 	
 	private void varGetFromFunction(TreeNode node) throws GenerationsFails {
 		String varName = node.getLeft().toString();

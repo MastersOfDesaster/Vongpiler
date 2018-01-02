@@ -6,6 +6,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Logger;
+
+import vong.piler.her.enums.TokenTypeEnum;
+
 import org.apache.logging.log4j.LogManager;
 
 public class Lexer {

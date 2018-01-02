@@ -6,14 +6,15 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import vong.piler.her.steakmachine.OperationEnum;
+import vong.piler.her.enums.DataTypeEnum;
+import vong.piler.her.enums.OperationEnum;
 
 class RegisterHandler {
 	
 	private static Logger logger = LogManager.getLogger(RegisterHandler.class);
 	
 	private static RegisterHandler instance;
-	
+
 	private Map<String, Integer> dataRegister;
 	private Map<String, Integer> addressMarkerRegister;
 	private int addressPointer;

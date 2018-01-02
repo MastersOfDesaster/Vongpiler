@@ -1,4 +1,4 @@
-package vong.piler.her.lexer;
+package vong.piler.her.enums;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -41,6 +41,9 @@ public enum TokenTypeEnum {
     CONST_ZAL("\\b(\\d{1,9})\\b.*", "const_zal"), // constant of type zal (number)
     CONST_ISSO("(yup|nope).*", "const_isso"), // constant of type isso (boolean)
     CONST_WORD("\\\"(.*?)\\\".*", "const_word"), // constant of type word (string)
+
+    // input
+    INPUT("(1gabe).*", "1gabe"), // screen input
 
     // name / identifier
     NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name");

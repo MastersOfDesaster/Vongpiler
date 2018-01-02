@@ -1,5 +1,7 @@
 package vong.piler.her.lexer;
 
+import vong.piler.her.enums.TokenTypeEnum;
+
 public class Token {
     private TokenTypeEnum type;
     private String content = "";

@@ -1,6 +1,6 @@
 package vong.piler.her.parser;
 
-import vong.piler.her.lexer.TokenTypeEnum;
+import vong.piler.her.enums.TokenTypeEnum;
 
 public class TreeNode {
 
@@ -33,7 +33,7 @@ public class TreeNode {
 		this.right = right;
 	}
 
-	public void setLeft(String left) {
+	public void setLeft(Object left) {
 		this.left = left;
 	}
 

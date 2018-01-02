@@ -10,7 +10,10 @@ i bims 1 zal zaehl goenn dir 0!!!
 
 i bims 1 isso ende goenn dir nope!!!
 
+
 #start
+
+zaehl goenn dir 1gabe!!!
 
 ende goenn dir was ist das fuer 1 isweniga vong zaehl, 10 her?
 

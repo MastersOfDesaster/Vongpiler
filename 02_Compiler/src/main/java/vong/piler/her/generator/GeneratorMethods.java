@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import vong.piler.her.enums.OperationEnum;
 import vong.piler.her.generator.model.ValueModel;
-import vong.piler.her.steakmachine.OperationEnum;
 
 //TODO: Check type of value
 class GeneratorMethods {
@@ -77,6 +77,14 @@ class GeneratorMethods {
 		operations.add(registerHandler.addOperation(OperationEnum.PSA, address + ""));
 		operations.add(registerHandler.addOperation(value.getOperation(), value.getValue()));
 		operations.add(registerHandler.addOperation(OperationEnum.SAV));
+		return operations;
+	}
+
+	static List<String> generateSaveInput(String name, OperationEnum operation) {
+		List<String> operations = new ArrayList<>();
+		int address = registerHandler.addVariable(name);
+		operations.add(registerHandler.addOperation(OperationEnum.PSA, address + ""));
+		operations.add(registerHandler.addOperation(operation));
 		return operations;
 	}
 
