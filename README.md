@@ -9,7 +9,7 @@ https://github.com/MastersOfDesaster/Vongpiler/releases/latest
 ## Vongpiler
 Der Vongpiler ermöglicht das übersetzen des mit der [2k18-spec](https://github.com/MastersOfDesaster/2k18-spec) geschriebenen Quellcodes in Machschinencode zum ausführen in der [JRE](#VRE (Vong Runtime Environment).
 Die Dateiendung des Quellcodes ist .vsh was für "vong skript her" steht.
-**Wichtig:** Der Quellcode muss utf8 kodiert sein und Unix Steuerzeichen für Zeilenumbrüche enthalten.
+**Wichtig:** Der Quellcode muss utf8 kodiert sein.
 
 ### Aufruf
 
