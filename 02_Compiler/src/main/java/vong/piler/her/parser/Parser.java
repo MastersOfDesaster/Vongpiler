@@ -245,12 +245,6 @@ public class Parser {
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
 			parent.setLeft(dataTypeVariable.get(parent.getParent().getParent().getLeft().toString()));
-		}
-		// Node without value
-		else if (t.getContent().isEmpty()) {
-			logger.debug("Token: " + t.getType());
-			parent.setRight(new TreeNode(t.getType(), parent));
-			parent = parent.getRight();
 		} else {
 			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
