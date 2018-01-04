@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import vong.piler.her.enums.DataTypeEnum;
 import vong.piler.her.enums.TokenTypeEnum;
@@ -30,9 +30,8 @@ public class Parser {
 	public Parser() {
 		// Add rules to map
 		ruleMap.put(TokenTypeEnum.START,
-				Arrays.asList(
-						new TokenTypeEnum[] { TokenTypeEnum.VSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART,
-								TokenTypeEnum.AAL, TokenTypeEnum.PRINT, TokenTypeEnum.END }));
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VSTART, TokenTypeEnum.HASHTAG,
+						TokenTypeEnum.GOTOSTART, TokenTypeEnum.AAL, TokenTypeEnum.PRINT, TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.VSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.TYPE }));
 		ruleMap.put(TokenTypeEnum.TYPE, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
 		ruleMap.put(TokenTypeEnum.NAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.ASSI, TokenTypeEnum.PEND,
@@ -82,14 +81,14 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 
 		// Define data type for functions
-		dataTypeVariable.put("sume", DataTypeEnum.ZAL); // Addition(+)
-		dataTypeVariable.put("abziehung", DataTypeEnum.ZAL); // Subtraktion(-)
-		dataTypeVariable.put("mahl", DataTypeEnum.ZAL); // Multiplikation(*)
-		dataTypeVariable.put("teilung", DataTypeEnum.ZAL); // Division(/)
-		dataTypeVariable.put("räst", DataTypeEnum.ZAL); // Modulo(%)
-		dataTypeVariable.put("ismär", DataTypeEnum.ISSO); // Größer als(>)
-		dataTypeVariable.put("isweniga", DataTypeEnum.ISSO); // Kleiner als(<)
-		dataTypeVariable.put("same", DataTypeEnum.ISSO);// Und(&&)
+		dataTypeFunction.put("sume", DataTypeEnum.ZAL); // Addition(+)
+		dataTypeFunction.put("abziehung", DataTypeEnum.ZAL); // Subtraktion(-)
+		dataTypeFunction.put("mahl", DataTypeEnum.ZAL); // Multiplikation(*)
+		dataTypeFunction.put("teilung", DataTypeEnum.ZAL); // Division(/)
+		dataTypeFunction.put("räst", DataTypeEnum.ZAL); // Modulo(%)
+		dataTypeFunction.put("ismär", DataTypeEnum.ISSO); // Größer als(>)
+		dataTypeFunction.put("isweniga", DataTypeEnum.ISSO); // Kleiner als(<)
+		dataTypeFunction.put("same", DataTypeEnum.ISSO);// Und(&&)
 	}
 
 	public TreeNode parse(List<Token> tokenList) {
@@ -116,10 +115,12 @@ public class Parser {
 							if (vStart) {
 								setDataTypeVariable(t.getContent(), type, t.getLine());
 							} else if (parent.getName().equals(TokenTypeEnum.CMD)) {
-								System.out.println("CMD");
-								System.out.println("#" + t.getContent() + "#");
-								System.out.println(dataTypeFunction.get(t.getContent()));
-
+								if (!dataTypeFunction.get(t.getContent())
+										.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
+									System.out.println("Fehler");
+									error(t, "Funktion Tipe", Arrays.asList(
+											new TokenTypeEnum[] { getTokenTypeEnum(parent.getParent().getParent()) }));
+								}
 							}
 							break;
 						case VSTART:
@@ -135,33 +136,32 @@ public class Parser {
 							// Check data type for assignment after initialization
 							if (!vStart && parent.getName().equals(TokenTypeEnum.ASSI)
 									&& !dataTypeVariable.get(parent.getParent().getLeft())
-											.equals(getDataTypeEnum(t.getType().getLabel()))) {
-								// TODO
-								error(t, "Tipe",
-										Arrays.asList(
-												new TokenTypeEnum[] { TokenTypeEnum.CONST_ZAL, TokenTypeEnum.INPUT }),
-										null);
+											.equals(getDataTypeEnum(t.getType().getLabel(), 6))) {
+								error(t, "Tipe", Arrays.asList(new TokenTypeEnum[] {
+										getTokenTypeEnum(parent.getParent()), TokenTypeEnum.INPUT }));
 							}
 							// Test data type for assignment during initialization
 							else if (vStart && !dataTypeVariable.get(parent.getParent().getLeft())
-									.equals(getDataTypeEnum(t.getType().getLabel()))) {
-								error(t, "Tipe", Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.INPUT }),
-										dataTypeVariable.get(parent.getParent().getLeft()));
+									.equals(getDataTypeEnum(t.getType().getLabel(), 6))) {
+								error(t, "Tipe", Arrays.asList(new TokenTypeEnum[] {
+										getTokenTypeEnum(parent.getParent()), TokenTypeEnum.INPUT }));
 							}
 							break;
 						case IFSTART:
 							bistDu = true;
 							break;
+						default:
+							break;
 						}
 					}
 					// Syntax fail
 					else {
-						error(t, "Sintax", rule, null);
+						error(t, "Sintax", rule);
 					}
 				}
 				// Token != START and first token
 				else if (!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()) {
-					error(t, "Sintax", Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.START }), null);
+					error(t, "Sintax", Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.START }));
 				} else {
 					// TODO
 				}
@@ -187,28 +187,27 @@ public class Parser {
 		// Last token is != END
 		else {
 			error(tokenList.get(tokenList.size() - 1), "Sintax",
-					Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.END }), null);
+					Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.END }));
 		}
 		return root;
 	}
 
-	private DataTypeEnum getDataTypeEnum(String type) {
-		return DataTypeEnum.valueOf(type.substring(6).toUpperCase());
+	private DataTypeEnum getDataTypeEnum(String type, int anz) {
+		return DataTypeEnum.valueOf(type.substring(anz).toUpperCase());
+	}
+
+	private TokenTypeEnum getTokenTypeEnum(TreeNode node) {
+		return TokenTypeEnum.valueOf("CONST_" + dataTypeVariable.get(node.getLeft()).toString());
 	}
 
 	private void setDataTypeVariable(String name, String type, int line) {
 		// check if variable name is already assigned
 		if (!dataTypeVariable.containsKey(name)) {
-			switch (type) {
-			case "isso":
-				dataTypeVariable.put(name, DataTypeEnum.ISSO);
-				break;
-			case "word":
-				dataTypeVariable.put(name, DataTypeEnum.WORD);
-				break;
-			case "zal":
-				dataTypeVariable.put(name, DataTypeEnum.ZAL);
-				break;
+			try {
+				dataTypeVariable.put(name, DataTypeEnum.valueOf(type.toUpperCase()));
+			} catch (IllegalArgumentException e) {
+				logger.error("Datentipe nit bekannt! Du lauch!!! Schausd du Zeile " + line + ": \"" + type + "\"");
+				System.exit(0);
 			}
 		} else {
 			logger.error("Fehler voms doppelteng variablemameng her! Du lauch!!! Schausd du Zeile " + line + ": \""
@@ -217,7 +216,7 @@ public class Parser {
 		}
 	}
 
-	private void error(Token t, String message, List<TokenTypeEnum> rule, DataTypeEnum type) {
+	private void error(Token t, String message, List<TokenTypeEnum> rule) {
 		String error = new String();
 		for (TokenTypeEnum tte : rule) {
 			error = error + tte.getLabel() + "|";
