@@ -1,4 +1,4 @@
-package vong.piler.her.generator.model;
+package vong.piler.her.generator.refactored;
 
 import vong.piler.her.enums.OperationEnum;
 

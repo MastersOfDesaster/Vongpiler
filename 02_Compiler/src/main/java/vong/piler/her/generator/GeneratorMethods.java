@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import vong.piler.her.enums.OperationEnum;
-import vong.piler.her.generator.model.ValueModel;
+import vong.piler.her.generator.refactored.ValueModel;
 
 //TODO: Check type of value
 class GeneratorMethods {

@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import vong.piler.her.enums.OperationEnum;
-import vong.piler.her.generator.model.ValueModel;
+import vong.piler.her.generator.refactored.ValueModel;
 
 public class ComparatorZalGenarationTest {
 	

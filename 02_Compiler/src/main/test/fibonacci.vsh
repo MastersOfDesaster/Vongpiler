@@ -1,7 +1,5 @@
 was ist das fuer 1 code?
 
-i bims 1 zal lauch1 goenn dir 0!!!
-
 i bims 1 zal lauch2 goenn dir 1!!!
 
 i bims 1 zal erg goenn dir 0!!!

@@ -13,7 +13,7 @@ import vong.piler.her.enums.DataTypeEnum;
 import vong.piler.her.enums.OperationEnum;
 import vong.piler.her.enums.TokenTypeEnum;
 import vong.piler.her.exceptions.GenerationsFails;
-import vong.piler.her.generator.model.ValueModel;
+import vong.piler.her.generator.refactored.ValueModel;
 import vong.piler.her.parser.TreeNode;
 
 public class Generator {
@@ -144,13 +144,9 @@ public class Generator {
 					return OperationEnum.WIN;
 				case ZAL:
 					return OperationEnum.ZIN;
-				default:
-					throw new GenerationsFails("Generation fails at Token" + node);
 			}
 		}
-		else{
-			throw new GenerationsFails("Generation fails at Token" + node);
-		}
+		throw new GenerationsFails("Generation fails at Token" + node);
 	}
 	
 	private void varGetFromFunction(TreeNode node) throws GenerationsFails {

@@ -63,7 +63,9 @@ public class Main {
 					if(output == null) {
 						output = filename.replace(".vsh", ".vch");	
 					}
-					
+					if(line.hasOption("d")) {
+						testPrint(root, 2);
+					}
 					generator = new Generator(output);
 					generator.generate(root);
 					
