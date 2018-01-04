@@ -24,7 +24,8 @@ public class Parser {
 	Map<TokenTypeEnum, List<TokenTypeEnum>> ruleMap = new EnumMap<TokenTypeEnum, List<TokenTypeEnum>>(
 			TokenTypeEnum.class);
 
-	Map<String, DataTypeEnum> dataType = new HashMap<String, DataTypeEnum>();
+	Map<String, DataTypeEnum> dataTypeVariable = new HashMap<String, DataTypeEnum>();
+	Map<String, DataTypeEnum> dataTypeFunction = new HashMap<String, DataTypeEnum>();
 
 	public Parser() {
 		// Add rules to map
@@ -78,95 +79,88 @@ public class Parser {
 						TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.INPUT, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
+
+		// Define data type for functions
+		dataTypeVariable.put("sume", DataTypeEnum.ZAL); // Addition(+)
+		dataTypeVariable.put("abziehung", DataTypeEnum.ZAL); // Subtraktion(-)
+		dataTypeVariable.put("mahl", DataTypeEnum.ZAL); // Multiplikation(*)
+		dataTypeVariable.put("teilung", DataTypeEnum.ZAL); // Division(/)
+		dataTypeVariable.put("räst", DataTypeEnum.ZAL); // Modulo(%)
+		dataTypeVariable.put("ismär", DataTypeEnum.ISSO); // Größer als(>)
+		dataTypeVariable.put("isweniga", DataTypeEnum.ISSO); // Kleiner als(<)
+		dataTypeVariable.put("same", DataTypeEnum.ISSO);// Und(&&)
 	}
 
 	public TreeNode parse(List<Token> tokenList) {
 
 		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
-		String vType = null;
-		String vName = null;
+		String type = null;
 		boolean vStart = false;
 		boolean bistDu = false;
 
+		// Check if the last token == END
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
 			for (Token t : tokenList) {
-
 				// Token != START
 				if (!(t.getType().equals(TokenTypeEnum.START)) && !(rule.isEmpty())) {
-					// Syntax ok
+					// Syntax check from ruleMap == ok
 					if (rule.contains(t.getType())) {
 						// Check type
-						if (t.getType().equals(TokenTypeEnum.TYPE)) {
-							vType = t.getContent();
-						}else if (t.getType().equals(TokenTypeEnum.NAME)) {
-							vName = t.getContent();
-						}else if (t.getType().equals(TokenTypeEnum.VSTART)) {
+						switch (t.getType()) {
+						case TYPE:
+							type = t.getContent();
+							break;
+						case NAME:
+							if (vStart) {
+								setDataTypeVariable(t.getContent(), type, t.getLine());
+							} else if (parent.getName().equals(TokenTypeEnum.CMD)) {
+								System.out.println("CMD");
+								System.out.println("#" + t.getContent() + "#");
+								System.out.println(dataTypeFunction.get(t.getContent()));
+
+							}
+							break;
+						case VSTART:
 							vStart = true;
-						}else if (t.getType().equals(TokenTypeEnum.VEND)) {
+							break;
+						case VEND:
 							vStart = false;
-						}
-						
-						
-						// Check type when token == CONST_ISSO|CONST_WORD|CONST_ZAL
-						if (vType != null && ((t.getType().equals(TokenTypeEnum.CONST_ISSO) && !vType.matches("isso"))
-								|| (t.getType().equals(TokenTypeEnum.CONST_WORD) && !vType.matches("word"))
-								|| (t.getType().equals(TokenTypeEnum.CONST_ZAL) && !vType.matches("zal")))) {
-							logger.error("Fehler voms Tipe her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
-									+ t.getType().getLabel() + " --> Gieb: " + vType);
-							System.exit(0);
-						}
-						// Set type == null after check
-						if (t.getType().equals(TokenTypeEnum.CONST_ISSO) || t.getType().equals(TokenTypeEnum.CONST_WORD)
-								|| t.getType().equals(TokenTypeEnum.CONST_ZAL)) {
-							if(vStart) {
-								switch(vType) {
-									case "isso":
-										dataType.put(vName, DataTypeEnum.ISSO);
-										break;
-									case "word":
-										dataType.put(vName, DataTypeEnum.WORD);
-										break;
-									case "zal":
-										dataType.put(vName, DataTypeEnum.ZAL);
-										break;
-								}
-							}							
-							vType = null;
-							vName = null;
-						}
-						if (t.getType().equals(TokenTypeEnum.IFSTART)) {
+							type = null;
+							break;
+						case CONST_ISSO:
+						case CONST_WORD:
+						case CONST_ZAL:
+							// Check data type for assignment after initialization
+							if (!vStart && parent.getName().equals(TokenTypeEnum.ASSI)
+									&& !dataTypeVariable.get(parent.getParent().getLeft())
+											.equals(getDataTypeEnum(t.getType().getLabel()))) {
+								// TODO
+								error(t, "Tipe",
+										Arrays.asList(
+												new TokenTypeEnum[] { TokenTypeEnum.CONST_ZAL, TokenTypeEnum.INPUT }),
+										null);
+							}
+							// Test data type for assignment during initialization
+							else if (vStart && !dataTypeVariable.get(parent.getParent().getLeft())
+									.equals(getDataTypeEnum(t.getType().getLabel()))) {
+								error(t, "Tipe", Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.INPUT }),
+										dataTypeVariable.get(parent.getParent().getLeft()));
+							}
+							break;
+						case IFSTART:
 							bistDu = true;
+							break;
 						}
 					}
 					// Syntax fail
 					else {
-						String error = new String();
-						for (TokenTypeEnum tte : rule) {
-							error = error + tte.getLabel() + "|";
-						}
-						if (t.getContent().isEmpty()) {
-							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile " + t.getLine()
-									+ ": Hab: " + t.getType().getLabel() + " -->  Gieb: "
-									+ error.substring(0, (error.length() - 1)));
-						} else {
-							logger.error("Fehler voms Sintax her! Du lauch!!! Schausd du Zeile  " + t.getLine()
-									+ ": Hab: " + t.getContent() + " -->  Gieb: "
-									+ error.substring(0, (error.length() - 1)));
-						}
-						System.exit(0);
+						error(t, "Sintax", rule, null);
 					}
 				}
 				// Token != START and first token
 				else if (!(t.getType().equals(TokenTypeEnum.START)) && rule.isEmpty()) {
-					if (t.getContent().isEmpty()) {
-						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getType().getLabel()
-								+ " --> Gieb: " + TokenTypeEnum.START.getLabel());
-					} else {
-						logger.error("syntax error in line " + t.getLine() + ": Hab: " + t.getContent() + " --> Gieb: "
-								+ TokenTypeEnum.START.getLabel());
-					}
-					System.exit(0);
+					error(t, "Sintax", Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.START }), null);
 				} else {
 					// TODO
 				}
@@ -182,31 +176,59 @@ public class Parser {
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PEND);
-
+					bistDu = false;
 				} else {
 					parseItem(t);
 					rule = ruleMap.get(t.getType());
-
 				}
-
 			}
-		}else
-
-	{
-		if (tokenList.get(tokenList.size() - 1).getContent().isEmpty()) {
-			logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
-					+ tokenList.get(tokenList.size() - 1).getType().getLabel() + " --> Expected: "
-					+ TokenTypeEnum.END.getLabel());
-		} else {
-			logger.error("syntax error in line " + tokenList.get(tokenList.size() - 1).getLine() + ": Got: "
-					+ tokenList.get(tokenList.size() - 1).getContent() + " --> Expected: "
-					+ TokenTypeEnum.END.getLabel());
 		}
-		System.exit(0);
+		// Last token is != END
+		else {
+			error(tokenList.get(tokenList.size() - 1), "Sintax",
+					Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.END }), null);
+		}
+		return root;
 	}
 
-	return root;
+	private DataTypeEnum getDataTypeEnum(String type) {
+		return DataTypeEnum.valueOf(type.substring(6).toUpperCase());
+	}
 
+	private void setDataTypeVariable(String name, String type, int line) {
+		// check if variable name is already assigned
+		if (!dataTypeVariable.containsKey(name)) {
+			switch (type) {
+			case "isso":
+				dataTypeVariable.put(name, DataTypeEnum.ISSO);
+				break;
+			case "word":
+				dataTypeVariable.put(name, DataTypeEnum.WORD);
+				break;
+			case "zal":
+				dataTypeVariable.put(name, DataTypeEnum.ZAL);
+				break;
+			}
+		} else {
+			logger.error("Fehler voms doppelteng variablemameng her! Du lauch!!! Schausd du Zeile " + line + ": \""
+					+ name + "\" gibd es bereits!");
+			System.exit(0);
+		}
+	}
+
+	private void error(Token t, String message, List<TokenTypeEnum> rule, DataTypeEnum type) {
+		String error = new String();
+		for (TokenTypeEnum tte : rule) {
+			error = error + tte.getLabel() + "|";
+		}
+		if (t.getContent().isEmpty()) {
+			logger.error("Fehler voms " + message + " her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
+					+ t.getType().getLabel() + " --> Gieb: " + error.substring(0, (error.length() - 1)));
+		} else {
+			logger.error("Fehler voms " + message + " her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
+					+ t.getContent() + " --> Gieb: " + error.substring(0, (error.length() - 1)));
+		}
+		System.exit(0);
 	}
 
 	private void parseItem(Token t) {
@@ -216,21 +238,19 @@ public class Parser {
 			logger.debug("Token: " + t.getType());
 			root = new TreeNode(t.getType(), null);
 			parent = root;
-		}
-		else if (t.getType().equals(TokenTypeEnum.INPUT)) {
-			//TODO: some is null: logger.debug("Value: " + parent.getParent().getParent().getLeft().toString() + " Token: " + t.getType());
+		} else if (t.getType().equals(TokenTypeEnum.INPUT)) {
+			// TODO: some is null: logger.debug("Value: " +
+			// parent.getParent().getParent().getLeft().toString() + " Token: " +
+			// t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
-			parent.setLeft(dataType.get(parent.getParent().getParent().getLeft().toString()));
-			
-		}		
+			parent.setLeft(dataTypeVariable.get(parent.getParent().getParent().getLeft().toString()));
+		}
 		// Node without value
 		else if (t.getContent().isEmpty()) {
 			logger.debug("Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
-
-			// Node with value
 		} else {
 			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
