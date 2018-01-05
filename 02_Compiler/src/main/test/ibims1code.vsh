@@ -1,25 +1,23 @@
-was ist das fuer 1 code?
+was ist das für 1 code?
 
-i bims 1 zal var1 goenn dir 12 !!!
+i bims 1 zal var1 gönn dir 12 !!!
 
-i bims 1 isso varIsso goenn dir yup !!!
+i bims 1 isso varIssö gönn dir yup !!!
 
-:X was ist das fuer 1 sume vong var1, 12 her? :X LAWL
+:X was ist das für 1 sume vong var1, 12 her? :X LAWL
 
 gieb "DAFUQ", 12 her?
 
 #LOL
 
-bist du varIsso? yup :X If {
-    bist du yup? nope :X If {
-        gieb "nope!!!" her?
+bist du varIssö? yup :X If {
+        gieb "nope!!!" !!!
         halo i bims!!!
-    real rap :X }
 real rap :X }
-bist du vong yup, nope her? :X Else {
-    gieb "nope!!!" her?
+bist du varIssö? nope :X Else {
+    gieb "nope!!!" !!!
 real rap :X }
 
-gehe zu #LOL du larry!!!
+g zu #LOL du larry!!!
 
 1 nicer!!!
