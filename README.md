@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/MastersOfDesaster/Vongpiler.svg?branch=master)](https://travis-ci.org/MastersOfDesaster/Vongpiler)
 # Vongpiler
 
 Halo i bim 1 Vongpiler vong [2k18-spec](https://github.com/MastersOfDesaster/2k18-spec) her.
