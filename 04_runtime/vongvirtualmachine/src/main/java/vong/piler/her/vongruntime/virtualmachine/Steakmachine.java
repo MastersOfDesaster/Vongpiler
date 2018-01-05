@@ -36,6 +36,7 @@ public class Steakmachine {
 
 	private int instructionPointer;
 	private boolean running;
+	private Scanner scanner = new Scanner(System.in);
 	
 	
 	public static int getProgramMemorySize() {
@@ -151,6 +152,7 @@ public class Steakmachine {
 				running = false;
 			} 
 		}
+		scanner.close();
 
 	}
 
@@ -303,7 +305,6 @@ public class Steakmachine {
 
 
 	private double readZal() {
-		Scanner scanner = new Scanner(System.in);
 		double zal = 0;
 		boolean read = false;
 		while(!read) {
@@ -315,19 +316,15 @@ public class Steakmachine {
 				scanner.nextLine();
 			}	
 		}
-		scanner.close();
 		return zal;
 	}
 	
 	private String readWord() {
-		Scanner scanner = new Scanner(System.in);
 		String word = scanner.nextLine();
-		scanner.close();
 		return word;
 	}
 
 	private boolean readIsso() {
-		Scanner scanner = new Scanner(System.in);
 		boolean isso = false;
 		boolean read = false;
 		while(!read) {
@@ -342,7 +339,6 @@ public class Steakmachine {
 				System.out.println("Du must 1 isso 1geben du Lauch!!");
 			}
 		}
-		scanner.close();
 		return isso;
 	}
 

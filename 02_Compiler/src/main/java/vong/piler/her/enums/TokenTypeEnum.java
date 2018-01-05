@@ -4,11 +4,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
     // program
-    START("(was ist das fuer 1 code\\?).*", "was ist das fuer 1 code?"), // start
+    START("(was ist das für 1 code\\?).*", "was ist das für 1 code?"), // start
     END("(1 nicer!!!).*", "1 nicer!!!"), // end
     
     // function
-    CMD("(was ist das fuer 1).*", "was ist das fuer 1"), // call function
+    CMD("(was ist das für 1).*", "was ist das für 1"), // call function
     PSTART("(vong).*", "vong"), // start of parameters
     PNEXT("((,|\\?|\\+){1}).*", ",|?|+"), // next parameter
     PEND("(her\\?).*", "her?"), // end of parameter
@@ -28,11 +28,11 @@ public enum TokenTypeEnum {
     
     // declare variable
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
-    ASSI("(goenn dir).*", "goenn dir"), // assign value
+    ASSI("(gönn dir).*", "gönn dir"), // assign value
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
     // whitespace
-    COMMENT(":X(.*?)\n.*"), WHITESPACE("( |\t).*"), NEWLINE("(\n).*"),
+    COMMENT(":X(.*?)(\n|\r\n).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
 
     // types
     TYPE("(zal\\h|word\\h|isso\\h).*", "zal|word|isso"),
@@ -46,7 +46,7 @@ public enum TokenTypeEnum {
     INPUT("(1gabe).*", "1gabe"), // screen input
 
     // name / identifier
-    NAME("\\b([a-zA-Z]{1}[0-9a-zA-Z_]{0,31})\\b.*", "name"),
+    NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name");
 	FNAME("", "fname");
     
     private String regEx;
