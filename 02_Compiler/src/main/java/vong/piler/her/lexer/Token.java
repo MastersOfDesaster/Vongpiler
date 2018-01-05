@@ -15,6 +15,10 @@ public class Token {
     public TokenTypeEnum getType() {
         return type;
     }
+    
+    public void setType(TokenTypeEnum type) {
+    	this.type = type;
+    }
 
     public String getContent() {
         return content;
