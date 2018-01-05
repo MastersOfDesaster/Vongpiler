@@ -99,7 +99,6 @@ public class Parser {
 		String type = null;
 		boolean vStart = false;
 		boolean bistDu = false;
-		boolean pStart = false;
 
 		// Check if the last token == END
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
@@ -150,12 +149,6 @@ public class Parser {
 						case IFSTART:
 							bistDu = true;
 							break;
-						case PSTART:
-							pStart = true;
-							break;
-						case PEND:
-							pStart = false;
-							break;
 						default:
 							break;
 						}
@@ -172,19 +165,26 @@ public class Parser {
 					// TODO
 				}
 
-				// Bist du
+				// Add after IFSTART a PSTART token
 				if (bistDu && t.getType().equals(TokenTypeEnum.IFSTART)) {
-					Token hT = new Token(0, TokenTypeEnum.PSTART);
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PSTART);
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PSTART);
 				} else if (bistDu && t.getType().equals(TokenTypeEnum.CONST_ISSO)) {
-					Token hT = new Token(0, TokenTypeEnum.PEND);
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PEND);
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PEND);
 					bistDu = false;
-				} else {
+				} // Add after PRINT a PSTART token
+				else if (t.getType().equals(TokenTypeEnum.PRINT)) {
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PSTART);
+					parseItem(t);
+					parseItem(hT);
+					rule = ruleMap.get(TokenTypeEnum.PSTART);
+				}
+					else{
 					parseItem(t);
 					rule = ruleMap.get(t.getType());
 				}

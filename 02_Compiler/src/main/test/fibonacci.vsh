@@ -12,7 +12,7 @@ i bims 1 zal zaehl gönn dir 0!!!
 
 i bims 1 isso ende gönn dir nope!!!
 
-gieb "gieb anz fibonacci"!!! 
+gieb "gieb anz fibonacci" her?
 
 max gönn dir 1gabe!!!
 
@@ -24,7 +24,7 @@ bist du ende? yup
 
     ergebnüs gönn dir was ist das für 1 sume vong lauch1, lauch2 her?
 
-    gieb "Fibonacci " + zaehl +" :" + lauch1 + " + " + lauch2 + " = " + ergebnüs!!!
+    gieb "Fibonacci " + zaehl +" :" + lauch1 + " + " + lauch2 + " = " + ergebnüs her?
 
     lauch1 gönn dir lauch2!!!
 
