@@ -23,6 +23,8 @@ public class Parser {
 
 	Map<TokenTypeEnum, List<TokenTypeEnum>> ruleMap = new EnumMap<TokenTypeEnum, List<TokenTypeEnum>>(
 			TokenTypeEnum.class);
+	
+	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
 	Map<String, DataTypeEnum> dataTypeVariable = new HashMap<String, DataTypeEnum>();
 	Map<String, DataTypeEnum> dataTypeFunction = new HashMap<String, DataTypeEnum>();
@@ -78,6 +80,7 @@ public class Parser {
 						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND,
 						TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.INPUT, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND }));
+		ruleMap.put(TokenTypeEnum.FNAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PSTART }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 
 		// Define data type for functions
@@ -93,11 +96,10 @@ public class Parser {
 
 	public TreeNode parse(List<Token> tokenList) {
 
-		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
-
 		String type = null;
 		boolean vStart = false;
 		boolean bistDu = false;
+		boolean pStart = false;
 
 		// Check if the last token == END
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
@@ -147,6 +149,12 @@ public class Parser {
 							break;
 						case IFSTART:
 							bistDu = true;
+							break;
+						case PSTART:
+							pStart = true;
+							break;
+						case PEND:
+							pStart = false;
 							break;
 						default:
 							break;
@@ -238,8 +246,11 @@ public class Parser {
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.containsKey(t.getContent())) {
 			logger.error("Funktion unbekamd: " + t.getContent());
 			System.exit(0);
-		}
-		// Check data type CMD && NAME
+		} // Set token type to FNAME		
+		else if(parent.getName().equals(TokenTypeEnum.CMD) && dataTypeFunction.containsKey(t.getContent())) {
+			t.setType(TokenTypeEnum.FNAME);
+			rule = ruleMap.get(TokenTypeEnum.FNAME);
+		} // Check data type CMD && NAME
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.get(t.getContent())
 				.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
 			error(t, "Funktion Tipe",
