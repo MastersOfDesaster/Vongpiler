@@ -66,9 +66,10 @@ public class Generator {
 		case CMD:
 			return cmd(node, null);
 		case IFSTART:
+			writer.addBlank("IF"+ ++ifCounter);
 			TreeNode nextNode = ifStart(node);
-			writer.addCommand(OperationEnum.JMT, "if"+ ifCounter);
-			ifCounter++;
+			writer.addNOT();
+			writer.addCommand(OperationEnum.JMT);
 			return nextNode;
 		case IFEND:
 			return ifend(node);
@@ -236,7 +237,7 @@ public class Generator {
 	private TreeNode vEnd(TreeNode node, String name, ValueModel value) throws GenerationsFails {
 		int address = registerHandler.getVariableAddress(name);
 		writer.addCommand(OperationEnum.PSA, address+"");
-		writer.addCommand(value.getOperation(), value.getValue());
+		writer.addCommandResolveAdresses(value.getOperation(), value.getValue());
 		writer.addCommand(OperationEnum.SAV);
 		return nextNode(node);
 	}
@@ -407,7 +408,7 @@ public class Generator {
 		registerHandler.addJumpMarkerIfNotExists("IF" + free);
 		writer.fillBlankAddress("IF"+free, registerHandler.getDataAddress("IF"+free), 0);
 		ifGenerated.add(free);
-		return node;
+		return nextNode(node);
 	}
 	
 	private int findFreeIfCounter() {

@@ -51,6 +51,18 @@ public class ByteCodeWriter {
 		addLine(operationBuilder.toString());
 		logger.debug("added operation " +  operationBuilder.toString());
 	}
+	
+	void addCommandResolveAdresses(OperationEnum command, String parameter) {
+		StringBuilder operationBuilder = new StringBuilder();
+		operationBuilder.append(command.ordinal());
+		operationBuilder.append(" ");
+		if (command.equals(OperationEnum.PSA))
+			operationBuilder.append(registerHandler.getVariableAddress(parameter));
+		else
+			operationBuilder.append(parameter);
+		addLine(operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
+	}
 
 	void addCommand(OperationEnum command, int address, int count) {
 		StringBuilder operationBuilder = new StringBuilder();
@@ -78,6 +90,11 @@ public class ByteCodeWriter {
 	
 	void addNOT() {
 		addCommand(OperationEnum.NOT);
+	}
+	
+	void addBlank(String blankMark) {
+		String blank = ":X" + blankMark + "X:";
+		addCommand(OperationEnum.PSA, blank);
 	}
 	
 	void fillBlankAddress(String blank, String address, int startIndex) {
