@@ -112,15 +112,13 @@ public class Parser {
 							type = t.getContent();
 							break;
 						case NAME:
+							// Save variable name and type
 							if (vStart) {
 								setDataTypeVariable(t.getContent(), type, t.getLine());
-							} else if (parent.getName().equals(TokenTypeEnum.CMD)) {
-								if (!dataTypeFunction.get(t.getContent())
-										.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
-									System.out.println("Fehler");
-									error(t, "Funktion Tipe", Arrays.asList(
-											new TokenTypeEnum[] { getTokenTypeEnum(parent.getParent().getParent()) }));
-								}
+							}
+							// Check after variable initialized for know variable and function names
+							else {
+								checkVariableFunction(t);
 							}
 							break;
 						case VSTART:
@@ -231,25 +229,40 @@ public class Parser {
 		System.exit(0);
 	}
 
+	private void checkVariableFunction(Token t) {
+		// Variable not initialized
+		if (!parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeVariable.containsKey(t.getContent())) {
+			logger.error("Variable unbekamd: " + t.getContent());
+			System.exit(0);
+		} // Token before is CMD -> NAME is from a function && funktion name not unknown
+		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.containsKey(t.getContent())) {
+			logger.error("Funktion unbekamd: " + t.getContent());
+			System.exit(0);
+		}
+		// Check data type CMD && NAME
+		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.get(t.getContent())
+				.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
+			error(t, "Funktion Tipe",
+					Arrays.asList(new TokenTypeEnum[] { getTokenTypeEnum(parent.getParent().getParent()) }));
+		}
+
+	}
+
 	private void parseItem(Token t) {
 
 		// Root node
 		if (root == null) {
-			logger.debug("Token: " + t.getType());
 			root = new TreeNode(t.getType(), null);
 			parent = root;
 		} else if (t.getType().equals(TokenTypeEnum.INPUT)) {
-			// TODO: some is null: logger.debug("Value: " +
-			// parent.getParent().getParent().getLeft().toString() + " Token: " +
-			// t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
 			parent.setLeft(dataTypeVariable.get(parent.getParent().getParent().getLeft().toString()));
 		} else {
-			logger.debug("Value: " + t.getContent() + " Token: " + t.getType());
 			parent.setRight(new TreeNode(t.getType(), parent));
 			parent = parent.getRight();
 			parent.setLeft(t.getContent());
 		}
+		logger.debug(t.getLine() + ": \t" + t.getType() + "(" + t.getContent() + ")");
 	}
 }
