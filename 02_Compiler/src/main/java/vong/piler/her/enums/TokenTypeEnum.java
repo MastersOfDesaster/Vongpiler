@@ -48,7 +48,7 @@ public enum TokenTypeEnum {
     // name / identifier
     NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name"),
 	
-	FNAME("","vname");
+	FNAME("","fname");
     
     private String regEx;
     private String label;

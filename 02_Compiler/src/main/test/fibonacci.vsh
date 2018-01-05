@@ -4,6 +4,7 @@ i bims 1 zal lauch1 gönn dir 0!!!
 
 i bims 1 zal lauch2 gönn dir 1!!!
 
+
 i bims 1 zal ergebnüs gönn dir 0!!!
 
 i bims 1 zal max gönn dir 0!!!

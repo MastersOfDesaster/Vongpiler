@@ -1,5 +1,8 @@
 package vong.piler.her.exceptions;
 
+import vong.piler.her.enums.TokenTypeEnum;
+import vong.piler.her.parser.TreeNode;
+
 public class GenerationsFails extends Exception {
 
 	private static final long serialVersionUID = -6054019395134165127L;
@@ -24,4 +27,12 @@ public class GenerationsFails extends Exception {
 		super(cause);
 	}
 
+	public GenerationsFails(TreeNode node, int tokenId, Throwable cause) {
+		super("Generation fails at token " + node.getName() + " with ID " + tokenId, cause);
+	}
+
+	public GenerationsFails(TreeNode node, int tokenId) {
+		super("Generation fails at token " + node.getName() + " with ID " + tokenId);
+	}
+	
 }
