@@ -259,7 +259,7 @@ public class Generator {
 
 	private TreeNode pStart(TreeNode node, String name, OperationEnum operation) throws GenerationsFails {
 		List<ValueModel> values = new ArrayList<>();
-		switch (node.getName()) {
+		switch (node.getRight().getName()) {
 			case CONST_ISSO:
 				return constIsso(nextNode(node), name, operation, values);
 			case CONST_WORD:
@@ -274,7 +274,7 @@ public class Generator {
 	}
 	
 	private TreeNode pNext(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
-		switch (node.getName()) {
+		switch (node.getRight().getName()) {
 			case CONST_ISSO:
 				return constIsso(nextNode(node), name, operation, values);
 			case CONST_WORD:
@@ -367,16 +367,16 @@ public class Generator {
 	
 	private TreeNode gotoStart(TreeNode node) throws GenerationsFails {
 		if (node.getRight().getName().equals(TokenTypeEnum.HASHTAG)) {
-			return hashtag(nextNode(node), node.getLeft().toString());
+			return hashtag(nextNode(node));
 		}
 		else {
 			throw new GenerationsFails(node, tokenId);
 		}
 	}
 
-	private TreeNode hashtag(TreeNode node, String name) throws GenerationsFails {
+	private TreeNode hashtag(TreeNode node) throws GenerationsFails {
 		if (node.getRight().getName().equals(TokenTypeEnum.GOTOEND)) {
-			return gotoEnd(nextNode(node), name);
+			return gotoEnd(nextNode(node), node.getLeft().toString());
 		}
 		else {
 			throw new GenerationsFails(node, tokenId);
