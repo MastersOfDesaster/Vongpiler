@@ -23,6 +23,8 @@ public class Parser {
 
 	Map<TokenTypeEnum, List<TokenTypeEnum>> ruleMap = new EnumMap<TokenTypeEnum, List<TokenTypeEnum>>(
 			TokenTypeEnum.class);
+	
+	List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
 	Map<String, DataTypeEnum> dataTypeVariable = new HashMap<String, DataTypeEnum>();
 	Map<String, DataTypeEnum> dataTypeFunction = new HashMap<String, DataTypeEnum>();
@@ -78,6 +80,7 @@ public class Parser {
 						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND,
 						TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.INPUT, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND }));
+		ruleMap.put(TokenTypeEnum.FNAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PSTART }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 
 		// Define data type for functions
@@ -92,8 +95,6 @@ public class Parser {
 	}
 
 	public TreeNode parse(List<Token> tokenList) {
-
-		List<TokenTypeEnum> rule = new ArrayList<TokenTypeEnum>();
 
 		String type = null;
 		boolean vStart = false;
@@ -164,19 +165,26 @@ public class Parser {
 					// TODO
 				}
 
-				// Bist du
+				// Add after IFSTART a PSTART token
 				if (bistDu && t.getType().equals(TokenTypeEnum.IFSTART)) {
-					Token hT = new Token(0, TokenTypeEnum.PSTART);
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PSTART);
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PSTART);
 				} else if (bistDu && t.getType().equals(TokenTypeEnum.CONST_ISSO)) {
-					Token hT = new Token(0, TokenTypeEnum.PEND);
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PEND);
 					parseItem(t);
 					parseItem(hT);
 					rule = ruleMap.get(TokenTypeEnum.PEND);
 					bistDu = false;
-				} else {
+				} // Add after PRINT a PSTART token
+				else if (t.getType().equals(TokenTypeEnum.PRINT)) {
+					Token hT = new Token(t.getLine(), TokenTypeEnum.PSTART);
+					parseItem(t);
+					parseItem(hT);
+					rule = ruleMap.get(TokenTypeEnum.PSTART);
+				}
+					else{
 					parseItem(t);
 					rule = ruleMap.get(t.getType());
 				}
@@ -238,8 +246,11 @@ public class Parser {
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.containsKey(t.getContent())) {
 			logger.error("Funktion unbekamd: " + t.getContent());
 			System.exit(0);
-		}
-		// Check data type CMD && NAME
+		} // Set token type to FNAME		
+		else if(parent.getName().equals(TokenTypeEnum.CMD) && dataTypeFunction.containsKey(t.getContent())) {
+			t.setType(TokenTypeEnum.FNAME);
+			rule = ruleMap.get(TokenTypeEnum.FNAME);
+		} // Check data type CMD && NAME
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.get(t.getContent())
 				.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
 			error(t, "Funktion Tipe",

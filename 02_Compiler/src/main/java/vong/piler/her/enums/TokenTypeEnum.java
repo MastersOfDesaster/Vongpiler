@@ -46,8 +46,9 @@ public enum TokenTypeEnum {
     INPUT("(1gabe).*", "1gabe"), // screen input
 
     // name / identifier
-    NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name");
-	FNAME("", "fname");
+    NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name"),
+	
+	FNAME("","fname");
     
     private String regEx;
     private String label;

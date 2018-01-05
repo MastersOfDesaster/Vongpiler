@@ -11,11 +11,11 @@ gieb "DAFUQ", 12 her?
 #LOL
 
 bist du varIssö? yup :X If {
-        gieb "nope!!!" !!!
+        gieb "nope!!!" her?
         halo i bims!!!
 real rap :X }
 bist du varIssö? nope :X Else {
-    gieb "nope!!!" !!!
+    gieb "nope!!!" her?
 real rap :X }
 
 g zu #LOL du larry!!!
