@@ -29,7 +29,7 @@ public class Token {
     }
 
     public String toString() {
-        String text = this.line + ": " + this.type.name();
+        String text = this.line + ": \t" + this.type.name();
         
         if (!this.content.isEmpty()) {
             text += ": " + this.content + "";
