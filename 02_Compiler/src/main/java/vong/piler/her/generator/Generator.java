@@ -1,296 +1,415 @@
 package vong.piler.her.generator;
 
-
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import vong.piler.her.enums.DataTypeEnum;
 import vong.piler.her.enums.OperationEnum;
 import vong.piler.her.enums.TokenTypeEnum;
 import vong.piler.her.exceptions.GenerationsFails;
-import vong.piler.her.generator.refactored.ValueModel;
 import vong.piler.her.parser.TreeNode;
 
 public class Generator {
 	
 	private static Logger logger = LogManager.getLogger(Generator.class);
-	private ByteCodeWriter writer;
 	private RegisterHandler registerHandler;
+	private ByteCodeWriter writer;
 	private int ifCounter;
 	private List<Integer> ifGenerated;
+	private int tokenId;
 	
-    public Generator(String outputPath) {
-        this.writer = new ByteCodeWriter(new File(outputPath));
-        this.registerHandler = RegisterHandler.getInstance();
-        this.ifCounter = 0;
-        this.ifGenerated = new ArrayList<>();
-    }
-    
-    public void generate(TreeNode root) throws GenerationsFails {
-    		TreeNode right = root.getRight();
-    		switch(right.getName()) {
-			case VSTART:
-				variableDeclaration(right);
-				break;
-			case CMD:
-				predefinedFunctionCalls(right, false);
-				break;
-			case PRINT:
-				printFunction(right);
-				break;
-			case AAL:
-				writer.addAAL();
-				generate(right);
-				break;
-			case HASHTAG:
-				registerHandler.addJumpMarkerIfNotExists(right.getLeft().toString());
-				generate(right);
-				break;
-			case IFSTART:
-				condition(right);
-				break;
-			case IFEND:
-				int free = findFreeIfCounter();
-				registerHandler.addJumpMarkerIfNotExists("IF" + free);
-				writer.fillBlankAddress("IF"+free, registerHandler.getDataAddress("IF"+free));
-				ifGenerated.add(free);
-				generate(right);
-				break;
-			case GOTOSTART:
-				jump(right);
-				break;
-			case NAME:
-				if (right.getRight().getRight().getName().equals(TokenTypeEnum.CMD)) {
-					varGetFromFunction(right);
-				}
-				else {
-					variableDeclaration(root);
-				}
-				break;
-			case END:
-				writer.eof();
-				break;
-    			default:
-    				throw new GenerationsFails("Generation fails at Token" + right);
-        }
-    }
-
-	private void jump(TreeNode node) throws GenerationsFails {
-		TreeNode right = node.getRight();
-		writer.addMultiCommand(GeneratorMethods.generateJump(right.getLeft().toString(), false, null));
-		right = right.getRight();
-		generate(right);
-	}
-
-	private void variableDeclaration(TreeNode node) throws GenerationsFails {
-		String name = null;
-		ValueModel value = null;
-		OperationEnum operation = null;
-		TreeNode right = null;
-		right = node.getRight();
-		while (!right.getName().equals(TokenTypeEnum.VEND)) {
-			switch (right.getName()) {
-				case TYPE:
-				case ASSI:
-					break;
-				case NAME:
-					if (name == null) {
-						name = (String)right.getLeft();
-					}
-					else {
-						value = new ValueModel(right.getLeft().toString(), true);
-					}
-					break;
-				case CONST_ZAL:
-					value = new ValueModel(Double.parseDouble(right.getLeft().toString()));
-					break;
-				case CONST_ISSO:
-					value = new ValueModel((right.getLeft().equals("yup"))?true:false);
-					break;
-				case CONST_WORD:
-					value = new ValueModel(right.getLeft().toString(), false);
-					break;
-				case INPUT:
-					operation = getInputOperation(right);
-					break;
-				default:
-    					throw new GenerationsFails("Generation fails at Token" + right);
-			}
-			right = right.getRight();
-		}
-		if (name != null && value != null) {
-			writer.addMultiCommand(GeneratorMethods.generateSaveVar(name, value));
-		}
-		else if (name != null && operation != null) {
-			writer.addMultiCommand(GeneratorMethods.generateSaveInput(name, operation));
-		}
-		else{
-			throw new GenerationsFails("Generation fails at Token" + right);
-		}
-		generate(right);
-    }
-	
-	private OperationEnum getInputOperation(TreeNode node) throws GenerationsFails {
-		if (node.getLeft() instanceof DataTypeEnum) {
-			switch (((DataTypeEnum)node.getLeft())) {
-				case ISSO:
-					return OperationEnum.IIN;
-				case WORD:
-					return OperationEnum.WIN;
-				case ZAL:
-					return OperationEnum.ZIN;
-			}
-		}
-		throw new GenerationsFails("Generation fails at Token" + node);
+	public Generator(String outputPath) {
+	    this.ifCounter = 0;
+	    this.ifGenerated = new ArrayList<>();
+	    this.tokenId = 1;
+	    this.registerHandler = RegisterHandler.getInstance();
+	    this.writer = new ByteCodeWriter(outputPath);
 	}
 	
-	private void varGetFromFunction(TreeNode node) throws GenerationsFails {
-		String varName = node.getLeft().toString();
-		writer.addCommand(OperationEnum.PSA, varName);
-		TreeNode right = node.getRight().getRight();
-		TreeNode next = predefinedFunctionCalls(right, true);
-		writer.addCommand(OperationEnum.SAV);
-		generate(next);
+	public TreeNode nextNode(TreeNode node) {
+		tokenId++;
+		return node.getRight();
 	}
 
-	private void printFunction(TreeNode node) throws GenerationsFails {
-		List<ValueModel> values = new ArrayList<>();
-		while (!node.getName().equals(TokenTypeEnum.PEND) && !node.getName().equals(TokenTypeEnum.VEND)) {
-			if (node.getName().equals(TokenTypeEnum.PRINT) || node.getName().equals(TokenTypeEnum.PNEXT)) {
-				node = node.getRight();
-				values.add(buildParameter(node));
-				node = node.getRight();
+	public void start(TreeNode root) throws GenerationsFails {
+		if (!root.getName().equals(TokenTypeEnum.START)) {
+			throw new GenerationsFails(root, tokenId);
+		}
+		TreeNode node = nextNode(root);
+		while(!node.getName().equals(TokenTypeEnum.END)) {
+			if (node.getName().equals(TokenTypeEnum.VSTART)) {
+				node = vStart(node);
 			}
-			else
-				throw new GenerationsFails("Generation fails at Token" + node);
+			else {
+				node = chooseNextStep(node);
+			}
 		}
-		writer.addMultiCommand(GeneratorMethods.generatePrint(values));
-		generate(node);
+		writer.eof();
+	}	
+	
+	public TreeNode chooseNextStep(TreeNode node) throws GenerationsFails {
+		switch(node.getName()) {
+		case HASHTAG:
+			registerHandler.addJumpMarkerIfNotExists(node.getLeft().toString()); 
+			return nextNode(node);
+		case AAL:
+			writer.addAAL();
+			return nextNode(node);
+		case PRINT:
+			return print(node);				
+		case NAME:
+			return decVarName(node);
+		case CMD:
+			return cmd(node, null);
+		case IFSTART:
+			TreeNode nextNode = ifStart(node);
+			writer.addCommand(OperationEnum.JMT, "if"+ ifCounter);
+			ifCounter++;
+			return nextNode;
+		case IFEND:
+			return ifend(node);
+		case GOTOSTART:
+			return gotoStart(node);				
+		default:
+			throw new GenerationsFails(node, tokenId)	;
+		}
 	}
 
-	private void condition(TreeNode node) throws GenerationsFails {
-		List<ValueModel> values = new ArrayList<>();
-		TreeNode right = node.getRight().getRight();
-		if (right.getName().equals(TokenTypeEnum.CONST_ISSO)) {
-			values.add(new ValueModel((right.getLeft().toString().equals("yup"))?true:false));
-		}
-		else if (right.getName().equals(TokenTypeEnum.NAME)) {
-			values.add(new ValueModel(right.getLeft().toString(), true));
+	public TreeNode vStart(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.TYPE)) {
+			return type(nextNode(node));
 		}
 		else {
-			throw new GenerationsFails("First parameter of if has to be CONST_ISSO or NAME");
+			throw new GenerationsFails(node, tokenId);
 		}
-		right = right.getRight();
-		right = right.getRight();
-		if (right.getName().equals(TokenTypeEnum.CONST_ISSO)) {
-			values.add(new ValueModel((right.getLeft().toString().equals("yup"))?true:false));
-		}
-		else {
-			throw new GenerationsFails("Second parameter of if has to be CONST_ISSO");
-		}
-		List<String> operationBetween = new ArrayList<>();
-		operationBetween.addAll(GeneratorMethods.generateComparator(OperationEnum.EQL, values));
-		operationBetween.add(registerHandler.addOperation(OperationEnum.NOT));
-		writer.addMultiCommand(GeneratorMethods.generateJump("IF" + ++ifCounter, true, operationBetween));
-		right = right.getRight();
-		generate(right);
 	}
 	
-    private TreeNode predefinedFunctionCalls(TreeNode node, boolean ignoreNextCall) throws GenerationsFails {
-    		OperationEnum operation = null;
-		List<ValueModel> values = new ArrayList<>();
-		while (!node.getName().equals(TokenTypeEnum.PEND)) {
-			node = node.getRight();
-			switch (node.getName()) {
-				case NAME:
-					operation = choosePredefinedOperation(node);
-					break;
-				case PRINT:
-					operation = OperationEnum.PRT;
-				case PNEXT:
-				case PSTART:
-					node = node.getRight();
-					values.add(buildParameter(node));
-					break;
-				case PEND:
-					break;
-				default:
-					throw new GenerationsFails("Generation fails at Token" + node);
-			}
+	private TreeNode type(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.NAME)) {
+			return decVarName(nextNode(node));
 		}
-		if (operation != null && !values.contains(null)) {
-			if (operation.equals(OperationEnum.ADD) || operation.equals(OperationEnum.SUB) || operation.equals(OperationEnum.MUL) 
-					|| operation.equals(OperationEnum.DIV) || operation.equals(OperationEnum.MOD)) {
-				writer.addMultiCommand(GeneratorMethods.generateCalculations(operation, values));
-			}
-			else if (operation.equals(OperationEnum.LES) || operation.equals(OperationEnum.GTR) || operation.equals(OperationEnum.EQL)) {
-				writer.addMultiCommand(GeneratorMethods.generateComparator(operation, values));
-			}
-			else{
-				throw new GenerationsFails("Generation fails at Token" + node);
-			}
+		else {
+			throw new GenerationsFails(node, tokenId);
 		}
-		else{
-			throw new GenerationsFails("Generation fails at Token" + node);
-		}
-		if (ignoreNextCall) {
-			return node;
-		}
-		else{
-			generate(node);
-			return null;
-		}
-    }
-    
-	private OperationEnum choosePredefinedOperation(TreeNode node) {
-		String method = node.getLeft().toString();
-		switch (method) {
-			case "sume":
-				return OperationEnum.ADD;
-			case "abziehung":
-				return OperationEnum.SUB;
-			case "mahl":
-				return OperationEnum.MUL;
-			case "teilung":
-				return OperationEnum.DIV;
-			case "räst":
-				return OperationEnum.MOD;
-			case "ismär":
-				return OperationEnum.GTR;
-			case "isweniga":
-				return OperationEnum.LES;
-			/*case "same": TODO
-				return OperationEnum.ADD;TODO*/
-		}
-		return null;
 	}
 
-	private ValueModel buildParameter(TreeNode node) throws GenerationsFails {
-		ValueModel value = null;
-		switch (node.getName()) {
-			case CONST_ZAL:
-				value = new ValueModel(Double.parseDouble(node.getLeft().toString()));
-				break;
+	private TreeNode decVarName(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.ASSI)) {
+			return assi(nextNode(node), node.getLeft().toString());
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode assi(TreeNode node, String name) throws GenerationsFails {
+		switch (node.getRight().getName()) {
 			case CONST_ISSO:
-				value = new ValueModel((node.getLeft().toString().equals("yup"))?true:false);
-				break;
+				return constIsso(nextNode(node), name);				
 			case CONST_WORD:
-				value = new ValueModel((String)node.getLeft(), false);
-				break;
+				return constWord(nextNode(node), name);				
+			case CONST_ZAL:
+				return constZal(nextNode(node), name);				
+			case INPUT:
+				return input(nextNode(node), name);				
 			case NAME:
-				value = new ValueModel((String)node.getLeft(), true);
+				return useVarName(nextNode(node), name);	
+			case CMD:
+				return cmd(nextNode(node), name);
+			default:
+				throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode constIsso(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.VEND)) {
+			return vEnd(nextNode(node), name, new ValueModel((node.getLeft().equals("yup"))?true:false));
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode constIsso(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PNEXT)) {
+			values.add(new ValueModel((node.getLeft().equals("yup"))?true:false));
+			return pNext(nextNode(node), name, operation, values);
+		}
+		else if (node.getRight().getName().equals(TokenTypeEnum.PEND)) {
+			values.add(new ValueModel((node.getLeft().equals("yup"))?true:false));
+			return pEnd(nextNode(node), name, operation, values);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode constWord(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.VEND)) {
+			return vEnd(nextNode(node), name, new ValueModel(node.getLeft().toString(), false));
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode constWord(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PNEXT)) {
+			values.add(new ValueModel(node.getLeft().toString(), false));
+			return pNext(nextNode(node), name, operation, values);
+		}
+		else if (node.getRight().getName().equals(TokenTypeEnum.PEND)) {
+			values.add(new ValueModel(node.getLeft().toString(), false));
+			return pEnd(nextNode(node), name, operation, values);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode constZal(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.VEND)) {
+			return vEnd(nextNode(node), name, new ValueModel(Double.parseDouble(node.getLeft().toString())));
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode constZal(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PNEXT)) {
+			values.add(new ValueModel(Double.parseDouble(node.getLeft().toString())));
+			return pNext(nextNode(node), name, operation, values);
+		}
+		else if (node.getRight().getName().equals(TokenTypeEnum.PEND)) {
+			values.add(new ValueModel(Double.parseDouble(node.getLeft().toString())));
+			return pEnd(nextNode(node), name, operation, values);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode input(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.VEND)) {
+			if (node.getLeft() instanceof DataTypeEnum) {
+				switch (((DataTypeEnum)node.getLeft())) {
+					case ISSO:
+						return vEnd(nextNode(node), name, OperationEnum.IIN);
+					case WORD:
+						return vEnd(nextNode(node), name,  OperationEnum.WIN);
+					case ZAL:
+						return vEnd(nextNode(node), name,  OperationEnum.ZIN);
+				}
+			}
+		}
+		throw new GenerationsFails(node, tokenId);
+	}
+
+	private TreeNode useVarName(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.VEND)) {
+			return vEnd(nextNode(node), name, new ValueModel(node.getLeft().toString(), true));
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode useVarName(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PNEXT)) {
+			values.add(new ValueModel(node.getLeft().toString(), true));
+			return pNext(nextNode(node), name, operation, values);
+		}
+		else if (node.getRight().getName().equals(TokenTypeEnum.PEND)) {
+			values.add(new ValueModel(node.getLeft().toString(), true));
+			return pEnd(nextNode(node), name, operation, values);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode vEnd(TreeNode node, String name, ValueModel value) throws GenerationsFails {
+		int address = registerHandler.getVariableAddress(name);
+		writer.addCommand(OperationEnum.PSA, address+"");
+		writer.addCommand(value.getOperation(), value.getValue());
+		writer.addCommand(OperationEnum.SAV);
+		return nextNode(node);
+	}
+	
+	private TreeNode vEnd(TreeNode node, String name, OperationEnum operation) throws GenerationsFails {
+		int address = registerHandler.addVariable(name);
+		writer.addCommand(OperationEnum.PSA, address+"");
+		writer.addCommand(operation);
+		return nextNode(node);
+	}
+
+	private TreeNode print(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PSTART)) {
+			return pStart(nextNode(node), null, OperationEnum.PRT);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode pStart(TreeNode node, String name, OperationEnum operation) throws GenerationsFails {
+		List<ValueModel> values = new ArrayList<>();
+		switch (node.getName()) {
+			case CONST_ISSO:
+				return constIsso(nextNode(node), name, operation, values);
+			case CONST_WORD:
+				return constWord(nextNode(node), name, operation, values);
+			case CONST_ZAL:
+				return constZal(nextNode(node), name, operation, values);
+			case NAME:
+				return useVarName(nextNode(node), name, operation, values);
+			default:
+				throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode pNext(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		switch (node.getName()) {
+			case CONST_ISSO:
+				return constIsso(nextNode(node), name, operation, values);
+			case CONST_WORD:
+				return constWord(nextNode(node), name, operation, values);
+			case CONST_ZAL:
+				return constZal(nextNode(node), name, operation, values);
+			case NAME:
+				return useVarName(nextNode(node), name, operation, values);
+			default:
+				throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode pEnd(TreeNode node, String name, OperationEnum operation, List<ValueModel> values) throws GenerationsFails {
+		if (name != null) {
+			int address = registerHandler.getVariableAddress(name);
+			writer.addCommand(OperationEnum.PSA, address+"");
+		}
+		switch(operation) {
+			case PRT:
+				PreDefinedFunction.generatePrint(operation, values, writer);
+				break;
+			case ADD:
+			case SUB:
+			case MUL:
+			case DIV:
+			case MOD:
+				PreDefinedFunction.generateCalculations(operation, values, writer);
+				break;
+			case GTR:
+			case LES:
+			case EQL:
+				PreDefinedFunction.generateComparator(operation, values, writer);
 				break;
 			default:
-				throw new GenerationsFails("Generation fails at Token" + node);
+				throw new GenerationsFails(node, tokenId);
 		}
-		return value;
+		if (name != null) {
+			writer.addCommand(OperationEnum.SAV);
+		}
+		return nextNode(node);
+	}
+	
+	private TreeNode cmd(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.FNAME)) {
+			return fName(nextNode(node), name);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
 	}
 
+	private TreeNode fName(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PSTART)) {
+			OperationEnum operation;
+			switch (node.getLeft().toString()) {
+				case "sume":
+					operation = OperationEnum.ADD;
+					break;
+				case "abziehung":
+					operation = OperationEnum.SUB;
+					break;
+				case "mahl":
+					operation = OperationEnum.MUL;
+					break;
+				case "teilung":
+					operation = OperationEnum.DIV;
+					break;
+				case "räst":
+					operation = OperationEnum.MOD;
+					break;
+				case "ismär":
+					operation = OperationEnum.GTR;
+					break;
+				case "isweniga":
+					operation = OperationEnum.LES;
+					break;
+				case "same": 
+					operation = OperationEnum.EQL;
+					break;
+				default:
+					throw new GenerationsFails(node, tokenId);
+			}
+			return pStart(nextNode(node), name, operation);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+	
+	private TreeNode gotoStart(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.HASHTAG)) {
+			return hashtag(nextNode(node), node.getLeft().toString());
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode hashtag(TreeNode node, String name) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.GOTOEND)) {
+			return gotoEnd(nextNode(node), name);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode gotoEnd(TreeNode node, String name) throws GenerationsFails {
+		String address = registerHandler.getDataAddress(name);
+		if (address == null) {
+			throw new GenerationsFails(node, tokenId);
+		}
+		writer.addCommand(OperationEnum.PSA, address);
+		writer.addCommand(OperationEnum.JMP);
+		return nextNode(node);
+	}
+	
+	private TreeNode ifStart(TreeNode node) throws GenerationsFails {
+		if (node.getRight().getName().equals(TokenTypeEnum.PSTART)) {
+			return pStart(nextNode(node), null, OperationEnum.EQL);
+		}
+		else {
+			throw new GenerationsFails(node, tokenId);
+		}
+	}
+
+	private TreeNode ifend(TreeNode node) {
+		int free = findFreeIfCounter();
+		registerHandler.addJumpMarkerIfNotExists("IF" + free);
+		writer.fillBlankAddress("IF"+free, registerHandler.getDataAddress("IF"+free), 0);
+		ifGenerated.add(free);
+		return node;
+	}
+	
 	private int findFreeIfCounter() {
 		for (int i=ifCounter; i>0; i--) {
 			if (!ifGenerated.contains(i))

@@ -67,7 +67,7 @@ public class Main {
 						testPrint(root, 2);
 					}
 					generator = new Generator(output);
-					generator.generate(root);
+					generator.start(root);
 					
 				}catch(IndexOutOfBoundsException e) {
 					System.err.println("I kan di Datei nit findn");

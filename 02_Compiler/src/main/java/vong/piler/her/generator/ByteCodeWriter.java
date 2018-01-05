@@ -18,61 +18,71 @@ public class ByteCodeWriter {
 	private static Logger logger = LogManager.getLogger(ByteCodeWriter.class);
 	
 	private List<String> linesToWrite;
-	
 	private File file;
-	
 	private RegisterHandler registerHandler;
 	
 	public ByteCodeWriter(File file) {
 		this.file = file;
 		linesToWrite = new ArrayList<>();
-		registerHandler = RegisterHandler.getInstance();
+		this.registerHandler = RegisterHandler.getInstance();
 	}
 
 	public ByteCodeWriter(String string) {
 		this(new File(string));
 	}
-
-	void addCommand(OperationEnum command) {
-		linesToWrite.add(registerHandler.addOperation(command));
+	
+	private void addLine(String line) {		
+		linesToWrite.add(line);
+		registerHandler.operationAdded();
 	}
 
-	void addCommand(OperationEnum command, String para) {
-		linesToWrite.add(registerHandler.addOperation(command, para));
+	void addCommand(OperationEnum command) {
+		StringBuilder operationBuilder = new StringBuilder();
+		operationBuilder.append(command.ordinal());
+		addLine(operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
+	}
+
+	void addCommand(OperationEnum command, String parameter) {
+		StringBuilder operationBuilder = new StringBuilder();
+		operationBuilder.append(command.ordinal());
+		operationBuilder.append(" ");
+		operationBuilder.append(parameter);
+		addLine(operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 	}
 
 	void addCommand(OperationEnum command, int address, int count) {
-		linesToWrite.add(registerHandler.addOperation(command, address, count));
-	}
-
-	void addCommand(OperationEnum command, String address, int count) {
-		linesToWrite.add(registerHandler.addOperation(command, address, count));
-	}
-	
-	void addMultiCommand(List<String> commands){
-		linesToWrite.addAll(commands);
+		StringBuilder operationBuilder = new StringBuilder();
+		operationBuilder.append(command.ordinal());
+		operationBuilder.append(" ");
+		operationBuilder.append(address);
+		operationBuilder.append(" ");
+		operationBuilder.append(count);
+		addLine(operationBuilder.toString());
+		logger.debug("added operation " +  operationBuilder.toString());
 	}
 	
 	void eof() {
-		linesToWrite.add(registerHandler.addOperation(OperationEnum.END));
+		addCommand(OperationEnum.END);
 		writeToFile();
 	}
 	
 	void addPrt() {
-		linesToWrite.add(registerHandler.addOperation(OperationEnum.PRT));
+		addCommand(OperationEnum.PRT);
 	}
 	
 	void addAAL() {
-		linesToWrite.add(registerHandler.addOperation(OperationEnum.AAL));
+		addCommand(OperationEnum.AAL);
 	}
 	
 	void addNOT() {
-		linesToWrite.add(registerHandler.addOperation(OperationEnum.NOT));
+		addCommand(OperationEnum.NOT);
 	}
 	
-	void fillBlankAddress(String blank, String address) { //TODO: Maybe add start index to shorten the loop
+	void fillBlankAddress(String blank, String address, int startIndex) {
 		blank = ":X" + blank + "X:";
-		int index = 0;
+		int index = startIndex;
 		for (String line : linesToWrite) {
 			if (line.contains(blank)) {
 				linesToWrite.set(index, line.replace(blank, address));

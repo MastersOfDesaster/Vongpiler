@@ -3,13 +3,12 @@ package vong.piler.her.generator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import vong.piler.her.enums.DataTypeEnum;
 import vong.piler.her.enums.OperationEnum;
 
-class RegisterHandler {
+public class RegisterHandler {
 	
 	private static Logger logger = LogManager.getLogger(RegisterHandler.class);
 	
@@ -44,16 +43,23 @@ class RegisterHandler {
 		return dataPointer++;
 	}
 	
-	String getVariableAddress(String name) {
+	int getVariableAddress(String name) {
 		if (!dataRegister.containsKey(name)) {
-			addVariable(name);
+			return addVariable(name);
 		}
-		return dataRegister.get(name)+"";
+		return dataRegister.get(name);
 	}
 	
 	String getDataAddress(String name) {
 		if (!addressMarkerRegister.containsKey(name)) {
-			addJumpMarkerIfNotExists(name);
+			return null;
+		}
+		return addressMarkerRegister.get(name)+"";
+	}
+	
+	String getDataAddressOrBlank(String name) {
+		if (!addressMarkerRegister.containsKey(name)) {
+			return ":X" + name + "X:";
 		}
 		return addressMarkerRegister.get(name)+"";
 	}
@@ -68,68 +74,8 @@ class RegisterHandler {
 		}
 	}
 	
-	String addOperation(OperationEnum operation) {
-		operationAdded(operation);
-		StringBuilder operationBuilder = new StringBuilder();
-		operationBuilder.append(operation.ordinal());
-		logger.debug("added operation " +  operationBuilder.toString());
-		return operationBuilder.toString();
-	}
-	
-	String addOperation(OperationEnum operation, String parameter) {
-		if (operation.equals(OperationEnum.PSA) && parameterIsNoNumber(parameter)) {
-			parameter = getVariableAddress(parameter);
-		}
-		operationAdded(operation);
-		StringBuilder operationBuilder = new StringBuilder();
-		operationBuilder.append(operation.ordinal());
-		operationBuilder.append(" ");
-		operationBuilder.append(parameter);
-		logger.debug("added operation " +  operationBuilder.toString());
-		return operationBuilder.toString();
-	}
-
-	String addOperation(OperationEnum operation, int address, int count) {
-		operationAdded(operation);
-		StringBuilder operationBuilder = new StringBuilder();
-		operationBuilder.append(operation.ordinal());
-		operationBuilder.append(" ");
-		operationBuilder.append(address);
-		operationBuilder.append(" ");
-		operationBuilder.append(count);
-		logger.debug("added operation " +  operationBuilder.toString());
-		return operationBuilder.toString();
-	}
-	
-	String addOperation(OperationEnum operation, String address, int count) {
-		return addOperation(operation, getVariableAddress(address), count);
-	}
-	
-	String addJumpOperation(String addressName) {
-		operationAdded(OperationEnum.PSA);
-		StringBuilder operationBuilder = new StringBuilder();
-		operationBuilder.append(OperationEnum.PSA.ordinal());
-		operationBuilder.append(" ");
-		if (addressMarkerRegister.containsKey(addressName))
-			operationBuilder.append(addressMarkerRegister.get(addressName));
-		else
-			operationBuilder.append(":X" + addressName + "X:");
-		logger.debug("added operation " +  operationBuilder.toString());
-		return operationBuilder.toString();
-	}
-	
-	void operationAdded(OperationEnum operation) {
+	void operationAdded() {
 		logger.debug("Opeartion will be added to address " + addressPointer);
 		addressPointer ++;
 	}
-	
-	private boolean parameterIsNoNumber(String parameter) {
-		try {
-			Integer.parseInt(parameter);
-			return false;
-		} catch (Exception e) {
-			return true;
-		}
-	}
-
 }
