@@ -51,6 +51,10 @@ Eine Hilfe zur Bedienung erhält man mit
 java -jar vong.jar -h
 ```
 
+## Dokumentation
+
+Siehe [2k18-spec](https://github.com/MastersOfDesaster/2k18-spec)
+
 ## Beispielcode
 
 ### Fibonacci Zahlen
