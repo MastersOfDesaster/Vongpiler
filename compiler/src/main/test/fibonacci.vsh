@@ -4,24 +4,23 @@ i bims 1 zal lauch1 gönn dir 0!!!
 
 i bims 1 zal lauch2 gönn dir 1!!!
 
-
 i bims 1 zal ergebnüs gönn dir 0!!!
 
 i bims 1 zal max gönn dir 0!!!
 
 i bims 1 zal zaehl gönn dir 0!!!
 
-i bims 1 isso ende gönn dir nope!!!
+i bims 1 isso 🦄 gönn dir nope!!!
 
 gieb "gieb anz fibonacci" her?
 
-max gönn dir 1gabe!!!
+:Xmax gönn dir 1gabe!!!
 
 #start
 
-ende gönn dir was ist das für 1 isweniga vong zaehl, max her?
+🦄 gönn dir was ist das für 1 isweniga vong zaehl, max her?
 
-bist du ende? yup
+bist du 🦄? yup
 
     ergebnüs gönn dir was ist das für 1 sume vong lauch1, lauch2 her?
 
@@ -37,4 +36,4 @@ bist du ende? yup
 
 real rap
 
-1 nicer!!!
+1 n🍦r!!!

@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 public enum TokenTypeEnum {
     // program
     START("(was ist das für 1 code\\?).*", "was ist das für 1 code?"), // start
-    END("(1 nicer!!!).*", "1 nicer!!!"), // end
+    END("(1 n:icecream:r!!!).*", "1 nicer!!!"), // end
     
     // function
     CMD("(was ist das für 1).*", "was ist das für 1"), // call function
@@ -46,7 +46,7 @@ public enum TokenTypeEnum {
     CONST_WORD("\\\"(.*?)\\\".*", "const_word"), // constant of type word (string)
 
     // name / identifier
-    NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name"),
+    NAME("((:{1}(\\w|\\+|\\|){2,}:{1})+|(\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b)).*", "name"),
 	
 	FNAME("","fname");
     
