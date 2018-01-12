@@ -20,15 +20,19 @@ public class Lexer {
 
     public Lexer() {
         // Print Token-Grammar
-        //System.out.println(TokenTypeEnum.toMarkdown());
+        // System.out.println(TokenTypeEnum.toMarkdown());
     }
 
     public List<Token> lex(String source) throws Exception {
-    	this.source = EmojiParser.parseToAliases(source);
+        // replace unicode emojis by text-based emojis
+        this.source = EmojiParser.parseToAliases(source);
+        
+        // we count lines from 1 to n
         this.line = 1;
 
         List<Token> tokenList = new ArrayList<Token>();
 
+        // return empty tokenlist, when source is empty
         if (this.source.isEmpty()) {
             return tokenList;
         }
@@ -41,7 +45,6 @@ public class Lexer {
                 case WHITESPACE:
                     break;
                 case NEWLINE:
-                    // increase line number
                     line++;
                     break;
                 default:
@@ -84,18 +87,15 @@ public class Lexer {
                 default:
                 }
 
-                // calculate lexed-length and cut from source-string
-                int matchlength = matcher.group(1).length();
+                String content = matcher.group(1);
+                int matchlength = content.length();
                 switch (tokenType) {
-                case COMMENT:
-                    matchlength += 3; // skip ":X" and "\n"
-                    break;
                 case CONST_WORD:
                     matchlength += 2; // skip the quotation marks at start and
                                       // end
                     break;
                 case HASHTAG:
-                    matchlength++; // skip hashtag
+                    matchlength++; // skip "#" at beginning
                     break;
                 default:
                     break;

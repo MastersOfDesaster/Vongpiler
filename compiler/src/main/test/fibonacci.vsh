@@ -14,7 +14,7 @@ i bims 1 isso 🦄 gönn dir nope!!!
 
 gieb "gieb anz fibonacci" her?
 
-:Xmax gönn dir 1gabe!!!
+max gönn dir 1gabe!!!
 
 #start
 
@@ -36,4 +36,5 @@ bist du 🦄? yup
 
 real rap
 
-1 n🍦r!!!
+:zipper_mouth_face: 1 n🍦r!!!
+1 nicer!!!

@@ -11,6 +11,16 @@ Für unserem Mutis!
 
 https://github.com/MastersOfDesaster/Vongpiler/releases/latest
 
+## Requirements
+
+### Ubuntu
+
+Um Unicode Emojis sehen zu können brauchst du das ttf-ancient-fonts Paket.
+
+```shell
+sudo apt-get install ttf-ancient-fonts
+```
+
 ## Vongpiler
 
 Der Vongpiler ermöglicht das übersetzen des mit der [2k18-spec](https://github.com/MastersOfDesaster/2k18-spec) geschriebenen Quellcodes in Machschinencode zum ausführen in der [VRE (Vong Runtime Environment)](#vre).

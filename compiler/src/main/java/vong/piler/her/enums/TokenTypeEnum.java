@@ -3,9 +3,12 @@ package vong.piler.her.enums;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
+    // whitespace
+    COMMENT("((:X|:zipper_mouth_face:).*?(\n|\r\n)).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
+    
     // program
     START("(was ist das für 1 code\\?).*", "was ist das für 1 code?"), // start
-    END("(1 n:icecream:r!!!).*", "1 nicer!!!"), // end
+    END("(1 nicer!!!|1 n:icecream:r!!!).*", "1 nicer!!!|1 n:icecream:r!!!"), // end
     
     // function
     CMD("(was ist das für 1).*", "was ist das für 1"), // call function
@@ -30,9 +33,6 @@ public enum TokenTypeEnum {
     VSTART("(i bims 1).*", "i bims 1"), // declare variable
     ASSI("(gönn dir).*", "gönn dir"), // assign value
     VEND("(!!!).*", "!!!"), // end of variable declaration
-
-    // whitespace
-    COMMENT(":X(.*?)(\n|\r\n).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
 
     // types
     TYPE("(zal\\h|word\\h|isso\\h).*", "zal|word|isso"),
