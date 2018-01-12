@@ -229,10 +229,10 @@ public class Parser {
 		}
 		if (t.getContent().isEmpty()) {
 			logger.error("Fehler voms " + message + " her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
-					+ t.getType().getLabel() + " --> Gieb: " + error.substring(0, (error.length() - 1)));
+					+ t.getType().getLabel() + " --> Brauch: " + error.substring(0, (error.length() - 1)));
 		} else {
 			logger.error("Fehler voms " + message + " her! Du lauch!!! Schausd du Zeile " + t.getLine() + ": Hab: "
-					+ t.getContent() + " --> Gieb: " + error.substring(0, (error.length() - 1)));
+					+ t.getContent() + " --> Brauch: " + error.substring(0, (error.length() - 1)));
 		}
 		System.exit(0);
 	}

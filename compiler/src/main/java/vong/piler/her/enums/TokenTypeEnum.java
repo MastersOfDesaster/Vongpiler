@@ -3,9 +3,12 @@ package vong.piler.her.enums;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
+    // whitespace
+    COMMENT("((:X|:zipper_mouth_face:).*?(\n|\r\n)).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
+    
     // program
     START("(was ist das für 1 code\\?).*", "was ist das für 1 code?"), // start
-    END("(1 nicer!!!).*", "1 nicer!!!"), // end
+    END("(1 nicer!!!|1 n:icecream:r!!!).*", "1 nicer!!!|1 n:icecream:r!!!"), // end
     
     // function
     CMD("(was ist das für 1).*", "was ist das für 1"), // call function
@@ -31,9 +34,6 @@ public enum TokenTypeEnum {
     ASSI("(gönn dir).*", "gönn dir"), // assign value
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
-    // whitespace
-    COMMENT(":X(.*?)(\n|\r\n).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
-
     // types
     TYPE("(zal\\h|word\\h|isso\\h).*", "zal|word|isso"),
     
@@ -46,7 +46,7 @@ public enum TokenTypeEnum {
     CONST_WORD("\\\"(.*?)\\\".*", "const_word"), // constant of type word (string)
 
     // name / identifier
-    NAME("\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b.*", "name"),
+    NAME("((:{1}(\\w|\\+|\\|){2,}:{1})+|(\\b([a-zA-Z]{1}[0-9a-zäöüßA-Z_ÄÖÜ]{0,31})\\b)).*", "name"),
 	
 	FNAME("","fname");
     

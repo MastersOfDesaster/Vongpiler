@@ -11,6 +11,16 @@ Für unserem Mutis!
 
 https://github.com/MastersOfDesaster/Vongpiler/releases/latest
 
+## Requirements
+
+### Ubuntu
+
+Um Unicode Emojis sehen zu können brauchst du das ttf-ancient-fonts Paket.
+
+```shell
+sudo apt-get install ttf-ancient-fonts
+```
+
 ## Vongpiler
 
 Der Vongpiler ermöglicht das übersetzen des mit der [2k18-spec](https://github.com/MastersOfDesaster/2k18-spec) geschriebenen Quellcodes in Machschinencode zum ausführen in der [VRE (Vong Runtime Environment)](#vre).
@@ -66,14 +76,14 @@ was ist das für 1 code?
   i bims 1 zal erg gönn dir 0!!!
   i bims 1 zal max gönn dir 0!!!
   i bims 1 zal zähl gönn dir 0!!!
-  i bims 1 isso ende gönn dir nope!!!
+  i bims 1 isso 🦄 gönn dir nope!!!
 
   gieb "gieb anz fibonacci" her?
   max gönn dir 1gabe!!!
 
   #start
-  ende gönn dir was ist das für 1 isweniga vong zähl, max her?
-  bist du ende? yup
+  🦄 gönn dir was ist das für 1 isweniga vong zähl, max her?
+  bist du 🦄? yup
       erg gönn dir was ist das für 1 sume vong lauch1, lauch2 her?
       gieb "Fibonacci " + zähl +" :" + lauch1 + " + " + lauch2 + " = " + erg her?
       lauch1 gönn dir lauch2!!!
@@ -81,7 +91,7 @@ was ist das für 1 code?
       zähl gönn dir was ist das für 1 sume vong zähl, 1 her?
       g zu #start du larry!!!
   real rap
-1 nicer!!!
+1 n🍦r!!!
 ```
 
 ## Was isd das für ein Vongpiler vong Erschafung her?
