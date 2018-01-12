@@ -1,7 +1,12 @@
 package vong.piler.her;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -11,10 +16,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import vong.piler.her.generator.Generator;
 import vong.piler.her.lexer.Lexer;
@@ -41,29 +46,37 @@ public class Main {
 		
 		CommandLineParser cliParser = new DefaultParser();
 		try {
-			CommandLine line = cliParser.parse(createOptions(), args);
+			CommandLine cmdLine = cliParser.parse(createOptions(), args);
 			String output = null;
 			
-			if(line.hasOption("d")) {
+			if(cmdLine.hasOption("d")) {
 				Configurator.setLevel("vong.piler.her", Level.DEBUG);
 			}
-			if(line.hasOption("o")) {
-				output = line.getOptionValue("o");
+			if(cmdLine.hasOption("o")) {
+				output = cmdLine.getOptionValue("o");
 			}
-			if(line.hasOption("h")) {
+			if(cmdLine.hasOption("h")) {
 				printHelp(createOptions());
 			}else {
 				try {
-					String filename = line.getArgs()[0];
+					String filename = cmdLine.getArgs()[0];
 					
-					String source = new String(Files.readAllBytes(new File(filename).toPath()));
+					InputStream is = new ByteArrayInputStream(Files.readAllBytes(new File(filename).toPath()));
+					BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+					StringBuilder sourceBuilder = new StringBuilder();
+					Iterator<String> sourceIterator = br.lines().iterator();
+					while(sourceIterator.hasNext()) {
+						sourceBuilder.append(sourceIterator.next()).append("\n");
+					}
+					String source = sourceBuilder.toString();
+					
 					List<Token> tokenList = lexer.lex(source);
 					TreeNode root = parser.parse(tokenList);
 
 					if(output == null) {
 						output = filename.replace(".vsh", ".vch");	
 					}
-					if(line.hasOption("d")) {
+					if(cmdLine.hasOption("d")) {
 						testPrint(root, 2);
 					}
 					generator = new Generator(output);
