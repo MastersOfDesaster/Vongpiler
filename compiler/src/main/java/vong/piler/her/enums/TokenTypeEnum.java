@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 public enum TokenTypeEnum {
     // whitespace
-    COMMENT("((:X|:zipper_mouth_face:).*?(\n|\r\n)).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n|\r\n).*"),
+    COMMENT("((:X|:zipper_mouth_face:).*?(\n)).*"), WHITESPACE("( |\t).*"), NEWLINE("(\n).*"),
     
     // program
     START("(was ist das für 1 code\\?).*", "was ist das für 1 code?"), // start
