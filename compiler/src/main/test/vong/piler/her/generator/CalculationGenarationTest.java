@@ -17,6 +17,8 @@ import vong.piler.her.enums.OperationEnum;
 public class CalculationGenarationTest {
 	
 	private List<ValueModel> values = new ArrayList<>(4);
+	private static String filePrefix = "gen/generatorTester/";
+	private static String correctFiles = "src/main/test/vong/piler/her/generator/correct/files/";
 
 	@Before
 	public void setUp() throws Exception {
@@ -25,11 +27,11 @@ public class CalculationGenarationTest {
 		values.add(new ValueModel(10.0));
 		values.add(new ValueModel(1.0));
 	}
-/*
+
 	@Test
 	public void additionTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("gen/generatorTester/add.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.ADD, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "add.vsh");
+		PreDefinedFunction.generateCalculations(OperationEnum.ADD, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -42,8 +44,8 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void substraktionTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/sub.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.SUB, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "sub.vsh");
+		PreDefinedFunction.generateCalculations(OperationEnum.SUB, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -56,8 +58,8 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void multiplicationTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/mul.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MUL, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "mul.vsh");
+		PreDefinedFunction.generateCalculations(OperationEnum.MUL, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -70,8 +72,8 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void divisionTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/div.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.DIV, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "div.vsh");
+		PreDefinedFunction.generateCalculations(OperationEnum.DIV, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -84,8 +86,8 @@ public class CalculationGenarationTest {
 
 	@Test
 	public void moduloTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/mod.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateCalculations(OperationEnum.MOD, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "mod.vsh");
+		PreDefinedFunction.generateCalculations(OperationEnum.MOD, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -98,8 +100,8 @@ public class CalculationGenarationTest {
 	
 	private boolean testFileContent(String filename) throws IOException {
 		boolean same = true;
-		File file1 = new File("gen/generatorTester/" + filename);
-		File file2 = new File("src/main/test/vong/piler/her/generator/correct/files/" + filename);
+		File file1 = new File(filePrefix + filename);
+		File file2 = new File(correctFiles + filename);
 		FileReader fr1 = new FileReader(file1);
 		FileReader fr2 = new FileReader(file2);
 		BufferedReader br1 = new BufferedReader(fr1);
@@ -115,6 +117,6 @@ public class CalculationGenarationTest {
 		fr1.close();
 		fr2.close();
 		return same;
-	}*/
+	}
 
 }

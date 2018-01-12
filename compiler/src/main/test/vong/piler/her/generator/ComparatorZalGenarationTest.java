@@ -18,6 +18,8 @@ import vong.piler.her.enums.OperationEnum;
 public class ComparatorZalGenarationTest {
 	
 	private List<ValueModel> values = new ArrayList<>(4);
+	private static String filePrefix = "gen/generatorTester/";
+	private static String correctFiles = "src/main/test/vong/piler/her/generator/correct/files/";
 
 	@Before
 	public void setUp() throws Exception {
@@ -26,12 +28,12 @@ public class ComparatorZalGenarationTest {
 		values.add(new ValueModel(10.0));
 		values.add(new ValueModel(1.0));
 	}
-/*
+
 	@Test
 	public void lesTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/les.vsh");
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "les.vsh");
 		Collections.reverse(values);
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.LES, values));
+		PreDefinedFunction.generateComparator(OperationEnum.LES, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -44,8 +46,8 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void gtrTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/gtr.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.GTR, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "gtr.vsh");
+		PreDefinedFunction.generateComparator(OperationEnum.GTR, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -58,8 +60,8 @@ public class ComparatorZalGenarationTest {
 
 	@Test
 	public void eqzTest() {
-		ByteCodeWriter writer = new ByteCodeWriter("generatorTester/eqz.vsh");
-		writer.addMultiCommand(GeneratorMethods.generateComparator(OperationEnum.EQL, values));
+		ByteCodeWriter writer = new ByteCodeWriter(filePrefix + "eqz.vsh");
+		PreDefinedFunction.generateComparator(OperationEnum.EQL, values, writer);
 		writer.addPrt();
 		writer.eof();
 		try {
@@ -72,8 +74,8 @@ public class ComparatorZalGenarationTest {
 	
 	private boolean testFileContent(String filename) throws IOException {
 		boolean same = true;
-		File file1 = new File("gen/generatorTester/" + filename);
-		File file2 = new File("src/main/test/vong/piler/her/generator/correct/files/" + filename);
+		File file1 = new File(filePrefix + filename);
+		File file2 = new File(correctFiles + filename);
 		FileReader fr1 = new FileReader(file1);
 		FileReader fr2 = new FileReader(file2);
 		BufferedReader br1 = new BufferedReader(fr1);
@@ -90,5 +92,5 @@ public class ComparatorZalGenarationTest {
 		fr2.close();
 		return same;
 	}
-*/
+
 }
