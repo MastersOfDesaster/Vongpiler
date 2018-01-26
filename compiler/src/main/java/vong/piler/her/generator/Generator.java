@@ -358,6 +358,15 @@ public class Generator {
 				case "same": 
 					operation = OperationEnum.EQL;
 					break;
+				case "ohr": 
+					operation = OperationEnum.OHR;
+					break;
+				case "unt": 
+					operation = OperationEnum.AND;
+					break;
+				case "nit": 
+					operation = OperationEnum.NOT;
+					break;
 				default:
 					throw new GenerationsFails(node, tokenId);
 			}
