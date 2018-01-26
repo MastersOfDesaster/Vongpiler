@@ -39,7 +39,7 @@ public enum TokenTypeEnum {
     VEND("(!!!).*", "!!!"), // end of variable declaration
 
     // types
-    TYPE("(zal\\h|word\\h|isso\\h).*", "zal|word|isso"),
+    TYPE("(zal\\h|word\\h|isso\\h|nix\\h).*", "zal|word|isso"),
     
     // input
     INPUT("(1gabe).*", "1gabe"), // screen input
