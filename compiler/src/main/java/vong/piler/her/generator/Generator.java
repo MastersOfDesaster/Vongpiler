@@ -1,6 +1,5 @@
 package vong.piler.her.generator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +57,7 @@ public class Generator {
 	public TreeNode chooseNextStep(TreeNode node) throws GenerationsFails {
 		switch(node.getName()) {
 		case HASHTAG:
-			hashtag(node);
+			return hashtag(node);
 		case AAL:
 			writer.addAAL();
 			return nextNode(node);
