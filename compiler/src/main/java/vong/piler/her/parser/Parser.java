@@ -83,9 +83,11 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.FSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.TYPE }));
 		ruleMap.put(TokenTypeEnum.FNAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PSTART }));
 		ruleMap.put(TokenTypeEnum.FEND,
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
+		ruleMap.put(TokenTypeEnum.RNAME,
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL,
 						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART,
-						TokenTypeEnum.NAME, TokenTypeEnum.END }));
+						TokenTypeEnum.NAME, TokenTypeEnum.FSTART, TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 
 		// Define data type for functions;
@@ -279,14 +281,18 @@ public class Parser {
 			logger.error("Variable unbekamd: " + t.getContent());
 			System.exit(0);
 		} // Token before is CMD -> NAME is from a function && funktion name not unknown
-		else if ((parent.getName().equals(TokenTypeEnum.CMD)||parent.getName().equals(TokenTypeEnum.VSTART))&& !dataTypeFunction.containsKey(t.getContent())) {
+		else if (parent.getName().equals(TokenTypeEnum.CMD)&& !dataTypeFunction.containsKey(t.getContent())) {
 			logger.error("Funktion unbekamd: " + t.getContent());
 			System.exit(0);
 		} // Set token type to FNAME		
-		else if(parent.getName().equals(TokenTypeEnum.CMD) && dataTypeFunction.containsKey(t.getContent())) {
+		else if((parent.getName().equals(TokenTypeEnum.CMD)||parent.getName().equals(TokenTypeEnum.VSTART)) && dataTypeFunction.containsKey(t.getContent())) {
 			t.setType(TokenTypeEnum.FNAME);
 			rule = ruleMap.get(TokenTypeEnum.FNAME);
-		} // Check data type CMD && NAME
+		} 	 // Set token type to FNAME		
+		else if(parent.getName().equals(TokenTypeEnum.FEND) && dataTypeFunction.containsKey(t.getContent())) {
+		t.setType(TokenTypeEnum.RNAME);
+		rule = ruleMap.get(TokenTypeEnum.RNAME);
+		}		// Check data type CMD && NAMER
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.get(t.getContent())
 				.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
 			error(t, "Funktion Tipe",
