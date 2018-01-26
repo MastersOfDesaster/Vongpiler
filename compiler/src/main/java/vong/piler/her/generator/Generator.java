@@ -2,7 +2,9 @@ package vong.piler.her.generator;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,11 +22,13 @@ public class Generator {
 	private ByteCodeWriter writer;
 	private int ifCounter;
 	private List<Integer> ifGenerated;
+	private Map<String, Integer> missingHashtags;
 	private int tokenId;
 	
 	public Generator(String outputPath) {
 	    this.ifCounter = 0;
 	    this.ifGenerated = new ArrayList<>();
+	    this.missingHashtags = new HashMap<>();
 	    this.tokenId = 1;
 	    this.registerHandler = RegisterHandler.getInstance();
 	    this.writer = new ByteCodeWriter(outputPath);
@@ -54,8 +58,7 @@ public class Generator {
 	public TreeNode chooseNextStep(TreeNode node) throws GenerationsFails {
 		switch(node.getName()) {
 		case HASHTAG:
-			registerHandler.addJumpMarkerIfNotExists(node.getLeft().toString()); 
-			return nextNode(node);
+			hashtag(node);
 		case AAL:
 			writer.addAAL();
 			return nextNode(node);
@@ -377,10 +380,21 @@ public class Generator {
 
 	private TreeNode hashtag(TreeNode node) throws GenerationsFails {
 		if (node.getRight().getName().equals(TokenTypeEnum.GOTOEND)) {
-			return gotoEnd(nextNode(node), node.getLeft().toString());
+			if (node.getParent().getName().equals(TokenTypeEnum.GOTOSTART)) {
+				return gotoEnd(nextNode(node), node.getLeft().toString());
+			}
+			else {
+				throw new GenerationsFails(node, tokenId);
+			}
 		}
 		else {
-			throw new GenerationsFails(node, tokenId);
+			String name = node.getLeft().toString();
+			registerHandler.addJumpMarkerIfNotExists(name);
+			if (missingHashtags.containsKey(name)) {
+				String address = registerHandler.getDataAddress(name);
+				writer.fillBlankAddress(name, address, missingHashtags.get(name));
+			}
+			return nextNode(node);
 		}
 	}
 
@@ -389,7 +403,12 @@ public class Generator {
 		if (address == null) {
 			throw new GenerationsFails(node, tokenId);
 		}
-		writer.addCommand(OperationEnum.PSA, address);
+		try{
+			writer.addCommand(OperationEnum.PSA, Integer.parseInt(address) + "");
+		} catch(NumberFormatException e) {
+			writer.addBlank(address);
+			missingHashtags.put(address, writer.getLineNumber()-1);
+		}
 		writer.addCommand(OperationEnum.JMP);
 		return nextNode(node);
 	}
