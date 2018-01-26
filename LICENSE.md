@@ -5,6 +5,8 @@ The Vongpiler Team wrote this compiler and thisvirtual machine. As long as you r
 can do whatever you want with this stuff. If we meet some day, and you think
 this stuff is worth it, you can buy us a beer in return. Vongpiler Team
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ## Deutsch
 Das Vongpiler Team schrieb diesen Compiler und diese Virtellen Maschine. Solange Sie diesen Vermerk nicht entfernen, können
 Sie mit dem Material machen, was Sie möchten. Wenn wir uns eines Tages treffen und Sie
