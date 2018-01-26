@@ -99,14 +99,19 @@ public class ByteCodeWriter {
 	
 	void fillBlankAddress(String blank, String address, int startIndex) {
 		blank = ":X" + blank + "X:";
-		int index = startIndex;
-		for (String line : linesToWrite) {
+//		int index = startIndex;
+		for (int index=startIndex; index<linesToWrite.size(); index++) {
+			String line = linesToWrite.get(index);
 			if (line.contains(blank)) {
 				linesToWrite.set(index, line.replace(blank, address));
 				break;
 			}
-			index++;
+//			index++;
 		}
+	}
+	
+	int getLineNumber() {
+		return linesToWrite.size();
 	}
 	
 	private boolean writeToFile() {

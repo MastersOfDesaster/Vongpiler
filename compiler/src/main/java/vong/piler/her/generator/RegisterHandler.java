@@ -52,7 +52,7 @@ public class RegisterHandler {
 	
 	String getDataAddress(String name) {
 		if (!addressMarkerRegister.containsKey(name)) {
-			return null;
+			return name;
 		}
 		return addressMarkerRegister.get(name)+"";
 	}

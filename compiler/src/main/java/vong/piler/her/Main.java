@@ -83,6 +83,7 @@ public class Main {
 					generator.start(root);
 					
 				}catch(IndexOutOfBoundsException e) {
+					e.printStackTrace();
 					System.err.println("I kan di Datei nit findn");
 				} catch (Exception e) {
 					System.err.println("Halo I bims 1 Ausname:");

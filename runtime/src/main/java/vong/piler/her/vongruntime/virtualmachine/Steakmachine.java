@@ -29,7 +29,7 @@ public class Steakmachine {
 	private boolean readAssembler = false;
 	
 	private static final int PROGRAM_MEMORY_SIZE = 100;
-	private static final int CODE_MEMORY_SIZE = 100;
+	private static final int CODE_MEMORY_SIZE = 10000;
 	private Stack<StackElement> stack;
 	private StackElement[] programmMemory;
 	private String[] codeMemory;
