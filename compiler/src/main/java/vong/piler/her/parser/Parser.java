@@ -34,8 +34,8 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.START,
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VSTART, TokenTypeEnum.HASHTAG,
 						TokenTypeEnum.GOTOSTART, TokenTypeEnum.AAL, TokenTypeEnum.PRINT, TokenTypeEnum.END }));
-		ruleMap.put(TokenTypeEnum.VSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.TYPE }));
-		ruleMap.put(TokenTypeEnum.TYPE, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
+		ruleMap.put(TokenTypeEnum.VSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.TYPE, TokenTypeEnum.NAME }));
+		ruleMap.put(TokenTypeEnum.TYPE, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME, TokenTypeEnum.VSTART }));
 		ruleMap.put(TokenTypeEnum.NAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.ASSI, TokenTypeEnum.PEND,
 				TokenTypeEnum.PNEXT, TokenTypeEnum.PSTART, TokenTypeEnum.VEND }));
 		ruleMap.put(TokenTypeEnum.ASSI,
@@ -50,7 +50,7 @@ public class Parser {
 		ruleMap.put(TokenTypeEnum.VEND,
 				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VSTART, TokenTypeEnum.CMD, TokenTypeEnum.PRINT,
 						TokenTypeEnum.AAL, TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART,
-						TokenTypeEnum.NAME, TokenTypeEnum.IFEND, TokenTypeEnum.END }));
+						TokenTypeEnum.NAME, TokenTypeEnum.IFEND, TokenTypeEnum.FSTART, TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.CMD, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
 		ruleMap.put(TokenTypeEnum.PSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CONST_ISSO,
 				TokenTypeEnum.CONST_WORD, TokenTypeEnum.CONST_ZAL, TokenTypeEnum.PEND, TokenTypeEnum.NAME }));
@@ -80,10 +80,17 @@ public class Parser {
 						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART, TokenTypeEnum.IFEND,
 						TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.INPUT, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.VEND }));
+		ruleMap.put(TokenTypeEnum.FSTART, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.TYPE }));
 		ruleMap.put(TokenTypeEnum.FNAME, Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.PSTART }));
+		ruleMap.put(TokenTypeEnum.FEND,
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.NAME }));
+		ruleMap.put(TokenTypeEnum.RNAME,
+				Arrays.asList(new TokenTypeEnum[] { TokenTypeEnum.CMD, TokenTypeEnum.PRINT, TokenTypeEnum.AAL,
+						TokenTypeEnum.IFSTART, TokenTypeEnum.HASHTAG, TokenTypeEnum.GOTOSTART,
+						TokenTypeEnum.NAME, TokenTypeEnum.FSTART, TokenTypeEnum.END }));
 		ruleMap.put(TokenTypeEnum.END, Arrays.asList(new TokenTypeEnum[] {}));
 
-		// Define data type for functions
+		// Define data type for functions;
 		dataTypeFunction.put("sume", DataTypeEnum.ZAL); // Addition(+)
 		dataTypeFunction.put("abziehung", DataTypeEnum.ZAL); // Subtraktion(-)
 		dataTypeFunction.put("mahl", DataTypeEnum.ZAL); // Multiplikation(*)
@@ -91,7 +98,9 @@ public class Parser {
 		dataTypeFunction.put("räst", DataTypeEnum.ZAL); // Modulo(%)
 		dataTypeFunction.put("ismär", DataTypeEnum.ISSO); // Größer als(>)
 		dataTypeFunction.put("isweniga", DataTypeEnum.ISSO); // Kleiner als(<)
-		dataTypeFunction.put("same", DataTypeEnum.ISSO);// Und(&&)
+		dataTypeFunction.put("same", DataTypeEnum.ISSO);// Gleich(==)
+		dataTypeFunction.put("unt", DataTypeEnum.ISSO);// Und(&&)
+		dataTypeFunction.put("ohr", DataTypeEnum.ISSO);// Oder(||)		
 	}
 
 	public TreeNode parse(List<Token> tokenList) {
@@ -99,6 +108,7 @@ public class Parser {
 		String type = null;
 		boolean vStart = false;
 		boolean bistDu = false;
+		boolean fStart = false;
 
 		// Check if the last token == END
 		if (tokenList.get(tokenList.size() - 1).getType().equals(TokenTypeEnum.END)) {
@@ -117,6 +127,11 @@ public class Parser {
 							if (vStart) {
 								setDataTypeVariable(t.getContent(), type, t.getLine());
 							}
+							// Save function name and type
+							else if(fStart)
+							{
+								setDataTypeFunction(t.getContent(), type, t.getLine());								
+							}
 							// Check after variable initialized for know variable and function names
 							else {
 								checkVariableFunction(t);
@@ -127,6 +142,13 @@ public class Parser {
 							break;
 						case VEND:
 							vStart = false;
+							type = null;
+							break;
+						case FSTART:
+							fStart = true;
+							break;
+						case FEND:
+							fStart = false;
 							type = null;
 							break;
 						case CONST_ISSO:
@@ -208,6 +230,22 @@ public class Parser {
 
 	private void setDataTypeVariable(String name, String type, int line) {
 		// check if variable name is already assigned
+		if (!dataTypeFunction.containsKey(name)) {
+			try {
+				dataTypeFunction.put(name, DataTypeEnum.valueOf(type.toUpperCase()));
+			} catch (IllegalArgumentException e) {
+				logger.error("Datentipe nit bekannt! Du lauch!!! Schausd du Zeile " + line + ": \"" + type + "\"");
+				System.exit(0);
+			}
+		} else {
+			logger.error("Fehler voms doppelteng variablemameng her! Du lauch!!! Schausd du Zeile " + line + ": \""
+					+ name + "\" gibd es bereits!");
+			System.exit(0);
+		}
+	}
+	
+	private void setDataTypeFunction(String name, String type, int line) {
+		// check if variable name is already assigned
 		if (!dataTypeVariable.containsKey(name)) {
 			try {
 				dataTypeVariable.put(name, DataTypeEnum.valueOf(type.toUpperCase()));
@@ -216,7 +254,7 @@ public class Parser {
 				System.exit(0);
 			}
 		} else {
-			logger.error("Fehler voms doppelteng variablemameng her! Du lauch!!! Schausd du Zeile " + line + ": \""
+			logger.error("Fehler voms doppelteng funktionmameng her! Du lauch!!! Schausd du Zeile " + line + ": \""
 					+ name + "\" gibd es bereits!");
 			System.exit(0);
 		}
@@ -243,14 +281,18 @@ public class Parser {
 			logger.error("Variable unbekamd: " + t.getContent());
 			System.exit(0);
 		} // Token before is CMD -> NAME is from a function && funktion name not unknown
-		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.containsKey(t.getContent())) {
+		else if (parent.getName().equals(TokenTypeEnum.CMD)&& !dataTypeFunction.containsKey(t.getContent())) {
 			logger.error("Funktion unbekamd: " + t.getContent());
 			System.exit(0);
 		} // Set token type to FNAME		
-		else if(parent.getName().equals(TokenTypeEnum.CMD) && dataTypeFunction.containsKey(t.getContent())) {
+		else if((parent.getName().equals(TokenTypeEnum.CMD)||parent.getName().equals(TokenTypeEnum.VSTART)) && dataTypeFunction.containsKey(t.getContent())) {
 			t.setType(TokenTypeEnum.FNAME);
 			rule = ruleMap.get(TokenTypeEnum.FNAME);
-		} // Check data type CMD && NAME
+		} 	 // Set token type to FNAME		
+		else if(parent.getName().equals(TokenTypeEnum.FEND) && dataTypeFunction.containsKey(t.getContent())) {
+		t.setType(TokenTypeEnum.RNAME);
+		rule = ruleMap.get(TokenTypeEnum.RNAME);
+		}		// Check data type CMD && NAMER
 		else if (parent.getName().equals(TokenTypeEnum.CMD) && !dataTypeFunction.get(t.getContent())
 				.equals(dataTypeVariable.get(parent.getParent().getParent().getLeft()))) {
 			error(t, "Funktion Tipe",
