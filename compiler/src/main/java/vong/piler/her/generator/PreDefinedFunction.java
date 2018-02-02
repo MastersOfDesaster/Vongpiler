@@ -33,6 +33,15 @@ public class PreDefinedFunction {
 		}
 	}
 	
+	static void generateLogicOperator(OperationEnum logicOperation, List<ValueModel> values, ByteCodeWriter writer){
+		writer.addCommandResolveAdresses(values.get(0).getOperation(), values.get(0).getValue());
+		values.remove(0);
+		values.forEach(value -> {
+			writer.addCommandResolveAdresses(value.getOperation(), value.getValue());
+			writer.addCommand(logicOperation);
+		});
+	}
+	
 	static void generatePrint(OperationEnum operation, List<ValueModel> values, ByteCodeWriter writer) {
 		values.forEach(value -> {
 			writer.addCommandResolveAdresses(value.getOperation(), value.getValue());
