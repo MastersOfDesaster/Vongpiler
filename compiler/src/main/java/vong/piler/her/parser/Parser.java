@@ -91,7 +91,9 @@ public class Parser {
 		dataTypeFunction.put("räst", DataTypeEnum.ZAL); // Modulo(%)
 		dataTypeFunction.put("ismär", DataTypeEnum.ISSO); // Größer als(>)
 		dataTypeFunction.put("isweniga", DataTypeEnum.ISSO); // Kleiner als(<)
-		dataTypeFunction.put("same", DataTypeEnum.ISSO);// Und(&&)
+		dataTypeFunction.put("same", DataTypeEnum.ISSO);// Gleich(==)
+		dataTypeFunction.put("unt", DataTypeEnum.ISSO);// Und(&&)
+		dataTypeFunction.put("ohr", DataTypeEnum.ISSO);// Oder(||)
 	}
 
 	public TreeNode parse(List<Token> tokenList) {
