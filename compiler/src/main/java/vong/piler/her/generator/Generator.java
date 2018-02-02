@@ -312,6 +312,10 @@ public class Generator {
 			case EQL:
 				PreDefinedFunction.generateComparator(operation, values, writer);
 				break;
+			case OHR:
+			case AND:
+				PreDefinedFunction.generateLogicOperator(operation, values, writer);
+				break;
 			default:
 				throw new GenerationsFails(node, tokenId);
 		}
